@@ -1,0 +1,18 @@
+Node:
+node07
+
+Login: 
+studi7
+
+==> studi7@cluster.inf.unibe.ch
+
+Password:
+Bxxxxxxxxxxxx -> Please find in Mail of simon.jenni@inf.unibe.ch (19.03.2019) 
+
+
+
+------------------------------
+Miscellaneous:
+(Virtual Env Setup)
+https://cyberhelp.sesync.org/quickstart/how-to-run-Python-scripts-on-the-cluster.html
+
