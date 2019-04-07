@@ -31,3 +31,13 @@ Note: In case enough data cannot be found, we will focus on EEG artifact removal
 12) --> Copy the code to the cluster and run first tests. Finalize the framework.
 
 ==> RESULT: Modular Framework which enables easy conductance of DL experiments on the EEG-datasets(~23.04.19)
+
+
+# Used Packages:
+
+- pyEDFlib
+- MNE - Python
+
+# Useful examples:
+
+- https://martinos.org/mne/stable/auto_examples/decoding/plot_decoding_csp_eeg.html#sphx-glr-auto-examples-decoding-plot-decoding-csp-eeg-py

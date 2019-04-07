@@ -106,3 +106,6 @@ venv.bak/
 *.DS_Store
 Cluster/TimLocal.txt
 Cluster/How_To_InWindows10.docx
+
+*.edf
+*.event
