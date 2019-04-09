@@ -35,7 +35,6 @@ Note: In case enough data cannot be found, we will focus on EEG artifact removal
 
 # Used Packages:
 
-- pyEDFlib
 - MNE - Python
 
 # Useful examples:
