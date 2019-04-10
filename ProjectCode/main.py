@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from torchvision.transforms import Compose, ToTensor
 from torch.utils.data import DataLoader
-from datasets import FlatLabelsDataset
+from datasets import ChannelsVoltageDataset
 import torch.nn as nn
 from nn_models import get_nn_model
 from optimizers import get_optimizer
@@ -36,13 +36,13 @@ Coded as label = 3:
 
 """USER SPECIFIC PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
-selected_subjects = [1]
+selected_subjects = [1, 2]
 # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks! Default: 1 to 14
 selected_runs = range(1, 14)
 # Select the event selection parameters
 # TODO: Extract the correct classes (done via selection of runs), or we have to come to an agreement what to classify
 #       exactly.
-# TODO: Make all the config files a class with member variables or at least a structure. Put in in a config.py file
+# TODO: Make all the config files a class with member variables or at least a structure. Put it in a config.py file
 # Remark:   This is a random pick.
 selected_classes = dict(both_hands_or_left_fist=2, both_feet_or_right_fist=3)
 time_before_event_s = -1.1  # Epochsize parameter: Start time before event.
@@ -108,10 +108,11 @@ if show_events_distribution:
 """CLASSIFICATION"""
 # Convert data from volt to millivolt
 # Pytorch expects float32 for input and int64 for labels.
+# TODO: Make this all in the dataset class
 event_start_sample_column = 0
 event_previous_class_column = 1
 event_current_class_column = 2
-# TODO: Make this all in the dataset class
+
 data = (epoched.get_data() * 1e6).astype(np.float32)  # Get all epochs as a 3D array.
 labels = (epoched.events[:, event_current_class_column] - 2).astype(np.int64)  # -2 -> Classes must be 0 indexed
 assert len(data) == len(labels)  # Check format
@@ -122,9 +123,9 @@ train_data, val_data, train_labels, val_labels = train_test_split(train_data_tem
                                                                   test_size=validation_split, shuffle=True)
 myTransforms = Compose([ToTensor()])  # TODO: This has to be more sophisticated
 # Define datasets
-train_ds = FlatLabelsDataset(train_data, train_labels, myTransforms)
-val_ds = FlatLabelsDataset(val_data, val_labels, myTransforms)
-test_ds = FlatLabelsDataset(test_data, test_labels, myTransforms)
+train_ds = ChannelsVoltageDataset(train_data, train_labels, myTransforms)
+val_ds = ChannelsVoltageDataset(val_data, val_labels, myTransforms)
+test_ds = ChannelsVoltageDataset(test_data, test_labels, myTransforms)
 print("train_ds.shape", train_ds.data.shape)
 # Define data loader
 train_dl = DataLoader(train_ds, batch_size, shuffle=True)

@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 
 
 # We do no transformation, just transforming to tensor
-class FlatLabelsDataset(Dataset):
+class ChannelsVoltageDataset(Dataset):
     def __init__(self, data, target, transform=None):
         self.data = data
         self.target = target
