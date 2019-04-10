@@ -109,3 +109,17 @@ Cluster/How_To_InWindows10.docx
 
 *.edf
 *.event
+
+ProjectCode/\.idea/encodings\.xml
+
+ProjectCode/\.idea/misc\.xml
+
+ProjectCode/\.idea/modules\.xml
+
+ProjectCode/\.idea/ProjectCode\.iml
+
+ProjectCode/\.idea/vcs\.xml
+
+ProjectCode/\.idea/workspace\.xml
+
+ProjectCode/\.idea/dictionaries/tim_f\.xml
