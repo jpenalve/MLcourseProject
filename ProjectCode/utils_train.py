@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import time
-
+from copy import deepcopy
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 
@@ -51,6 +51,7 @@ def test(model, test_loader, loss_fn):
 
 
 def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, scheduler=None, apply_early_stopping=False):
+    time_start = time.time()
     train_losses, train_accuracies = [], []
     val_losses, val_accuracies = [], []
 
@@ -88,5 +89,5 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
                 print('No improvement for {} epochs; training stopped.'.format(patience))
                 model = best_model
                 break
-
+    print("\n Time spend for training: ", time.time()-time_start)
     return train_losses, train_accuracies, val_losses, val_accuracies, model
