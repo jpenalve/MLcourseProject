@@ -2,54 +2,40 @@ import matplotlib.pyplot as plt
 from mne.datasets import eegbci
 from mne.io import concatenate_raws, read_raw_edf
 
-# # Download and Plot Single Subject Data
+"""PRESETTING"""
+# Number of subjects to investigate (range from 1 to 109).
+selected_subjects = [1, 2]
+# Select the experimental runs per subject (range from 1 to 14).
+selected_runs = range(1, 14)
+# Number of channels to investigate (range from 1 to 64)
+selected_channels = range(1, 10)
+# Show sample plot of 1 subject
+show_sample_plot = False
 
-# Load and preprocess data
-subject = 1
-runs = range(1, 14) # There are 14 runs per subject. We want to look at all runs.
+"""CODE START"""
+# Load the data
+subjects = selected_subjects
+runs = selected_runs
+raw_EDF_list = []
+for subj in subjects:
+    fileNames = eegbci.load_data(subj, runs, path = 'RawDataMNE')
+    raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
+    raw_EDF_list.append(concatenate_raws(raw_EDF))
 
-fnames = eegbci.load_data(subject, runs, path='RawDataMNE')
-raws = [read_raw_edf(f, preload=True, stim_channel='auto') for f in fnames]
-raw = concatenate_raws(raws)
+raw_EDFs_merged = concatenate_raws(raw_EDF_list)
+raw_EDFs_np = raw_EDFs_merged.get_data()
 
-# Extract data from the first 5 channels, from 1 s to 3 s.
-sfreq = raw.info['sfreq']
-data, times = raw[:5, :]
-plt.plot(times, data.T)
-plt.title('Sample channels')
+if show_sample_plot:
+    # PLOTSHOW: Extract data from the first 5 channels, from 1 s to 3 s for 1 subject
+    raw_for_plotshow = raw_EDF_list[1]
+    sfreq = raw_for_plotshow.info['sfreq']  # sample frequency
+    data, times = raw_for_plotshow[:5, :]
+    plt.plot(times, data.T)
+    plt.title('Sample channels')
+    raw_for_plotshow.plot(n_channels=5, scalings='auto', title='Auto-scaled Data from arrays',
+             show=True, block=True)
+    raw_numpy = raw_for_plotshow.get_data()
+    print("Type:", type(raw_numpy), " Shape:", raw_numpy.shape)
 
-raw.plot(n_channels=5, scalings='auto', title='Auto-scaled Data from arrays',
-         show=True, block=True)
+print("raw_EDFs_np.shape", raw_EDFs_np.shape)
 
-raw_numpy = raw.get_data()
-
-print("Type:", type(raw_numpy), " Shape:", raw_numpy.shape)
-
-# # Download Multiple Subject Data
-
-# In[81]:
-
-"""
-Subject = [1,2,3,4,5,6,7,8,9,10]  
-Runs = [1,2,3,4,5,6]  
-Raw_List = []
-
-for subj in Subject:
-    fnames = eegbci.load_data(subj, Runs, path = 'RawDataMNE')
-    raws = [read_raw_edf(f, preload=True, stim_channel='auto',verbose='WARNING') for f in fnames]
-    Raw_List.append(concatenate_raws(raws))
-
-Raw_List_All = concatenate_raws(Raw_List)
-Raw_Numpy_All = Raw_List_All.get_data()
-
-
-# In[105]:
-
-
-Raw_Numpy_All.shape
-plt.plot(Raw_Numpy_All[-1,:])
-plt.figure()
-plt.plot(Raw_Numpy_All[-1,50000:51000])
-plt.figure()
-plt.plot(Raw_Numpy_All[1,50000:51000]*1e6)
-"""
