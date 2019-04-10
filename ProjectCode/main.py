@@ -34,15 +34,18 @@ Coded as label = 3:
 """
 
 
-"""PRESETTING"""
+"""USER SPECIFIC PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
 selected_subjects = [1]
 # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks! Default: 1 to 14
 selected_runs = range(1, 14)
-# Select the classes to extract
-# TODO: Extract the correct classes, or we have to come to an agreement what to classify exactly.
-# Remark: This is a random pick
+# Select the event selection parameters
+# TODO: Extract the correct classes (done via selection of runs), or we have to come to an agreement what to classify
+#       exactly.
+# Remark:   This is a random pick.
 selected_classes = dict(both_hands_or_left_fist=2, both_feet_or_right_fist=3)
+time_before_event_s = -1.1  # Epochsize parameter: Start time before event.
+time_after_event_s = 4.0    # Epochsize parameter: Start time before event.
 # Number of channels to investigate (range from 1 to 64)
 selected_channels = range(1, 10)
 # Show sample plot of 1 subject
@@ -51,11 +54,11 @@ subjectIdx_to_plot = 0
 seconds_to_plot = 3
 channels_to_plot = 5
 # Show events distribution over selected_subjects
-show_events_distribution = True
+show_events_distribution = False
 # Train / Test / Validation Split
-train_split = 0.8
-test_split = 0.2
-validation_split = 0.2  # This is the share of the train_split
+train_split = 0.9
+test_split = 0.1
+validation_split = 0.1  # This is the share of the train_split
 # Batch Size
 batch_size = 50
 # Select network architecture (predefined in nn_models.py)
@@ -90,7 +93,7 @@ raw = concatenate_raws(raw_EDF_list)
 
 # Pick the events and select the epochs from them
 events = find_events(raw, shortest_event=0)
-epoched = Epochs(raw, events, selected_classes, event_id=None, tmin=-0.2, tmax=0.5, baseline=(None, 0), picks=None,
+epoched = Epochs(raw, events, event_id=selected_classes, tmin=time_before_event_s, tmax=time_after_event_s, baseline=(None, 0), picks=None,
                  preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
                  detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=None)
 
@@ -116,19 +119,21 @@ train_data_temp, test_data, train_labels_temp, test_labels = train_test_split(da
                                                                               shuffle=True)
 train_data, val_data, train_labels, val_labels = train_test_split(train_data_temp, train_labels_temp,
                                                                   test_size=validation_split, shuffle=True)
-myTransforms = Compose([ToTensor()]) # TODO: This has to be more sophisticated
+myTransforms = Compose([ToTensor()])  # TODO: This has to be more sophisticated
 # Define datasets
 train_ds = FlatLabelsDataset(train_data, train_labels, myTransforms)
 val_ds = FlatLabelsDataset(val_data, val_labels, myTransforms)
 test_ds = FlatLabelsDataset(test_data, test_labels, myTransforms)
-
+print("train_ds.shape", train_ds.data.shape)
 # Define data loader
 train_dl = DataLoader(train_ds, batch_size, shuffle=True)
 val_dl = DataLoader(val_ds, batch_size, shuffle=False)
 test_dl = DataLoader(test_ds, batch_size, shuffle=False)
 
 # Get the model
-model_untrained = get_nn_model(nn_list[nn_selection_idx])
+input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
+model_untrained = get_nn_model(nn_list[nn_selection_idx], input_dimension=input_dimension_,
+                               output_dimension=len(selected_classes))
 
 # Get the optimizer
 optimizer = get_optimizer(optimizer_list[optimizer_selection_idx], learning_rate, model_untrained.parameters(),
