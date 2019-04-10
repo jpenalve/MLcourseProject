@@ -4,8 +4,13 @@ from mne.io import concatenate_raws, read_raw_edf
 from mne import Epochs, pick_types, find_events, events_from_annotations
 import numpy as np
 from sklearn.model_selection import train_test_split
-from torchvision.transforms import Compose, ToTensor, Normalize
+from torchvision.transforms import Compose, ToTensor
+from torch.utils.data import DataLoader
 from datasets import FlatLabelsDataset
+import torch.nn as nn
+import torch
+from optimizers import get_optimizer
+
 """PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
 selected_subjects = [1]
@@ -24,6 +29,15 @@ show_events_distribution = False
 train_split = 0.8
 test_split = 0.2
 validation_split = 0.2  # This is the share of the train_split
+# Select optimizer parameters
+optimizer_selection_idx = 0
+learning_rate = 0.001
+optimizer_list = ["Adam", "SGD", "Adagrad"]  # Extend if you want more. Add them in the optimizer module
+# Adaption of learning rate?
+scheduler = None # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
+# Set loss function
+loss_fn = nn.CrossEntropyLoss()
+
 
 """LOAD RAW DATA"""
 # Load the data
@@ -65,8 +79,21 @@ train_data_temp, test_data, train_labels_temp, test_labels = train_test_split(da
                                                                               shuffle=True)
 train_data, val_data, train_labels, val_labels = train_test_split(train_data_temp, train_labels_temp,
                                                                   test_size=validation_split, shuffle=True)
-myTransforms = Compose([ToTensor()])
+myTransforms = Compose([ToTensor()]) # TODO: This has to be more sophisticated
 # Define datasets
 train_ds = FlatLabelsDataset(train_data, train_labels, myTransforms)
 val_ds = FlatLabelsDataset(val_data, val_labels, myTransforms)
 test_ds = FlatLabelsDataset(test_data, test_labels, myTransforms)
+
+# Define data loader
+batch_size = 50
+train_dl = DataLoader(train_ds, batch_size, shuffle=True)
+val_dl = DataLoader(val_ds, batch_size, shuffle=True)
+test_dl = DataLoader(test_ds, batch_size, shuffle=True)
+
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+# Get the optimizer
+optimizer = get_optimizer(optimizer_selection_idx)
+
+# Train and show validation loss
+curves = fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs)

@@ -4,6 +4,7 @@ import time
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
+
 def train(model, train_loader, optimizer, loss_fn, print_every=100):
     '''
     Trains the model for one epoch
@@ -25,7 +26,8 @@ def train(model, train_loader, optimizer, loss_fn, print_every=100):
         n_correct += torch.sum(output.argmax(1) == labels).item()
     accuracy = 100.0 * n_correct / len(train_loader.dataset)
     return np.mean(np.array(losses)), accuracy
-            
+
+
 def test(model, test_loader, loss_fn):
     '''
     Tests the model on data from test_loader
