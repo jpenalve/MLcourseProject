@@ -10,7 +10,7 @@ from datasets import FlatLabelsDataset
 import torch.nn as nn
 from nn_models import get_nn_model
 from optimizers import get_optimizer
-from utils_train import fit
+from utils_train import fit, test
 
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
@@ -42,6 +42,7 @@ selected_runs = range(1, 14)
 # Select the event selection parameters
 # TODO: Extract the correct classes (done via selection of runs), or we have to come to an agreement what to classify
 #       exactly.
+# TODO: Make all the config files a class with member variables or at least a structure. Put in in a config.py file
 # Remark:   This is a random pick.
 selected_classes = dict(both_hands_or_left_fist=2, both_feet_or_right_fist=3)
 time_before_event_s = -1.1  # Epochsize parameter: Start time before event.
@@ -62,7 +63,7 @@ validation_split = 0.1  # This is the share of the train_split
 # Batch Size
 batch_size = 50
 # Select network architecture (predefined in nn_models.py)
-nn_selection_idx = 0
+nn_selection_idx = 1
 nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models.py module
 
 # Select optimizer parameters
@@ -85,7 +86,7 @@ subjects = selected_subjects
 runs = selected_runs
 raw_EDF_list = []
 for subj in subjects:
-    fileNames = eegbci.load_data(subj, runs, path = 'RawDataMNE')
+    fileNames = eegbci.load_data(subj, runs, path='RawDataMNE')
     raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
     raw_EDF_list.append(concatenate_raws(raw_EDF))
 
@@ -112,7 +113,7 @@ event_previous_class_column = 1
 event_current_class_column = 2
 # TODO: Make this all in the dataset class
 data = (epoched.get_data() * 1e6).astype(np.float32)  # Get all epochs as a 3D array.
-labels = (epoched.events[:, event_current_class_column]).astype(np.int64)
+labels = (epoched.events[:, event_current_class_column] - 2).astype(np.int64)  # -2 -> Classes must be 0 indexed
 assert len(data) == len(labels)  # Check format
 # Split data in train test and validation set
 train_data_temp, test_data, train_labels_temp, test_labels = train_test_split(data, labels, test_size=test_split,
@@ -140,4 +141,8 @@ optimizer = get_optimizer(optimizer_list[optimizer_selection_idx], learning_rate
                           momentum, weight_decay)
 
 # Train and show validation loss
-curves = fit(train_dl, val_dl, model_untrained, optimizer, loss_fn, num_of_epochs)
+train_losses, train_accuracies, val_losses, val_accuracies, model_trained = fit(train_dl, val_dl, model_untrained, optimizer, loss_fn, num_of_epochs)
+
+# Test the net
+test(model_trained, test_dl, loss_fn, print_loss=True)
+# TODO: Store the results of the training with all the parameters from the """PRESETTING""" section above.

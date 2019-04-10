@@ -48,7 +48,7 @@ def test(model, test_loader, loss_fn, print_loss=False):
     average_loss = test_loss / len(test_loader)
     accuracy = 100.0 * n_correct / len(test_loader.dataset)
     if print_loss:
-        print('Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
+        print('--> Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
     return average_loss, accuracy
 
 
