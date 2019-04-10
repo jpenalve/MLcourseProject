@@ -35,12 +35,17 @@ Note: In case enough data cannot be found, we will focus on EEG artifact removal
 Code How-To:
 -------------
 --> All parameters necessary for adapting the classification can be modified inside the """USER SPECIFIC PRESETTING"""
-at the top of the main.py
+inside the config.py.
+	-> To store specific settings, just add a class to config.py, inheriting from Config (as shown in MyDummyOwnConfig). 
+	Make your changes here.
+	(Currently Config class is not final ... so change there as well if you like)
+	-> Inside the main.py: Select your config via myCfg = config.MyDummyOwnConfig
+	
 	-> In case of supplementary optimizers or nn, please add them to the optimizers.py or nn_models.py module
-			-> Adapt the optimizer_list or nn_list respecitvely.
+			-> Adapt the optimizer_list or nn_list in the config.py respecitvely.
 
 
-# TO DOs
+# TO DOs:
 ---------
 - Which classes to classify? (see main.py)
 - See the TODOs in the main.py (framework specific)
