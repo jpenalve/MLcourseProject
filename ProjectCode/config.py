@@ -55,5 +55,7 @@ class Config:
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class
+
+# Dummy Config
 class MyDummyOwnConfig(Config):
     num_of_epochs = 1   # Dummy

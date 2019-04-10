@@ -1,7 +1,5 @@
 from visualisations import eeg_sample_plot, events_distribution_plot
-from mne.datasets import eegbci
-from mne.io import concatenate_raws, read_raw_edf
-from mne import Epochs, find_events
+
 import numpy as np
 from sklearn.model_selection import train_test_split
 from torchvision.transforms import Compose, ToTensor
@@ -10,7 +8,8 @@ from datasets import ChannelsVoltageDataset
 from nn_models import get_nn_model
 from optimizers import get_optimizer
 from utils_train import fit, test
-from config import Config
+import config
+from mne_data_loader import load_the_edf_data
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
 annotation channel).
@@ -32,33 +31,19 @@ Coded as label = 3:
         both feet (in runs 5, 6, 9, 10, 13, and 14)
 """
 
-""" SELECT THE CONFIGURATION YOU NEED """
-myCfg = Config
+""" USER: SELECT THE CONFIGURATION YOU NEED """
+#myCfg = config.Config
+myCfg = config.MyDummyOwnConfig
 
 """LOAD RAW DATA"""
-# Load the data
-subjects = myCfg.selected_subjects
-runs = myCfg.selected_runs
-raw_EDF_list = []
-for subj in subjects:
-    fileNames = eegbci.load_data(subj, runs, path='RawDataMNE')
-    raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
-    raw_EDF_list.append(concatenate_raws(raw_EDF))
-
-raw = concatenate_raws(raw_EDF_list)
-
-# Pick the events and select the epochs from them
-events = find_events(raw, shortest_event=0)
-epoched = Epochs(raw, events, event_id=myCfg.selected_classes, tmin=myCfg.time_before_event_s, tmax=myCfg.time_after_event_s, baseline=(None, 0), picks=None,
-                 preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
-                 detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=None)
+epoched = load_the_edf_data(myCfg)
 
 """SHOW DATA"""
 # Show some sample EEG data if desired
 if myCfg.show_eeg_sample_plot:
     eeg_sample_plot(myCfg.subjectIdx_to_plot, myCfg.seconds_to_plot, myCfg.channels_to_plot, raw_EDF_list)
 if myCfg.show_events_distribution:
-    events_distribution_plot(events)
+    events_distribution_plot(epoched.events)
 
 """CLASSIFICATION"""
 # Convert data from volt to millivolt
