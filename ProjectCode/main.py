@@ -9,43 +9,24 @@ from nn_models import get_nn_model
 from optimizers import get_optimizer
 from utils_train import fit, test
 import config
-from mne_data_loader import load_the_edf_data
-"""
-The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
-annotation channel).
-The .event files and the annotation channels in the corresponding .edf files contain identical data.
+from mne_data_loader import get_epoched_data
 
-Each annotation includes one of three codes (T0, T1, or T2):
-
-Coded as label = 1:
-    T0 corresponds to rest
-    
-Coded as label = 2:
-    T1 corresponds to onset of motion (real or imagined of
-        the left fist (in runs 3, 4, 7, 8, 11, and 12)
-        both fists (in runs 5, 6, 9, 10, 13, and 14)
-        
-Coded as label = 3:        
-    T2 corresponds to onset of motion (real or imagined) of
-        the right fist (in runs 3, 4, 7, 8, 11, and 12)
-        both feet (in runs 5, 6, 9, 10, 13, and 14)
-"""
 
 """ USER: SELECT THE CONFIGURATION YOU NEED """
 #myCfg = config.Config
 myCfg = config.MyDummyOwnConfig
 
 """LOAD RAW DATA"""
-epoched = load_the_edf_data(myCfg)
+epoched = get_epoched_data(myCfg)
 
 """SHOW DATA"""
 # Show some sample EEG data if desired
 if myCfg.show_eeg_sample_plot:
-    eeg_sample_plot(myCfg.subjectIdx_to_plot, myCfg.seconds_to_plot, myCfg.channels_to_plot, raw_EDF_list)
+    eeg_sample_plot(myCfg.subjectIdx_to_plot, myCfg.seconds_to_plot, myCfg.channels_to_plot, myCfg.raw_EDF_list)
 if myCfg.show_events_distribution:
     events_distribution_plot(epoched.events)
 
-"""CLASSIFICATION"""
+"""DATA PREPARATION"""
 # Convert data from volt to millivolt
 # Pytorch expects float32 for input and int64 for labels.
 # TODO: Make this all in the dataset class
@@ -71,11 +52,11 @@ print("train_ds.shape", train_ds.data.shape)
 train_dl = DataLoader(train_ds, myCfg.batch_size, shuffle=True)
 val_dl = DataLoader(val_ds, myCfg.batch_size, shuffle=False)
 test_dl = DataLoader(test_ds, myCfg.batch_size, shuffle=False)
-
-# Get the model
 input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
-#TODO: More sophisticated models needed
-model_untrained = get_nn_model(myCfg.nn_list[myCfg.nn_selection_idx], input_dimension=input_dimension_,
+
+"""CLASSIFICATION"""
+# Get the model
+model_untrained = get_nn_model(myCfg.nn_list[myCfg.nn_selection_idx], input_dimension=input_dimension_, #TODO: More sophisticated models needed
                                output_dimension=len(myCfg.selected_classes))
 
 # Get the optimizer
@@ -86,7 +67,6 @@ optimizer = get_optimizer(myCfg.optimizer_list[myCfg.optimizer_selection_idx], m
 train_losses, train_accuracies, val_losses, val_accuracies, model_trained = fit(train_dl, val_dl, model_untrained,
                                                                                 optimizer, myCfg.loss_fn,
                                                                                 myCfg.num_of_epochs)
-
 # Test the net
 test(model_trained, test_dl, myCfg.loss_fn, print_loss=True)
 # TODO: Store the results of the training with all the parameters from the """PRESETTING""" section above.

@@ -2,6 +2,7 @@
 """USER SPECIFIC PRESETTING"""
 import torch.nn as nn
 
+
 # This class holds the attributes needed for EVERY setting. It is shared between all configs
 class Config:
     # Number of subjects to investigate (range from 1 to 109).
@@ -9,7 +10,7 @@ class Config:
     # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     # Default: 1 to 14
     selected_runs = range(1, 14)
-    # Select the event selection parameters
+    # Select the event selection parameters --> See impact in mne_data_loader.py
     # TODO: Extract the correct classes (done via selection of runs), or we have to come to an agreement what to
     #  classify exactly.
     # TODO: Make all the config files a class with member variables or at least a structure. Put it in a config.py file
@@ -59,3 +60,9 @@ class Config:
 # Dummy Config
 class MyDummyOwnConfig(Config):
     num_of_epochs = 1   # Dummy
+
+
+# Dummy Config
+class TimsConfig(Config):
+    num_of_epochs = 1337   # Dummy
+

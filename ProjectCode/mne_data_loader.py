@@ -2,8 +2,28 @@ from mne.datasets import eegbci
 from mne.io import concatenate_raws, read_raw_edf
 from mne import Epochs, find_events
 
+"""
+The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
+annotation channel).
+The .event files and the annotation channels in the corresponding .edf files contain identical data.
 
-def load_the_edf_data(config):
+Each annotation includes one of three codes (T0, T1, or T2):
+
+Coded as label = 1:
+    T0 corresponds to rest
+
+Coded as label = 2:
+    T1 corresponds to onset of motion (real or imagined of
+        the left fist (in runs 3, 4, 7, 8, 11, and 12)
+        both fists (in runs 5, 6, 9, 10, 13, and 14)
+
+Coded as label = 3:        
+    T2 corresponds to onset of motion (real or imagined) of
+        the right fist (in runs 3, 4, 7, 8, 11, and 12)
+        both feet (in runs 5, 6, 9, 10, 13, and 14)
+"""
+
+def get_epoched_data(config):
     # Load the data
     subjects = config.selected_subjects
     runs = config.selected_runs

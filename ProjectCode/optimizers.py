@@ -8,7 +8,8 @@ def get_optimizer(optimizer_name, learning_rate, model_parameters, sgd_momentum=
     elif optimizer_name == 'SGD':
         optimizer = optim.SGD(model_parameters, lr=learning_rate, weight_decay=weight_decay_factor)
     elif optimizer_name == 'SGDMomentum':
-        optimizer = optim.SGD(model_parameters, lr=learning_rate, momentum=sgd_momentum, weight_decay=0.01)
+        optimizer = optim.SGD(model_parameters, lr=learning_rate, momentum=sgd_momentum,
+                              weight_decay=weight_decay_factor)
     else:
         raise Exception('Mismatch between optimizer_list in main.py and available names in get_optimizer')
     return optimizer
