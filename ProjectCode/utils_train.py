@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import time
+from datetime import timedelta
 from copy import deepcopy
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
@@ -12,10 +13,10 @@ def train(model, train_loader, optimizer, loss_fn, print_every=100):
     model.train()
     losses = []
     n_correct = 0
-    for iteration, (images, labels) in enumerate(train_loader):
-        images = images.to(device)
+    for iteration, (data, labels) in enumerate(train_loader):
+        data = data.to(device)
         labels = labels.to(device)
-        output = model(images)
+        output = model(data)
         optimizer.zero_grad()
         loss = loss_fn(output, labels)
         loss.backward()
@@ -28,7 +29,7 @@ def train(model, train_loader, optimizer, loss_fn, print_every=100):
     return np.mean(np.array(losses)), accuracy
 
 
-def test(model, test_loader, loss_fn):
+def test(model, test_loader, loss_fn, print_loss=False):
     '''
     Tests the model on data from test_loader
     '''
@@ -46,7 +47,8 @@ def test(model, test_loader, loss_fn):
 
     average_loss = test_loss / len(test_loader)
     accuracy = 100.0 * n_correct / len(test_loader.dataset)
-#     print('Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
+    if print_loss:
+        print('Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
     return average_loss, accuracy
 
 
@@ -60,9 +62,12 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
         best_model = None
         patience = 5  # if no improvement after 5 epochs, stop training
         counter = 0
-
+    # Track learning rate
+    previous_learning_rate =  optimizer.param_groups[0]['lr'];
+    print('Learning Rate: ', optimizer.param_groups[0]['lr'])
     for epoch in range(n_epochs):
-        print('learning_rate', optimizer.param_groups[0]['lr'])
+        if previous_learning_rate != optimizer.param_groups[0]['lr']:
+            print('New Learning Rate: ', optimizer.param_groups[0]['lr'])
         train_loss, train_accuracy = train(model, train_dataloader, optimizer, loss_fn)
         val_loss, val_accuracy = test(model, val_dataloader, loss_fn)
         train_losses.append(train_loss)
@@ -89,5 +94,5 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
                 print('No improvement for {} epochs; training stopped.'.format(patience))
                 model = best_model
                 break
-    print("\n Time spend for training: ", time.time()-time_start)
+    print("Time spend for training: ", str(timedelta(seconds=time.time()-time_start)), " hh:mm:ss.ms")
     return train_losses, train_accuracies, val_losses, val_accuracies, model
