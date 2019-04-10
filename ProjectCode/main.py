@@ -12,11 +12,37 @@ from nn_models import get_nn_model
 from optimizers import get_optimizer
 from utils_train import fit
 
+"""
+The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
+annotation channel).
+The .event files and the annotation channels in the corresponding .edf files contain identical data.
+
+Each annotation includes one of three codes (T0, T1, or T2):
+
+Coded as label = 1:
+    T0 corresponds to rest
+    
+Coded as label = 2:
+    T1 corresponds to onset of motion (real or imagined of
+        the left fist (in runs 3, 4, 7, 8, 11, and 12)
+        both fists (in runs 5, 6, 9, 10, 13, and 14)
+        
+Coded as label = 3:        
+    T2 corresponds to onset of motion (real or imagined) of
+        the right fist (in runs 3, 4, 7, 8, 11, and 12)
+        both feet (in runs 5, 6, 9, 10, 13, and 14)
+"""
+
+
 """PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
 selected_subjects = [1]
 # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks! Default: 1 to 14
 selected_runs = range(1, 14)
+# Select the classes to extract
+# TODO: Extract the correct classes, or we have to come to an agreement what to classify exactly.
+# Remark: This is a random pick
+selected_classes = dict(both_hands_or_left_fist=2, both_feet_or_right_fist=3)
 # Number of channels to investigate (range from 1 to 64)
 selected_channels = range(1, 10)
 # Show sample plot of 1 subject
@@ -25,7 +51,7 @@ subjectIdx_to_plot = 0
 seconds_to_plot = 3
 channels_to_plot = 5
 # Show events distribution over selected_subjects
-show_events_distribution = False
+show_events_distribution = True
 # Train / Test / Validation Split
 train_split = 0.8
 test_split = 0.2
@@ -64,7 +90,7 @@ raw = concatenate_raws(raw_EDF_list)
 
 # Pick the events and select the epochs from them
 events = find_events(raw, shortest_event=0)
-epoched = Epochs(raw, events, event_id=None, tmin=-0.2, tmax=0.5, baseline=(None, 0), picks=None,
+epoched = Epochs(raw, events, selected_classes, event_id=None, tmin=-0.2, tmax=0.5, baseline=(None, 0), picks=None,
                  preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
                  detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=None)
 
