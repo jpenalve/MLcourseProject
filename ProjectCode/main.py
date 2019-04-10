@@ -4,7 +4,8 @@ from mne.io import concatenate_raws, read_raw_edf
 from mne import Epochs, pick_types, find_events, events_from_annotations
 import numpy as np
 from sklearn.model_selection import train_test_split
-
+from torchvision.transforms import Compose, ToTensor, Normalize
+from datasets import FlatLabelsDataset
 """PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
 selected_subjects = [1]
@@ -55,6 +56,7 @@ if show_events_distribution:
 event_start_sample_column = 0
 event_previous_class_column = 1
 event_current_class_column = 2
+# TODO: Make this all in the dataset class
 data = (epoched.get_data() * 1e6).astype(np.float32)  # Get all epochs as a 3D array.
 labels = (epoched.events[:, event_current_class_column]).astype(np.int64)
 assert len(data) == len(labels)  # Check format
@@ -63,3 +65,8 @@ train_data_temp, test_data, train_labels_temp, test_labels = train_test_split(da
                                                                               shuffle=True)
 train_data, val_data, train_labels, val_labels = train_test_split(train_data_temp, train_labels_temp,
                                                                   test_size=validation_split, shuffle=True)
+myTransforms = Compose([ToTensor()])
+# Define datasets
+train_ds = FlatLabelsDataset(train_data, train_labels, myTransforms)
+val_ds = FlatLabelsDataset(val_data, val_labels, myTransforms)
+test_ds = FlatLabelsDataset(test_data, test_labels, myTransforms)

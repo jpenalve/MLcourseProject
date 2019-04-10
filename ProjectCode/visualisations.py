@@ -1,5 +1,8 @@
+# Define the functions for plotting or visualizing here
+
 import matplotlib.pyplot as plt
 import mne
+
 
 def eeg_sample_plot(subject, seconds_to_plot, channels_to_plot, raw):
     raw_for_plotshow = raw[subject]
