@@ -36,7 +36,7 @@ Coded as label = 3:
 
 """USER SPECIFIC PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
-selected_subjects = [1, 2]
+selected_subjects = [1, 2, 3]
 # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks! Default: 1 to 14
 selected_runs = range(1, 14)
 # Select the event selection parameters
@@ -73,12 +73,14 @@ weight_decay = 0
 momentum = 0  # Relevant only for SGDMomentum, else: ignored
 optimizer_list = ['Adam', 'SGD', 'SGDMomentum']  # Extend if you want more. Add them in the optimizers.py module
 # Adaption of learning rate?
+# TODO: Make scheduler module like the optimizer module
 scheduler = None # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
 # Set loss function
 loss_fn = nn.CrossEntropyLoss()
 # Set number of epochs for training
 num_of_epochs = 3
 use_early_stopping = False
+# TODO : Make data augmentation module (e.g. add gaussian noise to channels)
 
 """LOAD RAW DATA"""
 # Load the data
@@ -134,6 +136,7 @@ test_dl = DataLoader(test_ds, batch_size, shuffle=False)
 
 # Get the model
 input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
+#TODO: More sophisticated models needed
 model_untrained = get_nn_model(nn_list[nn_selection_idx], input_dimension=input_dimension_,
                                output_dimension=len(selected_classes))
 
