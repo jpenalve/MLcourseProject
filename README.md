@@ -40,7 +40,7 @@ at the top of the main.py
 			-> Adapt the optimizer_list or nn_list respecitvely.
 
 
-# TO DOs
+# TO DOs:
 ---------
 - Which classes to classify? (see main.py)
 - See the TODOs in the main.py (framework specific)
