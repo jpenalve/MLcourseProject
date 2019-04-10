@@ -8,8 +8,9 @@ from torchvision.transforms import Compose, ToTensor
 from torch.utils.data import DataLoader
 from datasets import FlatLabelsDataset
 import torch.nn as nn
-import torch
+from nn_models import get_nn_model
 from optimizers import get_optimizer
+from utils_train import fit
 
 """PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
@@ -29,15 +30,25 @@ show_events_distribution = False
 train_split = 0.8
 test_split = 0.2
 validation_split = 0.2  # This is the share of the train_split
+# Batch Size
+batch_size = 50
+# Select network architecture (predefined in nn_models.py)
+nn_selection_idx = 0
+nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models.py module
+
 # Select optimizer parameters
 optimizer_selection_idx = 0
 learning_rate = 0.001
-optimizer_list = ["Adam", "SGD", "Adagrad"]  # Extend if you want more. Add them in the optimizer module
+weight_decay = 0
+momentum = 0  # Relevant only for SGDMomentum, else: ignored
+optimizer_list = ['Adam', 'SGD', 'SGDMomentum']  # Extend if you want more. Add them in the optimizers.py module
 # Adaption of learning rate?
 scheduler = None # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
 # Set loss function
 loss_fn = nn.CrossEntropyLoss()
-
+# Set number of epochs for training
+num_of_epochs = 3
+use_early_stopping = False
 
 """LOAD RAW DATA"""
 # Load the data
@@ -86,14 +97,16 @@ val_ds = FlatLabelsDataset(val_data, val_labels, myTransforms)
 test_ds = FlatLabelsDataset(test_data, test_labels, myTransforms)
 
 # Define data loader
-batch_size = 50
 train_dl = DataLoader(train_ds, batch_size, shuffle=True)
-val_dl = DataLoader(val_ds, batch_size, shuffle=True)
-test_dl = DataLoader(test_ds, batch_size, shuffle=True)
+val_dl = DataLoader(val_ds, batch_size, shuffle=False)
+test_dl = DataLoader(test_ds, batch_size, shuffle=False)
 
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+# Get the model
+model_untrained = get_nn_model(nn_list[nn_selection_idx])
+
 # Get the optimizer
-optimizer = get_optimizer(optimizer_selection_idx)
+optimizer = get_optimizer(optimizer_list[optimizer_selection_idx], learning_rate, model_untrained.parameters(),
+                          momentum, weight_decay)
 
 # Train and show validation loss
-curves = fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs)
+curves = fit(train_dl, val_dl, model_untrained, optimizer, loss_fn, num_of_epochs)
