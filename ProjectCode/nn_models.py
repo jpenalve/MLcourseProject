@@ -5,10 +5,10 @@ import torch.nn as nn
 
 # Fully Connected (FC) network
 class SimpleFC(nn.Module):
-    def __init__(self):
+    def __init__(self, input_dimension, output_dimension):
         super().__init__()
         self.layers = nn.Sequential(
-            nn.Linear(36 * 36, 2, bias=True),
+            nn.Linear(input_dimension, output_dimension)
         )
 
     def forward(self, x):
@@ -18,14 +18,14 @@ class SimpleFC(nn.Module):
 
 # Fully Connected (FC) little deep network
 class DeepFC(nn.Module):
-    def __init__(self):
+    def __init__(self, input_dimension, output_dimension):
         super().__init__()
         self.layers = nn.Sequential(
-            nn.Linear(36 * 36, 128, bias=True),
+            nn.Linear(input_dimension, 128),
             nn.ReLU(),
-            nn.Linear(128, 128, bias=True),
+            nn.Linear(128, 128),
             nn.ReLU(),
-            nn.Linear(128, 2, bias=True)
+            nn.Linear(128, output_dimension)
         )
 
     def forward(self, x):
@@ -34,11 +34,11 @@ class DeepFC(nn.Module):
 
 
 # Model selection
-def get_nn_model(model_name):
+def get_nn_model(model_name, input_dimension, output_dimension):
     if model_name == 'SimpleFC':
-        model = SimpleFC()
+        model = SimpleFC(input_dimension, output_dimension)
     elif model_name == 'DeepFC':
-        model = DeepFC()
+        model = DeepFC(input_dimension, output_dimension)
     else:
         raise Exception('Mismatch between nn_list in main.py and available names in get_nn_model')
 
