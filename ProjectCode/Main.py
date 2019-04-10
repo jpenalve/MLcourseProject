@@ -4,13 +4,16 @@ from mne.io import concatenate_raws, read_raw_edf
 
 """PRESETTING"""
 # Number of subjects to investigate (range from 1 to 109).
-selected_subjects = [1, 2]
+selected_subjects = [1]
 # Select the experimental runs per subject (range from 1 to 14).
 selected_runs = range(1, 14)
 # Number of channels to investigate (range from 1 to 64)
 selected_channels = range(1, 10)
 # Show sample plot of 1 subject
-show_sample_plot = False
+show_sample_plot = True
+seconds_to_plot = 3
+subjectIdx_to_plot = 0 # idx corresponding to selected_subjects list
+channels_to_plot = 5
 
 """CODE START"""
 # Load the data
@@ -26,13 +29,13 @@ raw_EDFs_merged = concatenate_raws(raw_EDF_list)
 raw_EDFs_np = raw_EDFs_merged.get_data()
 
 if show_sample_plot:
-    # PLOTSHOW: Extract data from the first 5 channels, from 1 s to 3 s for 1 subject
-    raw_for_plotshow = raw_EDF_list[1]
+    raw_for_plotshow = raw_EDF_list[subjectIdx_to_plot]
     sfreq = raw_for_plotshow.info['sfreq']  # sample frequency
-    data, times = raw_for_plotshow[:5, :]
+    timelength_s = int(seconds_to_plot * sfreq)
+    data, times = raw_for_plotshow[:channels_to_plot, :timelength_s]
     plt.plot(times, data.T)
     plt.title('Sample channels')
-    raw_for_plotshow.plot(n_channels=5, scalings='auto', title='Auto-scaled Data from arrays',
+    raw_for_plotshow.plot(n_channels=channels_to_plot, scalings='auto', title='Auto-scaled Data from arrays',
              show=True, block=True)
     raw_numpy = raw_for_plotshow.get_data()
     print("Type:", type(raw_numpy), " Shape:", raw_numpy.shape)
