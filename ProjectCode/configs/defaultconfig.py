@@ -12,6 +12,20 @@ class DefaultConfig:
     selected_subjects = [1, 2, 3]
     # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     # Default: 1 to 14
+    """
+    RUN         TASK
+    1           Baseline, eyes open
+
+    2           Baseline, eyes closed
+
+    3, 7, 11    Motor execution: left vs right hand
+
+    4, 8, 12    Motor imagery: left vs right hand
+
+    5, 9, 13    Motor execution: hands vs feet
+
+    6, 10, 14   Motor imagery: hands vs feet
+    """
     selected_runs = range(1, 14)
     # Select the event selection parameters --> See impact in mne_data_loader.py
     # TODO: Extract the correct classes (done via selection of runs), or we have to come to an agreement what to
