@@ -1,7 +1,19 @@
 from configs.defaultconfig import DefaultConfig
 
 
-# Dummy Config
-class TimsConfig(DefaultConfig):
-    num_of_epochs = 1337   # Dummy
+# Own configs follow here
+class ConfigNo01(DefaultConfig):
+    num_of_epochs = 1
+
+
+class ConfigNo02(DefaultConfig):
+    num_of_epochs = 2
+
+
+class ConfigNo03(DefaultConfig):
+    num_of_epochs = 3
+
+
+# Put them all in a list
+list_of_configs = [ConfigNo01, ConfigNo02, ConfigNo03]
 
