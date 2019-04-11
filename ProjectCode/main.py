@@ -5,15 +5,18 @@ from sklearn.model_selection import train_test_split
 from torchvision.transforms import Compose, ToTensor
 from torch.utils.data import DataLoader
 from datasets import ChannelsVoltageDataset
-from nn_models import get_nn_model
+from neural_nets.nn_models_getter import get_nn_model
 from optimizers import get_optimizer
 from utils_train import fit, test
-from configs import configs_joaquin, configs_tim, configs_oezhan
+from configs import configs_tim
 from mne_data_loader import get_epoched_data
 
 
 """ USER: SELECT THE CONFIGURATION YOU NEED """
 myList = configs_tim.list_of_configs
+#myList = configs_joaquin.list_of_configs
+#myList = configs_oezhan.list_of_configs
+
 for myCfg in myList:
     """LOAD RAW DATA"""
     epoched = get_epoched_data(myCfg)

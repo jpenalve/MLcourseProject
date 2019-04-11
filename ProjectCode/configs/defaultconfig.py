@@ -4,7 +4,9 @@ import torch.nn as nn
 
 
 # This class holds the attributes needed for EVERY setting. It is shared between all configs
-# ( ..unfortunately no abstract classes or access specifiers like in c++ for python)
+
+# ==> PLEASE PUBLISH CHANGES CLEARLY TO ALL USERS. ALL USER INHERIT THIS CLASS
+# (non overwritten attributes take the DefaultConfigs values)
 class DefaultConfig:
     # Number of subjects to investigate (range from 1 to 109).
     selected_subjects = [1, 2, 3]
@@ -34,9 +36,9 @@ class DefaultConfig:
     validation_split = 0.1  # This is the share of the train_split
     # Batch Size
     batch_size = 50
-    # Select network architecture according to the nn_list(predefined in nn_models.py)
+    # Select network architecture according to the nn_list(predefined in nn_models_getter.py)
     nn_selection_idx = 1
-    nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models.py module
+    nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
 
     # Select optimizer parameters
     optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
