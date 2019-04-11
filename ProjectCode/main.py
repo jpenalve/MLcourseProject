@@ -17,10 +17,6 @@ myList = configs_tim.list_of_configs
 #myList = configs_joaquin.list_of_configs
 #myList = configs_oezhan.list_of_configs
 
-# Getting back a specific objects:
-#with open('objs.pkl', 'rb') as classification_results:  # Python 3: open(..., 'rb')
-    #model_trained, optimizer, myCfg, train_losses = pickle.load(classification_results)
-
 for my_cfg in myList:
     """LOAD RAW DATA"""
     epoched = get_epoched_data(my_cfg)
@@ -70,15 +66,15 @@ for my_cfg in myList:
                               model_untrained.parameters(), my_cfg.momentum, my_cfg.weight_decay)
 
     # Train and show validation loss
-    train_losses, train_accuracies, val_losses, val_accuracies, model_trained = fit(train_dl, val_dl, model_untrained,
-                                                                                    optimizer, my_cfg.loss_fn,
-                                                                                    my_cfg.num_of_epochs)
+    train_losses, train_accuracies, val_losses, val_accuracies, model_trained, time_spent_for_training_s =\
+        fit(train_dl, val_dl, model_untrained, optimizer, my_cfg.loss_fn, my_cfg.num_of_epochs)
+
     # Test the net
     test_loss, test_accuracy = test(model_trained, test_dl, my_cfg.loss_fn, print_loss=True)
 
     # Store the results
     results_storer.store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy, train_losses,
-                                 train_accuracies, val_losses, val_accuracies)
+                                 train_accuracies, time_spent_for_training_s, val_losses, val_accuracies)
 
 
 

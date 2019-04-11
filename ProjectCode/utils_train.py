@@ -94,5 +94,6 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
                 print('No improvement for {} epochs; training stopped.'.format(patience))
                 model = best_model
                 break
-    print("Time spend for training: ", str(timedelta(seconds=time.time()-time_start)), " hh:mm:ss.ms")
-    return train_losses, train_accuracies, val_losses, val_accuracies, model
+    time_spent_for_training_s = str(timedelta(seconds=time.time()-time_start))
+    print("Time spend for training: ", time_spent_for_training_s, " hh:mm:ss.ms")
+    return train_losses, train_accuracies, val_losses, val_accuracies, model, time_spent_for_training_s
