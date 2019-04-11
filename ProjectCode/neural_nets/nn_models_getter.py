@@ -13,7 +13,7 @@ def get_nn_model(model_name, input_dimension, output_dimension):
     elif model_name == 'DeepFC':
         model = fc.Deep(input_dimension, output_dimension)
     else:
-        raise Exception('Mismatch between nn_list in main.py and available names in get_nn_model')
+        raise Exception('Mismatch between nn_list in config and available names in get_nn_model')
 
     # Transfer model to gpu if possible
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")

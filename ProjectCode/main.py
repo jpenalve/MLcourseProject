@@ -10,22 +10,26 @@ from optimizers import get_optimizer
 from utils_train import fit, test
 from configs import configs_tim
 from mne_data_loader import get_epoched_data
-
+from classification_results import results_storer
 
 """ USER: SELECT THE CONFIGURATION YOU NEED """
 myList = configs_tim.list_of_configs
 #myList = configs_joaquin.list_of_configs
 #myList = configs_oezhan.list_of_configs
 
-for myCfg in myList:
+# Getting back a specific objects:
+#with open('objs.pkl', 'rb') as classification_results:  # Python 3: open(..., 'rb')
+    #model_trained, optimizer, myCfg, train_losses = pickle.load(classification_results)
+
+for my_cfg in myList:
     """LOAD RAW DATA"""
-    epoched = get_epoched_data(myCfg)
+    epoched = get_epoched_data(my_cfg)
 
     """SHOW DATA"""
     # Show some sample EEG data if desired
-    if myCfg.show_eeg_sample_plot:
-        eeg_sample_plot(myCfg.subjectIdx_to_plot, myCfg.seconds_to_plot, myCfg.channels_to_plot, myCfg.raw_EDF_list)
-    if myCfg.show_events_distribution:
+    if my_cfg.show_eeg_sample_plot:
+        eeg_sample_plot(my_cfg.subjectIdx_to_plot, my_cfg.seconds_to_plot, my_cfg.channels_to_plot, my_cfg.raw_EDF_list)
+    if my_cfg.show_events_distribution:
         events_distribution_plot(epoched.events)
 
     """DATA PREPARATION"""
@@ -40,10 +44,10 @@ for myCfg in myList:
     labels = (epoched.events[:, event_current_class_column] - 2).astype(np.int64)  # -2 -> Classes must be 0 indexed
     assert len(data) == len(labels)  # Check format
     # Split data in train test and validation set
-    train_data_temp, test_data, train_labels_temp, test_labels = train_test_split(data, labels, test_size=myCfg.test_split,
+    train_data_temp, test_data, train_labels_temp, test_labels = train_test_split(data, labels, test_size=my_cfg.test_split,
                                                                                   shuffle=True)
     train_data, val_data, train_labels, val_labels = train_test_split(train_data_temp, train_labels_temp,
-                                                                      test_size=myCfg.validation_split, shuffle=True)
+                                                                      test_size=my_cfg.validation_split, shuffle=True)
     myTransforms = Compose([ToTensor()])  # TODO: This has to be more sophisticated
     # Define datasets
     train_ds = ChannelsVoltageDataset(train_data, train_labels, myTransforms)
@@ -51,24 +55,30 @@ for myCfg in myList:
     test_ds = ChannelsVoltageDataset(test_data, test_labels, myTransforms)
     print("train_ds.shape", train_ds.data.shape)
     # Define data loader
-    train_dl = DataLoader(train_ds, myCfg.batch_size, shuffle=True)
-    val_dl = DataLoader(val_ds, myCfg.batch_size, shuffle=False)
-    test_dl = DataLoader(test_ds, myCfg.batch_size, shuffle=False)
+    train_dl = DataLoader(train_ds, my_cfg.batch_size, shuffle=True)
+    val_dl = DataLoader(val_ds, my_cfg.batch_size, shuffle=False)
+    test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
     input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
 
     """CLASSIFICATION"""
     # Get the model
-    model_untrained = get_nn_model(myCfg.nn_list[myCfg.nn_selection_idx], input_dimension=input_dimension_, #TODO: More sophisticated models needed
-                                   output_dimension=len(myCfg.selected_classes))
+    model_untrained = get_nn_model(my_cfg.nn_list[my_cfg.nn_selection_idx], input_dimension=input_dimension_,  #TODO: More sophisticated models needed
+                                   output_dimension=len(my_cfg.selected_classes))
 
     # Get the optimizer
-    optimizer = get_optimizer(myCfg.optimizer_list[myCfg.optimizer_selection_idx], myCfg.learning_rate,
-                              model_untrained.parameters(), myCfg.momentum, myCfg.weight_decay)
+    optimizer = get_optimizer(my_cfg.optimizer_list[my_cfg.optimizer_selection_idx], my_cfg.learning_rate,
+                              model_untrained.parameters(), my_cfg.momentum, my_cfg.weight_decay)
 
     # Train and show validation loss
     train_losses, train_accuracies, val_losses, val_accuracies, model_trained = fit(train_dl, val_dl, model_untrained,
-                                                                                    optimizer, myCfg.loss_fn,
-                                                                                    myCfg.num_of_epochs)
+                                                                                    optimizer, my_cfg.loss_fn,
+                                                                                    my_cfg.num_of_epochs)
     # Test the net
-    test(model_trained, test_dl, myCfg.loss_fn, print_loss=True)
-    # TODO: Store the results of the training with all the parameters from the """PRESETTING""" section above.
+    test_loss, test_accuracy = test(model_trained, test_dl, my_cfg.loss_fn, print_loss=True)
+
+    # Store the results
+    results_storer.store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy, train_losses,
+                                 train_accuracies, val_losses, val_accuracies)
+
+
+
