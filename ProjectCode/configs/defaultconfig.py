@@ -4,7 +4,8 @@ import torch.nn as nn
 
 
 # This class holds the attributes needed for EVERY setting. It is shared between all configs
-class Config:
+# ( ..unfortunately no abstract classes or access specifiers like in c++ for python)
+class DefaultConfig:
     # Number of subjects to investigate (range from 1 to 109).
     selected_subjects = [1, 2, 3]
     # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
@@ -58,11 +59,9 @@ class Config:
 # overwrite parameters from the Config class
 
 # Dummy Config
-class MyDummyOwnConfig(Config):
+class MyDummyOwnConfig(DefaultConfig):
     num_of_epochs = 1   # Dummy
 
 
-# Dummy Config
-class TimsConfig(Config):
-    num_of_epochs = 1337   # Dummy
+
 

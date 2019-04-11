@@ -8,13 +8,13 @@ from datasets import ChannelsVoltageDataset
 from nn_models import get_nn_model
 from optimizers import get_optimizer
 from utils_train import fit, test
-import config
+from configs import configs_joaquin, configs_tim, configs_oezhan
 from mne_data_loader import get_epoched_data
 
 
 """ USER: SELECT THE CONFIGURATION YOU NEED """
-#myCfg = config.Config
-myCfg = config.MyDummyOwnConfig
+#myCfg = defaultconfig.DefaultConfig
+myCfg = configs_tim.TimsConfig
 
 """LOAD RAW DATA"""
 epoched = get_epoched_data(myCfg)
