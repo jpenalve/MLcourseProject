@@ -34,15 +34,16 @@ Note: In case enough data cannot be found, we will focus on EEG artifact removal
 
 Code How-To:
 -------------
---> All parameters necessary for adapting the classification can be modified inside the config/myconfig.py files.
-	-> To store specific settings, just add a class to myconfig.py, inheriting from DefaultConfig. 
-	(Currently DefaultConfig class is not final! ... so change there as well if you like)
-		- Put your configs which shall be evaluated inside the list_of_configs in the myconfig.py module.
+All parameters necessary for adapting the classification can be modified inside the config/myconfig.py files.
+
+To store specific settings, just add a class to myconfig.py, inheriting from DefaultConfig.
+(Currently DefaultConfig class is not final! ... so change there as well if you like)
+
+Put your configs which shall be evaluated inside the list_of_configs in the myconfig.py module.
 	
-	-> Inside the main.py: Select your config via myList = myconfig.list_of_configs
-	
-	-> In case of supplementary optimizers or nn, please add them to the optimizers.py or neural_nets package.
-			-> Adapt the optimizer_list or nn_list (+nn_models_getter.py) the  in the defaultconifg.py respecitvely.
+Inside the main.py: Select your config via myList = myconfig.list_of_configs
+
+In case of supplementary optimizers or nn, please add them to the optimizers.py or neural_nets package. Adapt the optimizer_list or nn_list (+nn_models_getter.py) the  in the defaultconifg.py respecitvely.
 
 
 # TO DOs:
