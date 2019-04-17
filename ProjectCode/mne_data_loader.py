@@ -41,4 +41,4 @@ def get_epoched_data(config):
                      tmax=config.time_after_event_s, baseline=(None, 0), picks=None,
                      preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
                      detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=None)
-    return epoched
+    return epoched, raw_EDF_list
