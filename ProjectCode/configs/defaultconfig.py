@@ -48,8 +48,8 @@ class DefaultConfig:
     train_split = 0.9
     test_split = 0.1
     validation_split = 0.1  # This is the share of the train_split
-    # Batch Size
-    batch_size = 50
+    # Batch Size. Batch size should be powers of 2 for better utilization of GPUs.
+    batch_size = 64 
     # Select network architecture according to the nn_list(predefined in nn_models_getter.py)
     nn_selection_idx = 1
     nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module

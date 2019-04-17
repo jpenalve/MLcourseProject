@@ -49,6 +49,7 @@ def test(model, test_loader, loss_fn, print_loss=False):
     accuracy = 100.0 * n_correct / len(test_loader.dataset)
     if print_loss:
         print('--> Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
+        print("\n\n")
     return average_loss, accuracy
 
 
@@ -95,5 +96,5 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
                 model = best_model
                 break
     time_spent_for_training_s = str(timedelta(seconds=time.time()-time_start))
-    print("Time spend for training: ", time_spent_for_training_s, " hh:mm:ss.ms")
+    print("Time spend for training: ", time_spent_for_training_s, " hh:mm:ss.ms \n")
     return train_losses, train_accuracies, val_losses, val_accuracies, model, time_spent_for_training_s

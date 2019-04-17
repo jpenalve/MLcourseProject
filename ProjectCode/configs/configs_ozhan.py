@@ -4,11 +4,12 @@ from configs.defaultconfig import DefaultConfig
 # Own configs follow here
 class ConfigNo01(DefaultConfig):
     # Overwriting base class attributes
-    num_of_epochs = 1
+    num_of_epochs = 25
 
     # Give it a unique name and a brief description if you like
     config_name = 'simpleNN'
     config_remark = 'This is a simple NN test.. nothing serious'
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
 class ConfigNo02(DefaultConfig):
     # Overwriting base class attributes
@@ -28,4 +29,4 @@ class ConfigNo03(DefaultConfig):
 
 
 # Put them all in a list
-list_of_configs = [ConfigNo01, ConfigNo02, ConfigNo03]
+list_of_configs = [ConfigNo01]
