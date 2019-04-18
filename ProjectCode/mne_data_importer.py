@@ -1,6 +1,8 @@
 from mne.datasets import eegbci
 from mne.io import concatenate_raws, read_raw_edf
 from mne import Epochs, find_events
+from visualisations import eeg_sample_plot, events_distribution_plot
+
 
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
@@ -40,5 +42,14 @@ def get_epoched_data(config):
     epoched = Epochs(raw, events, event_id=config.selected_classes, tmin=config.time_before_event_s,
                      tmax=config.time_after_event_s, baseline=(None, 0), picks=None,
                      preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
-                     detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=None)
-    return epoched, raw_EDF_list
+                     detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose='WARNING')
+    
+    """SHOW DATA"""
+    # Show some sample EEG data if desired
+    if config.show_eeg_sample_plot:
+        eeg_sample_plot(config.subjectIdx_to_plot, config.seconds_to_plot, config.channels_to_plot, raw_EDF_list)
+    if config.show_events_distribution:
+        events_distribution_plot(epoched.events)
+        
+        
+    return epoched

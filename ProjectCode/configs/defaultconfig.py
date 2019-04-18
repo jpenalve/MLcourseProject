@@ -27,7 +27,7 @@ class DefaultConfig:
     6, 10, 14   Motor imagery: hands vs feet
     """
     selected_runs = range(1, 14)
-    # Select the event selection parameters --> See impact in mne_data_loader.py
+    # Select the event selection parameters --> See impact in mne_data_importer.py
     # TODO: Extract the correct classes (done via selection of runs), or we have to come to an agreement what to
     #  classify exactly.
     # TODO: Make all the config files a class with member variables or at least a structure. Put it in a config.py file
@@ -44,6 +44,9 @@ class DefaultConfig:
     channels_to_plot = 5
     # Show events distribution over selected_subjects
     show_events_distribution = False
+    
+    
+    
     # Train / Test / Validation Split
     train_split = 0.9
     test_split = 0.1

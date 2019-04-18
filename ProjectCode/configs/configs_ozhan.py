@@ -11,10 +11,12 @@ class ConfigNo01(DefaultConfig):
     config_remark = 'This is a simple NN test.. nothing serious'
     selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     
-    show_eeg_sample_plot = False
-    subjectIdx_to_plot = 4
+    
+    show_events_distribution = True
+    show_eeg_sample_plot = True
+    subjectIdx_to_plot = 1
     seconds_to_plot = 3
-    channels_to_plot = 2
+    channels_to_plot = 5
     
     nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
