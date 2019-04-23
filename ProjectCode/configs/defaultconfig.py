@@ -9,34 +9,12 @@ import torch.nn as nn
 # (non overwritten attributes take the DefaultConfigs values)
 class DefaultConfig:
     # Number of subjects to investigate (range from 1 to 109).
-    selected_subjects = [1, 2, 3]
-    # Select the experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
-    # Default: 1 to 14
-    """
-    RUN         TASK
-    1           Baseline, eyes open
-
-    2           Baseline, eyes closed
-
-    3, 7, 11    Motor execution: left vs right hand
-
-    4, 8, 12    Motor imagery: left vs right hand
-
-    5, 9, 13    Motor execution: hands vs feet
-
-    6, 10, 14   Motor imagery: hands vs feet
-    """
-    selected_runs = range(1, 14)
-    # Select the event selection parameters --> See impact in mne_data_loader.py
-    # TODO: Extract the correct classes (done via selection of runs), or we have to come to an agreement what to
-    #  classify exactly.
-    # TODO: Make all the config files a class with member variables or at least a structure. Put it in a config.py file
-    # Remark:   This is a random pick.
-    selected_classes = dict(both_hands_or_left_fist=2, both_feet_or_right_fist=3)
+    # ==> Subjects 88, 92 and 100 have overlapping events. Please exclude these subjects.
+    selected_subjects = [1, 2, 3, 4]
     time_before_event_s = -1.1  # Epochsize parameter: Start time before event.
     time_after_event_s = 4.0  # Epochsize parameter: Start time before event.
     # Number of channels to investigate (range from 1 to 64)
-    selected_channels = range(1, 10)
+    selected_channels = range(1, 64)
     # Show sample plot of 1 subject
     show_eeg_sample_plot = False
     subjectIdx_to_plot = 0
@@ -51,13 +29,13 @@ class DefaultConfig:
     # Batch Size
     batch_size = 50
     # Select network architecture according to the nn_list(predefined in nn_models_getter.py)
-    nn_selection_idx = 1
-    nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 3
+    nn_list = ['SimpleFC', 'DeepFC', 'EEGNet', 'ConvNet01']  # Extend if you want more. Add them in the nn_models_getter.py module
 
     # Select optimizer parameters
     optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
     learning_rate = 0.001
-    weight_decay = 0
+    weight_decay = 0.000075
     momentum = 0  # Relevant only for SGDMomentum, else: ignored
     optimizer_list = ['Adam', 'SGD', 'SGDMomentum']  # Extend if you want more. Add them in the optimizers.py module
     # Adaption of learning rate?
