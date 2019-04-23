@@ -7,6 +7,7 @@ from mne.datasets import eegbci
 from mne.io import concatenate_raws, read_raw_edf
 from mne import Epochs, find_events
 import os
+from visualisations import eeg_sample_plot, events_distribution_plot
 
 
 """
@@ -56,7 +57,8 @@ run 	        task
 
 def get_dataloader_objects(my_cfg):
     # We want the classes as defined above
-    classes_to_extract = ['C0', 'C1', 'C2', 'C3', 'C4']
+    #classes_to_extract = ['C0', 'C1', 'C2', 'C3', 'C4']
+    classes_to_extract = ['C_DEBUG']
     for cls in classes_to_extract:
         """LOAD RAW DATA"""
         epoched, offset_to_subtract = get_epoched_data(my_cfg, cls)
@@ -88,10 +90,15 @@ def get_dataloader_objects(my_cfg):
         test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
         input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
 
+        return train_dl, val_dl, test_dl, input_dimension_
 
-def get_epoched_data(config, class_to_extract):
+def get_epoched_data(my_cfg, class_to_extract):
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
-    if class_to_extract == 'C0':
+    if class_to_extract == 'C_DEBUG':
+        offset_to_subtract = 1
+        runs = range(1, 14)
+        selected_classes = None # if none all are selected
+    elif class_to_extract == 'C0':
         offset_to_subtract = 1
         runs = range(1, 14)
         selected_classes = dict(resting=1)
@@ -114,18 +121,20 @@ def get_epoched_data(config, class_to_extract):
 
 
     # Load the data
-    subjects = config.selected_subjects
+    subjects = my_cfg.selected_subjects
     raw_EDF_list = []
-    raw_data_path = 'RawDataMNE'
-
-    # Dirty hack: If we are on the cluster, the path to the RawDataMNE changes
-    this_path = os.path.dirname(os.path.abspath(__file__))
-    if not "MLCourseProject" in this_path:
-        # We are (most likely ;)...) on the cluster
-        raw_data_path = '../../var/tmp/RawDataMNE'
+    current_path = os.path.abspath(__file__)
+    print(current_path)
+    if 'studi7/home/ProjectCode/' in current_path:
+        data_path = '../../var/tmp/RawDataMNE'
+        print('We are on the cluster...')
+        data_path = '../../var/tmp/RawDataMNE'
+    else:
+        print('We are not on the cluster...')
+        data_path = 'RawDataMNE'
 
     for subj in subjects:
-        fileNames = eegbci.load_data(subj, runs, path=raw_data_path)
+        fileNames = eegbci.load_data(subj, runs, path=data_path)
         raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
         raw_EDF_list.append(concatenate_raws(raw_EDF))
 
@@ -133,8 +142,17 @@ def get_epoched_data(config, class_to_extract):
 
     # Pick the events and select the epochs from them
     events = find_events(raw, shortest_event=0)
-    epoched = Epochs(raw, events, event_id=selected_classes, tmin=config.time_before_event_s,
-                     tmax=config.time_after_event_s, baseline=(None, 0), picks=None,
+    epoched = Epochs(raw, events, event_id=selected_classes, tmin=my_cfg.time_before_event_s,
+                     tmax=my_cfg.time_after_event_s, baseline=(None, 0), picks=None,
                      preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
                      detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=None)
+
+
+    """SHOW DATA"""
+    # Show some sample EEG data if desired
+    if my_cfg.show_eeg_sample_plot:
+        eeg_sample_plot(my_cfg.subjectIdx_to_plot, my_cfg.seconds_to_plot, my_cfg.channels_to_plot, raw_EDF_list)
+    if my_cfg.show_events_distribution:
+        events_distribution_plot(epoched.events)
+
     return epoched, offset_to_subtract

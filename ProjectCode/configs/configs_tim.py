@@ -6,7 +6,6 @@ from configs.defaultconfig import DefaultConfig
 class ConfigNo01(DefaultConfig):
     # Overwriting base class attributes
     num_of_epochs = 1
-
     # Give it a unique name and a brief description if you like
     config_name = 'simpleNN'
     config_remark = 'This is a simple NN test.. nothing serious'
@@ -21,9 +20,9 @@ class ConfigNo02(DefaultConfig):
                         50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
                         60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
                         70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
-                        80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
-                        90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
-                        100, 101, 102, 103, 104, 105, 106, 107, 108, 109]""" #88 is errorous??? 92 100
+                        80, 81, 82, 83, 84, 85, 86, 87,, 89,
+                        90, 91, 93, 94, 95, 96, 97, 98, 99,
+                        101, 102, 103, 104, 105, 106, 107, 108, 109]""" #88 is errorous??? 92 100
     selected_subjects = [1]
     # Give it a unique name and a brief description if you like
     config_name = 'example1'
@@ -38,5 +37,5 @@ class ConfigNo03(DefaultConfig):
     config_remark = 'Super crazy network tested with normal settings'
 
 # Put them all in a list
-list_of_configs = [ConfigNo02]
+list_of_configs = [ConfigNo01]
 
