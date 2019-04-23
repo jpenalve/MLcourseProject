@@ -1,7 +1,7 @@
 from mne.datasets import eegbci
 from mne.io import concatenate_raws, read_raw_edf
 from mne import Epochs, find_events
-
+import os
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
 annotation channel).
@@ -28,8 +28,19 @@ def get_epoched_data(config):
     subjects = config.selected_subjects
     runs = config.selected_runs
     raw_EDF_list = []
+
+    current_path = os.path.abspath(__file__)
+    print(current_path)
+    if 'studi7/home/ProjectCode/' in current_path:
+        data_path = '../../var/tmp/RawDataMNE'
+        #print('We are on the cluster...')
+        data_path = '../../var/tmp/RawDataMNE'
+    else:
+        #print('We are not on the cluster...')
+        data_path = 'RawDataMNE'
+
     for subj in subjects:
-        fileNames = eegbci.load_data(subj, runs, path='RawDataMNE')
+        fileNames = eegbci.load_data(subj, runs, path=data_path)
         raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
         raw_EDF_list.append(concatenate_raws(raw_EDF))
 
