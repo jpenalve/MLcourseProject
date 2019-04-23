@@ -1,5 +1,5 @@
 from configs.defaultconfig import DefaultConfig
-# ==> Subjects 88, 92 and 100 have overlapping events. Please exclude these subjects.
+# ==> Subjects 88, 89, 92 and 100 have overlapping events. Please exclude these subjects.
 
 
 # Own configs follow here
