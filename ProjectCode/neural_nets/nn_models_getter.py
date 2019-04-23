@@ -15,6 +15,7 @@ def get_nn_model(model_name, input_dimension, output_dimension):
     elif model_name == 'ConvNet01':
         model = conv.ConvNet01()
     elif model_name == 'EEGNet':
+        print('NOT WORKING CURRENTLY')  # TODO
         model = conv.EEGNet()
     else:
         raise Exception('Mismatch between nn_list in config and available names in get_nn_model')

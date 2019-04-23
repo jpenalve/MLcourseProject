@@ -29,7 +29,7 @@ class DefaultConfig:
     # Batch Size
     batch_size = 50
     # Select network architecture according to the nn_list(predefined in nn_models_getter.py)
-    nn_selection_idx = 3
+    nn_selection_idx = 1
     nn_list = ['SimpleFC', 'DeepFC', 'EEGNet', 'ConvNet01']  # Extend if you want more. Add them in the nn_models_getter.py module
 
     # Select optimizer parameters

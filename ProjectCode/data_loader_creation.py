@@ -89,8 +89,9 @@ def get_dataloader_objects(my_cfg):
         val_dl = DataLoader(val_ds, my_cfg.batch_size, shuffle=False)
         test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
         input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
+        output_dimension_ = epoched.events.shape[1]
 
-        return train_dl, val_dl, test_dl, input_dimension_
+        return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
 def get_epoched_data(my_cfg, class_to_extract):
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!

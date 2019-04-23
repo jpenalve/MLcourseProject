@@ -14,13 +14,14 @@ myList = configs_tim.list_of_configs
  
 for my_cfg in myList:
 
-    train_dl, val_dl, test_dl, input_dimension_ = get_dataloader_objects(my_cfg)
+    """ PREPARE DATALOADERS """
+    train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
 
 
     """CLASSIFICATION"""
     # Get the model
     model_untrained = get_nn_model(my_cfg.nn_list[my_cfg.nn_selection_idx], input_dimension=input_dimension_,
-                                   output_dimension=len(my_cfg.selected_classes))
+                                   output_dimension=output_dimension_)
 
     # Get the optimizer
     optimizer = get_optimizer(my_cfg.optimizer_list[my_cfg.optimizer_selection_idx], my_cfg.learning_rate,
