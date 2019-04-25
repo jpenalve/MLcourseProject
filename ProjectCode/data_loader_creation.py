@@ -136,7 +136,7 @@ def get_epoched_data(my_cfg, class_to_extract):
 
     for subj in subjects:
         fileNames = eegbci.load_data(subj, runs, path=data_path)
-        raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose=my_cfg.verbose) for f in fileNames]
+        raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
         raw_EDF_list.append(concatenate_raws(raw_EDF))
 
     raw = concatenate_raws(raw_EDF_list)
