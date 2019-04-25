@@ -28,6 +28,8 @@ class ConfigNo01(DefaultConfig):
     momentum = 0  # Relevant only for SGDMomentum, else: ignored
     optimizer_list = ['Adam', 'SGD', 'SGDMomentum']  # Extend if you want more. Add them in the optimizers.py module
     optimizer_selection_idx = 1  # Idx corresponds to entry optimizer_list (find below)
+    
+    verbose = 'WARNING'
 
 
 # Put them all in a list

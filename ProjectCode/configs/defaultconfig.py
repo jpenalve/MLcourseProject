@@ -50,6 +50,10 @@ class DefaultConfig:
     num_of_epochs = 3
     use_early_stopping = False
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)
+    
+    
+    # Warning messages for MNE related stuff
+    verbose = None
 
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to

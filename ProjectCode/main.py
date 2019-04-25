@@ -10,7 +10,7 @@ from classification_results import results_storer
 """ USER: SELECT THE CONFIGURATION YOU NEED """
 myList = configs_tim.list_of_configs
 #myList = configs_joaquin.list_of_configs
-#myList = configs_oezhan.list_of_configs
+#myList = configs_ozhan.list_of_configs
  
 for my_cfg in myList:
 
