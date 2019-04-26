@@ -1,6 +1,6 @@
 # Here we define the different dataset classes we possibly need for different approaches
 from torch.utils.data import Dataset
-
+import torch
 
 # We do no transformation, just transforming to tensor
 class ChannelsVoltageDataset(Dataset):

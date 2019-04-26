@@ -22,7 +22,7 @@ def get_nn_model(model_name, input_dimension, output_dimension):
 
     # Transfer model to gpu if possible
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    print(device, "Will be used for training of this model.")
+    print(device, "will be used for training of this model.")
     if (device == torch.device("cuda")) and (torch.cuda.device_count() > 1):
         print("You have", torch.cuda.device_count(), "GPUs for training!")
         model = nn.DataParallel(model)

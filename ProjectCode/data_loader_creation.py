@@ -8,6 +8,7 @@ from mne.io import concatenate_raws, read_raw_edf
 from mne import Epochs, find_events
 import os
 from visualisations import eeg_sample_plot, events_distribution_plot
+import torch
 
 
 """
@@ -67,22 +68,34 @@ def get_dataloader_objects(my_cfg):
         # Convert data from volt to millivolt
         # Pytorch expects float32 for input and int64 for labels.
         event_current_class_column = 2 #  event_previous_class_column = 1   event_start_sample_column = 0
-        data = (epoched.get_data() * 1e6).astype(np.float32)  # Get all epochs as a 3D array.
+        
+        data = (epoched.get_data() * 1e6)  # Get all epochs as a 3D array.
+        data = data[:,:-1,:] # We do not want to feed in the labels as inputs
+        
         # -offset_to_subtract -> Classes made matching to CX definition
-        labels = (epoched.events[:, event_current_class_column] - offset_to_subtract).astype(np.int64)
+        labels = (epoched.events[:, event_current_class_column] - offset_to_subtract)
+            
+        # Split data in train test and validation set. Stratify makes sure the label distribution is the same
+        temp_data, test_data, temp_labels, test_labels = train_test_split(data, labels, test_size=my_cfg.test_split,
+                                                                                      shuffle=True, stratify=labels)
 
-        # Split data in train test and validation set
-        train_data_temp, test_data, train_labels_temp, test_labels = train_test_split(data, labels, test_size=my_cfg.test_split,
-                                                                                      shuffle=True)
-        train_data, val_data, train_labels, val_labels = train_test_split(train_data_temp, train_labels_temp,
-                                                                          test_size=my_cfg.validation_split, shuffle=True)
-        myTransforms = Compose([ToTensor()])  # TODO: This has to be more sophisticated. Should also be list selectable like the optimizers
+        train_data, val_data, train_labels, val_labels = train_test_split(temp_data, temp_labels,
+                                                                          test_size=my_cfg.validation_split, shuffle=True, stratify=temp_labels)
+        
+        # Convert them to Tensors already. torch.float is needed for GPU.
+        train_data = torch.tensor(train_data, dtype=torch.float)
+        train_labels = torch.tensor(train_labels, dtype=torch.long)
+        val_data = torch.tensor(val_data, dtype=torch.float)
+        val_labels = torch.tensor(val_labels, dtype=torch.long)
+        test_data = torch.tensor(test_data, dtype=torch.float)
+        test_labels = torch.tensor(test_labels, dtype=torch.long)
+        
+        myTransforms = None  # TODO: This has to be more sophisticated. Should also be list selectable like the optimizers
 
         # Define datasets
         train_ds = ChannelsVoltageDataset(train_data, train_labels, myTransforms) # TODO: Should also be list selectable like the optimizers
         val_ds = ChannelsVoltageDataset(val_data, val_labels, myTransforms)
         test_ds = ChannelsVoltageDataset(test_data, test_labels, myTransforms)
-        print("train_ds.shape", train_ds.data.shape)
 
         # Define data loader
         train_dl = DataLoader(train_ds, my_cfg.batch_size, shuffle=True)
@@ -92,8 +105,11 @@ def get_dataloader_objects(my_cfg):
         output_dimension_ = epoched.events.shape[1]
 
         return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
+        
 
 def get_epoched_data(my_cfg, class_to_extract):
+    
+    print("Data is being loaded using MNE...")
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     if class_to_extract == 'C_DEBUG':
         offset_to_subtract = 1
@@ -125,7 +141,7 @@ def get_epoched_data(my_cfg, class_to_extract):
     subjects = my_cfg.selected_subjects
     raw_EDF_list = []
     current_path = os.path.abspath(__file__)
-    print(current_path)
+    #print(current_path)
     if 'studi7/home/ProjectCode/' in current_path:
         data_path = '../../var/tmp/RawDataMNE'
         print('We are on the cluster...')
@@ -156,4 +172,6 @@ def get_epoched_data(my_cfg, class_to_extract):
     if my_cfg.show_events_distribution:
         events_distribution_plot(epoched.events)
 
+    print("...data loading with MNE was finished. \n")
+    
     return epoched, offset_to_subtract

@@ -10,8 +10,8 @@ class Simple(nn.Module):
         )
 
     def forward(self, x):
-        output = x.view(x.size(0), -1)
-        return self.layers(output)
+        x = x.view(x.size(0), -1)
+        return self.layers(x)
 
 
 # Fully Connected (FC) little deep network
@@ -20,6 +20,12 @@ class Deep(nn.Module):
         super().__init__()
         self.layers = nn.Sequential(
             nn.Linear(input_dimension, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
             nn.ReLU(),
             nn.Linear(128, 128),
             nn.ReLU(),
