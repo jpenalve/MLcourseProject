@@ -1,5 +1,5 @@
 from configs.defaultconfig import DefaultConfig
-
+# ==> Make sure to pick enough subjects! Otherwise baseline has too few labels!
 
 # Own configs follow here
 class ConfigNo01(DefaultConfig):
