@@ -4,7 +4,7 @@ import time
 from datetime import timedelta
 from copy import deepcopy
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-
+import matplotlib.pyplot as plt
 
 def train(model, train_loader, optimizer, loss_fn, print_every=100):
     '''
@@ -49,6 +49,7 @@ def test(model, test_loader, loss_fn, print_loss=False):
     accuracy = 100.0 * n_correct / len(test_loader.dataset)
     if print_loss:
         print('--> Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
+        print("\n\n")
     return average_loss, accuracy
 
 
@@ -95,5 +96,68 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
                 model = best_model
                 break
     time_spent_for_training_s = str(timedelta(seconds=time.time()-time_start))
-    print("Time spend for training: ", time_spent_for_training_s, " hh:mm:ss.ms")
+    print("Time spend for training: ", time_spent_for_training_s, " hh:mm:ss.ms \n")
     return train_losses, train_accuracies, val_losses, val_accuracies, model, time_spent_for_training_s
+
+
+
+
+
+def plot_all_metrics(training_curves):
+    
+    plt.figure(figsize=(20, 6))
+    plt.subplot(121)
+    keys = []
+    for k, v in sorted(training_curves.items()):
+        plt.plot(np.arange(len(v[1])), v[1])
+        keys.append("tra_"+k)
+    for k, v in sorted(training_curves.items()):
+        plt.plot(np.arange(len(v[3])), v[3])
+        keys.append("val_"+k)
+    plt.title('Accuracy for different optimizers')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.legend(keys)
+    plt.grid(True)
+    
+    plt.subplot(122)
+    keys = []
+    for k, v in sorted(training_curves.items()):
+        plt.plot(np.arange(len(v[0])), v[0])
+        keys.append("tra_"+k)
+    for k, v in sorted(training_curves.items()):
+        plt.plot(np.arange(len(v[2])), v[2])
+        keys.append("val_"+k)
+    plt.title('Loss for different optimizers')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend(keys)
+    plt.grid(True)
+    
+    
+    
+def plot_val_metrics(training_curves):
+    
+    plt.figure(figsize=(20, 6))
+    plt.subplot(121)
+    keys = []
+    for k, v in sorted(training_curves.items()):
+        plt.plot(np.arange(len(v[3])), v[3])
+        keys.append("val_"+k)
+    plt.title('Validation Accuracy for different optimizers')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.legend(keys)
+    plt.grid(True)
+    
+    plt.subplot(122)
+    keys = []
+    for k, v in sorted(training_curves.items()):
+        plt.plot(np.arange(len(v[2])), v[2])
+        keys.append("val_"+k)
+    plt.title('Validation Loss for different optimizers')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend(keys)
+    plt.grid(True)
+

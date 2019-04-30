@@ -22,12 +22,15 @@ class DefaultConfig:
     channels_to_plot = 5
     # Show events distribution over selected_subjects
     show_events_distribution = False
+    
+    
+    
     # Train / Test / Validation Split
     train_split = 0.9
     test_split = 0.1
     validation_split = 0.1  # This is the share of the train_split
-    # Batch Size
-    batch_size = 50
+    # Batch Size. Batch size should be powers of 2 for better utilization of GPUs.
+    batch_size = 64 
     # Select network architecture according to the nn_list(predefined in nn_models_getter.py)
     nn_selection_idx = 1
     nn_list = ['SimpleFC', 'DeepFC', 'EEGNet', 'ConvNet01']  # Extend if you want more. Add them in the nn_models_getter.py module
@@ -47,6 +50,10 @@ class DefaultConfig:
     num_of_epochs = 3
     use_early_stopping = False
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)
+    
+    
+    # Warning messages for MNE related stuff
+    verbose = None
 
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
