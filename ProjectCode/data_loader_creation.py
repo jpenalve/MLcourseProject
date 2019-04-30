@@ -98,7 +98,7 @@ def get_dataloader_objects(my_cfg):
     val_dl = DataLoader(val_ds, my_cfg.batch_size, shuffle=False)
     test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
     input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
-    output_dimension_ = epoched.events.shape[1]
+    output_dimension_ = np.max(labels) + 1  # Classes start at 0, therefore +1 offset
 
     return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
@@ -114,7 +114,6 @@ def get_epoched_data(my_cfg):
 
     # Load the data
     subjects = my_cfg.selected_subjects
-    raw_EDF_list = []
     current_path = os.path.abspath(__file__)
     # print(current_path)
     if 'studi7/home/ProjectCode/' in current_path:
@@ -129,6 +128,7 @@ def get_epoched_data(my_cfg):
     for idx, runs in enumerate(arr_runs):
         tmp_classes = arr_selected_classes[idx]
         tmp_offset = arr_labels_offsets[idx]
+        raw_EDF_list = []
 
         for subj in subjects:
             fileNames = eegbci.load_data(subj, runs, path=data_path)
