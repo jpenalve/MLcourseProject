@@ -5,11 +5,10 @@ from torch.utils.data import DataLoader
 from datasets import ChannelsVoltageDataset
 from mne.datasets import eegbci
 from mne.io import concatenate_raws, read_raw_edf
-from mne import Epochs, find_events
+from mne import Epochs, find_events, concatenate_epochs
 import os
 from visualisations import eeg_sample_plot, events_distribution_plot
 import torch
-
 
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
@@ -40,108 +39,83 @@ run 	        task
 5, 9, 13 	    Motor execution: hands vs feet
 6, 10, 14 	    Motor imagery: hands vs feet
 
-
-==> We map the classes the following:
-    C0  Rest
-    C1  Left Fist   (real or imaged) (in runs 3, 4, 7, 8, 11, and 12) (T1)
-    C2  Both Fists  (real or imaged) (in runs 5, 6, 9, 10, 13, and 14) (T1)
-    C3  Right Fist  (real or imaged) (in runs 3, 4, 7, 8, 11, and 12) (T2)
-    C4  Both Feet   (real or imaged) (in runs 5, 6, 9, 10, 13, and 14) (T2)
-
-    find T2 and make it C3
-    find T2 and make it C4
-
-    find T1 and make it C2
+POSSIBLE LABELS                 APPEAR IN RUNS      ACTUAL LABEL IN RUNS    OUR OFFSET NEEDED
+0 Baseline, eyes open           1                   T0(=1)                  1
+1 Baseline, eyes closed         2                   T0(=1)                  0
+2 Motor Ex: Left Hand           3,7,11              T1(=2)                  0
+3 Motor Ex: Right Hand          3,7,11              T2(=3)                  -1
+4 Motor Im: Left Hand           4,8,12              T1(=2)                  -2
+5 Motor Im: Right Hand          4,8,12              T2(=3)                  -2
+6 Motor Ex: Both Hands          5,9,13              T1(=2)                  -4
+7 Motor Ex: Both Feet           5,9,13              T2(=3)                  -4
+8 Motor Im: Both Hands          6,10,14             T1(=2)                  -6
+9 Motor Im: Both Feet           6,10,14             T2(=3)                  -6
 
 """
 
 
 def get_dataloader_objects(my_cfg):
-    # We want the classes as defined above
-    #classes_to_extract = ['C0', 'C1', 'C2', 'C3', 'C4']
-    classes_to_extract = ['C_DEBUG']
-    for cls in classes_to_extract:
-        """LOAD RAW DATA"""
-        epoched, offset_to_subtract = get_epoched_data(my_cfg, cls)
+    """LOAD RAW DATA"""
+    epoched = get_epoched_data(my_cfg)
 
-        """DATA PREPARATION"""
-        # Convert data from volt to millivolt
-        # Pytorch expects float32 for input and int64 for labels.
-        event_current_class_column = 2 #  event_previous_class_column = 1   event_start_sample_column = 0
-        
-        data = (epoched.get_data() * 1e6)  # Get all epochs as a 3D array.
-        data = data[:,:-1,:] # We do not want to feed in the labels as inputs
-        
-        # -offset_to_subtract -> Classes made matching to CX definition
-        labels = (epoched.events[:, event_current_class_column] - offset_to_subtract)
-            
-        # Split data in train test and validation set. Stratify makes sure the label distribution is the same
-        temp_data, test_data, temp_labels, test_labels = train_test_split(data, labels, test_size=my_cfg.test_split,
-                                                                                      shuffle=True, stratify=labels)
+    """DATA PREPARATION"""
+    # Convert data from volt to millivolt
+    # Pytorch expects float32 for input and int64 for labels.
+    event_current_class_column = 2  # event_previous_class_column = 1   event_start_sample_column = 0
 
-        train_data, val_data, train_labels, val_labels = train_test_split(temp_data, temp_labels,
-                                                                          test_size=my_cfg.validation_split, shuffle=True, stratify=temp_labels)
-        
-        # Convert them to Tensors already. torch.float is needed for GPU.
-        train_data = torch.tensor(train_data, dtype=torch.float)
-        train_labels = torch.tensor(train_labels, dtype=torch.long)
-        val_data = torch.tensor(val_data, dtype=torch.float)
-        val_labels = torch.tensor(val_labels, dtype=torch.long)
-        test_data = torch.tensor(test_data, dtype=torch.float)
-        test_labels = torch.tensor(test_labels, dtype=torch.long)
-        
-        myTransforms = None  # TODO: This has to be more sophisticated. Should also be list selectable like the optimizers
+    data = (epoched.get_data() * 1e6)  # Get all epochs as a 3D array.
+    data = data[:, :-1, :]  # We do not want to feed in the labels as inputs
 
-        # Define datasets
-        train_ds = ChannelsVoltageDataset(train_data, train_labels, myTransforms) # TODO: Should also be list selectable like the optimizers
-        val_ds = ChannelsVoltageDataset(val_data, val_labels, myTransforms)
-        test_ds = ChannelsVoltageDataset(test_data, test_labels, myTransforms)
+    # -offset_to_subtract -> Classes made matching to CX definition
+    labels = epoched.events[:, event_current_class_column]
 
-        # Define data loader
-        train_dl = DataLoader(train_ds, my_cfg.batch_size, shuffle=True)
-        val_dl = DataLoader(val_ds, my_cfg.batch_size, shuffle=False)
-        test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
-        input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
-        output_dimension_ = epoched.events.shape[1]
+    # Split data in train test and validation set. Stratify makes sure the label distribution is the same
+    temp_data, test_data, temp_labels, test_labels = train_test_split(data, labels, test_size=my_cfg.test_split,
+                                                                      shuffle=True, stratify=labels)
 
-        return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
-        
+    train_data, val_data, train_labels, val_labels = train_test_split(temp_data, temp_labels,
+                                                                      test_size=my_cfg.validation_split, shuffle=True,
+                                                                      stratify=temp_labels)
 
-def get_epoched_data(my_cfg, class_to_extract):
-    
+    # Convert them to Tensors already. torch.float is needed for GPU.
+    train_data = torch.tensor(train_data, dtype=torch.float)
+    train_labels = torch.tensor(train_labels, dtype=torch.long)
+    val_data = torch.tensor(val_data, dtype=torch.float)
+    val_labels = torch.tensor(val_labels, dtype=torch.long)
+    test_data = torch.tensor(test_data, dtype=torch.float)
+    test_labels = torch.tensor(test_labels, dtype=torch.long)
+
+    myTransforms = None  # TODO: This has to be more sophisticated. Should also be list selectable like the optimizers
+
+    # Define datasets
+    train_ds = ChannelsVoltageDataset(train_data, train_labels,
+                                      myTransforms)  # TODO: Should also be list selectable like the optimizers
+    val_ds = ChannelsVoltageDataset(val_data, val_labels, myTransforms)
+    test_ds = ChannelsVoltageDataset(test_data, test_labels, myTransforms)
+
+    # Define data loader
+    train_dl = DataLoader(train_ds, my_cfg.batch_size, shuffle=True)
+    val_dl = DataLoader(val_ds, my_cfg.batch_size, shuffle=False)
+    test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
+    input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
+    output_dimension_ = np.max(labels) + 1  # Classes start at 0, therefore +1 offset
+
+    return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
+
+
+def get_epoched_data(my_cfg):
     print("Data is being loaded using MNE...")
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
-    if class_to_extract == 'C_DEBUG':
-        offset_to_subtract = 1
-        runs = range(1, 14)
-        selected_classes = None # if none all are selected
-    elif class_to_extract == 'C0':
-        offset_to_subtract = 1
-        runs = range(1, 14)
-        selected_classes = dict(resting=1)
-    elif class_to_extract == 'C1':
-        offset_to_subtract = 1
-        runs = [3, 4, 7, 8, 11, 12]
-        selected_classes = dict(both_hands_or_left_fist=2)
-    elif class_to_extract == 'C2':
-        offset_to_subtract = 0
-        runs = [5, 6, 9, 10, 13, 14]
-        selected_classes = dict(both_hands_or_left_fist=2)
-    elif class_to_extract == 'C3':
-        offset_to_subtract = 0
-        runs = [3, 4, 7, 8, 11, 12]
-        selected_classes = dict(both_feet_or_right_fist=3)
-    elif class_to_extract == 'C4':
-        offset_to_subtract = -1
-        runs = [5, 6, 9, 10, 13, 14]
-        selected_classes = dict(both_feet_or_right_fist=3)
+    # -> We want to split up the dataset in all classes there are
 
+    arr_runs = np.array([1, 2, [3, 7, 11], [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    arr_selected_classes = np.array([1, 1, [2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
+    arr_labels_offsets = np.array([1, 0, 0, -1, -2, -4, -6])
 
     # Load the data
     subjects = my_cfg.selected_subjects
-    raw_EDF_list = []
     current_path = os.path.abspath(__file__)
-    #print(current_path)
+    # print(current_path)
     if 'studi7/home/ProjectCode/' in current_path:
         data_path = '../../var/tmp/RawDataMNE'
         print('We are on the cluster...')
@@ -150,19 +124,36 @@ def get_epoched_data(my_cfg, class_to_extract):
         print('We are not on the cluster...')
         data_path = 'RawDataMNE'
 
-    for subj in subjects:
-        fileNames = eegbci.load_data(subj, runs, path=data_path)
-        raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
-        raw_EDF_list.append(concatenate_raws(raw_EDF))
+    list_epochs = []
+    for idx, runs in enumerate(arr_runs):
+        tmp_classes = arr_selected_classes[idx]
+        tmp_offset = arr_labels_offsets[idx]
+        raw_EDF_list = []
 
-    raw = concatenate_raws(raw_EDF_list)
+        for subj in subjects:
+            fileNames = eegbci.load_data(subj, runs, path=data_path)
+            raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
+            raw_EDF_list.append(concatenate_raws(raw_EDF))
 
-    # Pick the events and select the epochs from them
-    events = find_events(raw, shortest_event=0)
-    epoched = Epochs(raw, events, event_id=selected_classes, tmin=my_cfg.time_before_event_s,
-                     tmax=my_cfg.time_after_event_s, baseline=(None, 0), picks=None,
-                     preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
-                     detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=my_cfg.verbose)
+        raw = concatenate_raws(raw_EDF_list)
+
+        # Pick the events
+        events = find_events(raw, shortest_event=0)
+        # Subtract the offset to make the label match
+        events[:, 2] = events[:, 2] - tmp_offset
+        tmp_classes = (tmp_classes - tmp_offset).tolist()
+        # Extract the epochs
+        tmp_epoched = Epochs(raw, events, event_id=tmp_classes, tmin=my_cfg.time_before_event_s,
+                          tmax=my_cfg.time_after_event_s, baseline=(None, 0), picks=None,
+                          preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
+                          detrend=None, on_missing='error', reject_by_annotation=True, metadata=None,
+                          verbose=my_cfg.verbose)
+
+        # Store epoch for later use
+        list_epochs.append(tmp_epoched)
+
+
+    epoched = concatenate_epochs(list_epochs)
 
 
     """SHOW DATA"""
@@ -173,5 +164,5 @@ def get_epoched_data(my_cfg, class_to_extract):
         events_distribution_plot(epoched.events)
 
     print("...data loading with MNE was finished. \n")
-    
-    return epoched, offset_to_subtract
+
+    return epoched
