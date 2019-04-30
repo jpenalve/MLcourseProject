@@ -40,18 +40,18 @@ run 	        task
 5, 9, 13 	    Motor execution: hands vs feet
 6, 10, 14 	    Motor imagery: hands vs feet
 
+POSSIBLE LABELS                 APPEAR IN RUNS      ACTUAL LABEL IN RUNS    OUR OFFSET NEEDED
+0 Baseline, eyes open           1                   T0(=1)                  0
+1 Baseline, eyes closed         2                   T0(=1)                  -1
+2 Motor Ex: Left Hand           3,7,11              T1(=2)                  0
+3 Motor Ex: Right Hand          3,7,11              T2(=3)                  0
+4 Motor Im: Left Hand           4,8,12              T1(=2)                  2
+5 Motor Im: Right Hand          4,8,12              T2(=3)                  2
+6 Motor Ex: Both Hands          5,9,13              T1(=2)                  4
+7 Motor Ex: Both Feet           5,9,13              T2(=3)                  4
+8 Motor Im: Both Hands          6,10,14             T1(=2)                  6
+9 Motor Im: Both Feet           6,10,14             T2(=3)                  6
 
-==> We map the classes the following:
-    C0  Rest
-    C1  Left Fist   (real or imaged) (in runs 3, 4, 7, 8, 11, and 12) (T1)
-    C2  Both Fists  (real or imaged) (in runs 5, 6, 9, 10, 13, and 14) (T1)
-    C3  Right Fist  (real or imaged) (in runs 3, 4, 7, 8, 11, and 12) (T2)
-    C4  Both Feet   (real or imaged) (in runs 5, 6, 9, 10, 13, and 14) (T2)
-
-    find T2 and make it C3
-    find T2 and make it C4
-
-    find T1 and make it C2
 
 """
 
