@@ -12,6 +12,7 @@ It is proven that thinking about different movement that one plans to execute, g
 ==> Subjects 88, 92 and 100 have overlapping events. Please exclude these subjects.
 
 We will classify the following:
+
 LABELS	|	DESCRIPTION
 ------------------------------
 0 	|	Baseline, eyes open           
