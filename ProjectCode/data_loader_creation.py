@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from datasets import ChannelsVoltageDataset
 from mne.datasets import eegbci
 from mne.io import concatenate_raws, read_raw_edf
-from mne import Epochs, find_events
+from mne import Epochs, find_events, concatenate_epochs
 import os
 from visualisations import eeg_sample_plot, events_distribution_plot
 import torch
@@ -40,17 +40,16 @@ run 	        task
 6, 10, 14 	    Motor imagery: hands vs feet
 
 POSSIBLE LABELS                 APPEAR IN RUNS      ACTUAL LABEL IN RUNS    OUR OFFSET NEEDED
-0 Baseline, eyes open           1                   T0(=1)                  0
-1 Baseline, eyes closed         2                   T0(=1)                  -1
+0 Baseline, eyes open           1                   T0(=1)                  1
+1 Baseline, eyes closed         2                   T0(=1)                  0
 2 Motor Ex: Left Hand           3,7,11              T1(=2)                  0
-3 Motor Ex: Right Hand          3,7,11              T2(=3)                  0
-4 Motor Im: Left Hand           4,8,12              T1(=2)                  2
-5 Motor Im: Right Hand          4,8,12              T2(=3)                  2
-6 Motor Ex: Both Hands          5,9,13              T1(=2)                  4
-7 Motor Ex: Both Feet           5,9,13              T2(=3)                  4
-8 Motor Im: Both Hands          6,10,14             T1(=2)                  6
-9 Motor Im: Both Feet           6,10,14             T2(=3)                  6
-
+3 Motor Ex: Right Hand          3,7,11              T2(=3)                  -1
+4 Motor Im: Left Hand           4,8,12              T1(=2)                  -2
+5 Motor Im: Right Hand          4,8,12              T2(=3)                  -2
+6 Motor Ex: Both Hands          5,9,13              T1(=2)                  -4
+7 Motor Ex: Both Feet           5,9,13              T2(=3)                  -4
+8 Motor Im: Both Hands          6,10,14             T1(=2)                  -6
+9 Motor Im: Both Feet           6,10,14             T2(=3)                  -6
 
 """
 
@@ -107,8 +106,11 @@ def get_dataloader_objects(my_cfg):
 def get_epoched_data(my_cfg):
     print("Data is being loaded using MNE...")
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
-    runs = range(1, 14)
-    selected_classes = None  # if none all are selected
+    # -> We want to split up the dataset in all classes there are
+
+    arr_runs = np.array([1, 2, [3, 7, 11], [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    arr_selected_classes = np.array([1, 1, [2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
+    arr_labels_offsets = np.array([1, 0, 0, -1, -2, -4, -6])
 
     # Load the data
     subjects = my_cfg.selected_subjects
@@ -123,21 +125,37 @@ def get_epoched_data(my_cfg):
         print('We are not on the cluster...')
         data_path = 'RawDataMNE'
 
-    for subj in subjects:
-        fileNames = eegbci.load_data(subj, runs, path=data_path)
-        raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
-        raw_EDF_list.append(concatenate_raws(raw_EDF))
+    list_epochs = []
+    for idx, runs in enumerate(arr_runs):
+        tmp_classes = arr_selected_classes[idx]
+        tmp_offset = arr_labels_offsets[idx]
 
-    raw = concatenate_raws(raw_EDF_list)
+        for subj in subjects:
+            fileNames = eegbci.load_data(subj, runs, path=data_path)
+            raw_EDF = [read_raw_edf(f, preload=True, stim_channel='auto', verbose='WARNING') for f in fileNames]
+            raw_EDF_list.append(concatenate_raws(raw_EDF))
 
-    # Pick the events and select the epochs from them
-    events = find_events(raw, shortest_event=0)
-    epoched = Epochs(raw, events, event_id=selected_classes, tmin=my_cfg.time_before_event_s,
-                     tmax=my_cfg.time_after_event_s, baseline=(None, 0), picks=None,
-                     preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
-                     detrend=None, on_missing='error', reject_by_annotation=True, metadata=None, verbose=my_cfg.verbose)
+        raw = concatenate_raws(raw_EDF_list)
 
-    epoched.events[:, 2] = epoched.events[:, 2] - 1
+        # Pick the events
+        events = find_events(raw, shortest_event=0)
+        # Subtract the offset to make the label match
+        events[:, 2] = events[:, 2] - tmp_offset
+        tmp_classes = (tmp_classes - tmp_offset).tolist()
+        # Extract the epochs
+        tmp_epoched = Epochs(raw, events, event_id=tmp_classes, tmin=my_cfg.time_before_event_s,
+                          tmax=my_cfg.time_after_event_s, baseline=(None, 0), picks=None,
+                          preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
+                          detrend=None, on_missing='error', reject_by_annotation=True, metadata=None,
+                          verbose=my_cfg.verbose)
+
+        # Store epoch for later use
+        list_epochs.append(tmp_epoched)
+
+
+    epoched = concatenate_epochs(list_epochs)
+
+
     """SHOW DATA"""
     # Show some sample EEG data if desired
     if my_cfg.show_eeg_sample_plot:

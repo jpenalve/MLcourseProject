@@ -9,7 +9,7 @@ class ConfigNo01(DefaultConfig):
     # Give it a unique name and a brief description if you like
     config_name = 'simpleNN'
     config_remark = 'This is a simple NN test.. nothing serious'
-
+    show_events_distribution = True
 class ConfigNo02(DefaultConfig):
     # Overwriting base class attributes
     num_of_epochs = 5
