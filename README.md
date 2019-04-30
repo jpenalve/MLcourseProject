@@ -11,6 +11,22 @@ It is proven that thinking about different movement that one plans to execute, g
 
 ==> Subjects 88, 92 and 100 have overlapping events. Please exclude these subjects.
 
+We will classify the following:
+
+LABELS	|	DESCRIPTION
+------------------------------
+0 	|	Baseline, eyes open           
+1 	|	Baseline, eyes closed         
+2 	|	Motor execution: Left Hand           
+3 	|	Motor execution: Right Hand          
+4 	|	Motor imagery: Left Hand           
+5 	|	Motor imagery: Right Hand          
+6 	|	Motor execution: Both Hands          
+7 	|	Motor execution: Both Feet           
+8 	|	Motor Im: Both Hands          
+9 	|	Motor imagery: Both Feet           
+
+
 Note: In case enough data cannot be found, we will focus on EEG artifact removal, instead.
 
 # Steps
