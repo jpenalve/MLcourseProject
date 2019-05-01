@@ -53,7 +53,7 @@ def test(model, test_loader, loss_fn, print_loss=False):
     return average_loss, accuracy
 
 
-def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, scheduler=None, apply_early_stopping=False):
+def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, scheduler=None, apply_early_stopping=False, estop_patience=5):
     time_start = time.time()
     train_losses, train_accuracies = [], []
     val_losses, val_accuracies = [], []
@@ -61,7 +61,7 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
     if apply_early_stopping:
         best_val_loss = np.inf
         best_model = None
-        patience = 5  # if no improvement after 5 epochs, stop training
+        patience = estop_patience  # if no improvement after estop_patience epochs, stop training
         counter = 0
     # Track learning rate
     previous_learning_rate =  optimizer.param_groups[0]['lr'];

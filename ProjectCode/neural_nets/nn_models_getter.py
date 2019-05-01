@@ -13,14 +13,13 @@ def get_nn_model(model_name, input_dimension, output_dimension):
     elif model_name == 'DeepFC':
         model = fc.Deep(input_dimension, output_dimension)
     elif model_name == 'ConvNet01':
-        model = conv.ConvNet01()
+        model = conv.ConvNet01(output_dimension)
     elif model_name == 'ConvNet1D':
-        model = conv.ConvNet1D()
+        model = conv.ConvNet1D(output_dimension)
     elif model_name == 'ConvNet3D':
-        model = conv.ConvNet3D()
+        model = conv.ConvNet3D(output_dimension)
     elif model_name == 'EEGNet':
-        #print('NOT WORKING CURRENTLY')  # TODO
-        model = conv.EEGNet()
+        model = conv.EEGNet(output_dimension)
     else:
         raise Exception('Mismatch between nn_list in config and available names in get_nn_model')
 

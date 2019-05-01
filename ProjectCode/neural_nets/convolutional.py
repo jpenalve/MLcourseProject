@@ -5,7 +5,7 @@ import torch
 
 class ConvNet01(nn.Module):
 
-    def __init__(self):
+    def __init__(self, output_dimension):
         super(ConvNet01, self).__init__()
         # Define layers
         self.layer1 = nn.Sequential(nn.Conv2d(in_channels=1, out_channels=128, kernel_size=5, stride=1),
@@ -21,7 +21,7 @@ class ConvNet01(nn.Module):
                                       nn.Linear(384, 192),
                                       nn.LeakyReLU(0.2),
                                       nn.Dropout(0.5),
-                                      nn.Linear(192, 2))
+                                      nn.Linear(192, output_dimension))
 
     def forward(self, input):
         output = self.layer1(input)
@@ -33,7 +33,7 @@ class ConvNet01(nn.Module):
     
 class ConvNet1D(nn.Module):
 
-    def __init__(self):
+    def __init__(self, output_dimension):
         super(ConvNet1D, self).__init__()
         # Define layers
         self.convlayer = nn.Sequential(nn.Conv1d(in_channels=64, out_channels=128, kernel_size=5, stride=1),
@@ -50,7 +50,7 @@ class ConvNet1D(nn.Module):
                                       nn.Linear(384, 192),
                                       nn.LeakyReLU(0.2),
                                       nn.Dropout(0.5),
-                                      nn.Linear(192, 3))
+                                      nn.Linear(192, output_dimension))
 
     def forward(self, x):
         x = self.convlayer(x)
@@ -60,7 +60,7 @@ class ConvNet1D(nn.Module):
     
 class EEGNet(nn.Module):
     
-    def __init__(self):
+    def __init__(self, output_dimension):
         super(EEGNet, self).__init__()
         self.T = 817
 
@@ -83,7 +83,7 @@ class EEGNet(nn.Module):
         # FC Layer
         # NOTE: This dimension will depend on the number of timestamps per sample in your data.
         # I have 120 timepoints.
-        self.fc1 = nn.Linear(408, 3)
+        self.fc1 = nn.Linear(408, output_dimension)
 
     def forward(self, x):
         x = x.permute(0, 2, 1)
@@ -116,7 +116,32 @@ class EEGNet(nn.Module):
     
     
     
+class ConvNet3D(nn.Module):
     
+    # Will be done 3D
+    def __init__(self, output_dimension):
+        super(ConvNet3D, self).__init__()
+        # Define layers
+        self.convlayer = nn.Sequential(nn.Conv1d(in_channels=64, out_channels=128, kernel_size=5, stride=1),
+                                    nn.LeakyReLU(0.2),
+                                    nn.MaxPool2d(kernel_size=2, stride=2),
+                                    nn.Conv1d(in_channels=64, out_channels=64, kernel_size=5, stride=1),
+                                    nn.LeakyReLU(0.2),
+                                    nn.MaxPool2d(kernel_size=2, stride=2))
+
+
+        self.fclayers = nn.Sequential(nn.Linear(6432, 384),
+                                      nn.LeakyReLU(0.2),
+                                      nn.Dropout(0.5),
+                                      nn.Linear(384, 192),
+                                      nn.LeakyReLU(0.2),
+                                      nn.Dropout(0.5),
+                                      nn.Linear(192, output_dimension))
+
+    def forward(self, x):
+        x = self.convlayer(x)
+        x = x.view(x.size(0), -1)
+        return self.fclayers(x)
     
     
     

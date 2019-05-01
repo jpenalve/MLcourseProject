@@ -9,6 +9,8 @@ from mne import Epochs, find_events, concatenate_epochs
 import os
 from visualisations import eeg_sample_plot, events_distribution_plot
 import torch
+from tqdm import tqdm
+
 
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
@@ -104,7 +106,7 @@ def get_dataloader_objects(my_cfg):
 
 
 def get_epoched_data(my_cfg):
-    print("Data is being loaded using MNE...")
+    print("Data is being loaded using MNE...",flush=True)
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     # -> We want to split up the dataset in all classes there are
 
@@ -118,14 +120,14 @@ def get_epoched_data(my_cfg):
     # print(current_path)
     if 'studi7/home/ProjectCode/' in current_path:
         data_path = '../../var/tmp/RawDataMNE'
-        print('We are on the cluster...')
+        print('We are on the cluster...',flush=True)
         data_path = '../../var/tmp/RawDataMNE'
     else:
-        print('We are not on the cluster...')
+        print('We are not on the cluster...',flush=True)
         data_path = 'RawDataMNE'
 
     list_epochs = []
-    for idx, runs in enumerate(arr_runs):
+    for idx, runs in tqdm(enumerate(arr_runs),total=len(arr_runs)):
         tmp_classes = arr_selected_classes[idx]
         tmp_offset = arr_labels_offsets[idx]
         raw_EDF_list = []
@@ -138,7 +140,7 @@ def get_epoched_data(my_cfg):
         raw = concatenate_raws(raw_EDF_list)
 
         # Pick the events
-        events = find_events(raw, shortest_event=0)
+        events = find_events(raw, shortest_event=0, verbose=my_cfg.verbose)
         # Subtract the offset to make the label match
         events[:, 2] = events[:, 2] - tmp_offset
         tmp_classes = (tmp_classes - tmp_offset).tolist()

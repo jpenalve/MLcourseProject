@@ -18,16 +18,16 @@ class ConfigNo01(DefaultConfig):
     seconds_to_plot = 3
     channels_to_plot = 5
     
-    nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
-    nn_selection_idx = 1
+    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
 
     # Select optimizer parameters
     
     learning_rate = 1e-3
     weight_decay = 0.005
     momentum = 0  # Relevant only for SGDMomentum, else: ignored
-    optimizer_list = ['Adam', 'SGD', 'SGDMomentum']  # Extend if you want more. Add them in the optimizers.py module
-    optimizer_selection_idx = 1  # Idx corresponds to entry optimizer_list (find below)
+    optimizer_list = ['SGD']  # Extend if you want more. Add them in the optimizers.py module
+    optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
     
     verbose = 'CRITICAL'
     
@@ -49,15 +49,15 @@ class ConfigNo02(DefaultConfig):
     seconds_to_plot = 3
     channels_to_plot = 5
     
-    nn_list = ['SimpleFC', 'DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
-    nn_selection_idx = 1
+    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
 
     # Select optimizer parameters
     
     learning_rate = 1e-3
     weight_decay = 0.005
     momentum = 0.0  # Relevant only for SGDMomentum, else: ignored
-    optimizer_list = ['Adam', 'SGD', 'SGDMomentum']  # Extend if you want more. Add them in the optimizers.py module
+    optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
     optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
     
     verbose = 'CRITICAL'
@@ -95,33 +95,7 @@ class ConfigConv1D(DefaultConfig):
     
     batch_size = 64
     use_early_stopping = True
-    
-class ConfigConv3D(DefaultConfig):
-    # Overwriting base class attributes
-    num_of_epochs = 50
-
-    # Give it a unique name and a brief description if you like
-    config_name = 'ConvNet3D'
-    config_remark = 'This is a cov NN test.. I am serious'
-    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    
-    
-    nn_list = ['ConvNet3D']  # Extend if you want more. Add them in the nn_models_getter.py module
-    nn_selection_idx = 0
-    optimizer_list = ['SGD']  # Extend if you want more. Add them in the optimizers.py module
-    optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
-    
-
-    # Select optimizer parameters
-    learning_rate = 1e-4
-    weight_decay = 0.01
-    
-    verbose = 'CRITICAL'
-    
-    batch_size = 64
-    use_early_stopping = True
-    
-    
+        
 class EEGNet(DefaultConfig):
     # Overwriting base class attributes
     num_of_epochs = 100
@@ -146,7 +120,38 @@ class EEGNet(DefaultConfig):
     
     batch_size = 64
     use_early_stopping = True
+    es_patience = 20
 
+    
+    
+class ConfigConv3D(DefaultConfig):
+    # Overwriting base class attributes
+    num_of_epochs = 100
 
+    # Give it a unique name and a brief description if you like
+    config_name = 'ConvNet3D'
+    config_remark = 'This is a cov NN test.. I am serious'
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    
+    
+    nn_list = ['ConvNet3D']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
+    optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
+    
+
+    # Select optimizer parameters
+    learning_rate = 1e-3
+    weight_decay = 0.008
+    
+    verbose = 'CRITICAL'
+    
+    batch_size = 64
+    use_early_stopping = True
+    es_patience = 20
+    
+    
+    
+    
 # Put them all in a list
-list_of_configs = [EEGNet]
+list_of_configs = [ConfigConv3D]
