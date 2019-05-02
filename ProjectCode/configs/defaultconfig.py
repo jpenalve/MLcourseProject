@@ -52,6 +52,8 @@ class DefaultConfig:
     es_patience = 5
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)
     
+    normalize = True # Epoch normalization to mean=0.5, std=0.5
+    
     
     # Warning messages for MNE related stuff
     verbose = None

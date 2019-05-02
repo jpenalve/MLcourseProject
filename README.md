@@ -63,7 +63,13 @@ Inside the main.py: Select your config via myList = myconfig.list_of_configs
 
 In case of supplementary optimizers or nn, please add them to the optimizers.py or neural_nets package. Adapt the optimizer_list or nn_list (+nn_models_getter.py) the  in the defaultconifg.py respecitvely.
 
+Tensorboard:
+------------
+To run the TensorBoard, open a new terminal and run the command `$ tensorboard --logdir=./logs --port=6006`. Then, open http://localhost:6006/ on your web browser. If you have logs in your log dir, you will see nice graphs ;)
 
+(logdir should point to the log directory of your created logs)
+
+Logs can be created by calling write_logs_for_tensorboard() -> Feel free to modify, extend this function or add more tensorboard functions for further analysis of network performance.
 # TO DOs:
 ---------
 - Which classes to classify? (see main.py)
