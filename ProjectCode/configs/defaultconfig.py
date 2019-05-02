@@ -49,6 +49,7 @@ class DefaultConfig:
     # Set number of epochs for training
     num_of_epochs = 3
     use_early_stopping = False
+    es_patience = 5
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)
     
     
