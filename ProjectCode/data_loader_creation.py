@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
-from torchvision.transforms import Compose, ToTensor
 from torch.utils.data import DataLoader
 from datasets import ChannelsVoltageDataset
 from mne.datasets import eegbci

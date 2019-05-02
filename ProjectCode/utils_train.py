@@ -5,6 +5,8 @@ from datetime import timedelta
 from copy import deepcopy
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 import matplotlib.pyplot as plt
+from logger import Logger
+from visualisations import write_logs_for_tensorboard
 
 def train(model, train_loader, optimizer, loss_fn, print_every=100):
     '''
@@ -13,18 +15,20 @@ def train(model, train_loader, optimizer, loss_fn, print_every=100):
     model.train()
     losses = []
     n_correct = 0
+
     for iteration, (data, labels) in enumerate(train_loader):
         data = data.to(device)
         labels = labels.to(device)
-        output = model(data)
+        outputs = model(data)
         optimizer.zero_grad()
-        loss = loss_fn(output, labels)
+        loss = loss_fn(outputs, labels)
         loss.backward()
         optimizer.step()
-#         if iteration % print_every == 0:
-#             print('Training iteration {}: loss {:.4f}'.format(iteration, loss.item()))
         losses.append(loss.item())
-        n_correct += torch.sum(output.argmax(1) == labels).item()
+        predicted_labels = outputs.argmax(1)
+        n_correct += torch.sum(predicted_labels == labels).item()
+        if iteration % print_every == 0:
+            print('Training iteration {}: loss {:.4f}'.format(iteration, loss.item()))
     accuracy = 100.0 * n_correct / len(train_loader.dataset)
     return np.mean(np.array(losses)), accuracy
 
@@ -57,7 +61,7 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
     time_start = time.time()
     train_losses, train_accuracies = [], []
     val_losses, val_accuracies = [], []
-
+    logger = Logger('./logs')
     if apply_early_stopping:
         best_val_loss = np.inf
         best_model = None
@@ -95,6 +99,9 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
                 print('No improvement for {} epochs; training stopped.'.format(patience))
                 model = best_model
                 break
+        write_logs_for_tensorboard(val_loss, val_accuracy, epoch, model, logger)
+
+
     time_spent_for_training_s = str(timedelta(seconds=time.time()-time_start))
     print("Time spend for training: ", time_spent_for_training_s, " hh:mm:ss.ms \n")
     return train_losses, train_accuracies, val_losses, val_accuracies, model, time_spent_for_training_s

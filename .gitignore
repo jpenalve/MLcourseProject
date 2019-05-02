@@ -127,3 +127,7 @@ ProjectCode/\.idea/dictionaries/tim_f\.xml
 ProjectCode/classification_results/tmp_local/
 
 Literature/Deep Learning With Convolutional NeuralNetworks for EEG Decoding and Visualization\.pdf
+
+*.LUDWIG
+
+\.idea/

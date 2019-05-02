@@ -40,3 +40,25 @@ def events_distribution_plot(events):
             both feet (in runs 5, 6, 9, 10, 13, and 14)
     """
 
+def write_logs_for_tensorboard(loss, accuracy, step, model, logger):
+    # ================================================================== #
+    #                        Tensorboard Logging                         #
+    # ================================================================== #
+
+    # 1. Log scalar values (scalar summary)
+    info = {'loss': loss, 'accuracy': accuracy}
+
+    for tag, value in info.items():
+        logger.scalar_summary(tag, value, step + 1)
+
+    # 2. Log values and gradients of the parameters (histogram summary)
+    for tag, value in model.named_parameters():
+        tag = tag.replace('.', '/')
+        logger.histo_summary(tag, value.data.cpu().numpy(), step + 1)
+        logger.histo_summary(tag + '/grad', value.grad.data.cpu().numpy(), step + 1)
+
+    # 3. Log training data (image summary)
+    # info = {'data': data.view(-1, 28, 28)[:10].cpu().numpy()}
+
+    # for tag, data in info.items():
+    #    logger.image_summary(tag, data, iteration + 1)

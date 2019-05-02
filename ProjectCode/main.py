@@ -27,6 +27,7 @@ for my_cfg in myList:
     optimizer = get_optimizer(my_cfg.optimizer_list[my_cfg.optimizer_selection_idx], my_cfg.learning_rate,
                               model_untrained.parameters(), my_cfg.momentum, my_cfg.weight_decay)
 
+
     # Train and show validation loss
     train_losses, train_accuracies, val_losses, val_accuracies, model_trained, time_spent_for_training_s =\
         fit(train_dl, val_dl, model_untrained, optimizer, my_cfg.loss_fn, my_cfg.num_of_epochs)
