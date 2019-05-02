@@ -150,7 +150,7 @@ class ConfigConv3D(DefaultConfig):
     use_early_stopping = True
     es_patience = 20
     
-    
+    normalize = True
     
     
 # Put them all in a list

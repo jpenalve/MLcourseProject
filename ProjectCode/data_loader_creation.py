@@ -89,11 +89,12 @@ def get_dataloader_objects(my_cfg):
 
     myTransforms = None  # TODO: This has to be more sophisticated. Should also be list selectable like the optimizers
 
+
     # Define datasets
     train_ds = ChannelsVoltageDataset(train_data, train_labels,
-                                      myTransforms)  # TODO: Should also be list selectable like the optimizers
-    val_ds = ChannelsVoltageDataset(val_data, val_labels, myTransforms)
-    test_ds = ChannelsVoltageDataset(test_data, test_labels, myTransforms)
+                                      my_cfg.normalize)  # TODO: Should also be list selectable like the optimizers
+    val_ds = ChannelsVoltageDataset(val_data, val_labels, my_cfg.normalize)
+    test_ds = ChannelsVoltageDataset(test_data, test_labels, my_cfg.normalize)
 
     # Define data loader
     train_dl = DataLoader(train_ds, my_cfg.batch_size, shuffle=True)
