@@ -15,6 +15,8 @@ myList = configs_tim.list_of_configs
 for my_cfg in myList:
 
     """ PREPARE DATALOADERS """
+    # TODO: Write a method that checks if we have already stored the DL objects for this specific my_cfg -> LOAD THEM
+    # TODO: If not -> STORE THEM (...We need a unique identifier for each DL object.. for example MD5 value)
     train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
 
 

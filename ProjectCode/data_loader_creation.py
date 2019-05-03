@@ -9,7 +9,7 @@ import os
 from visualisations import eeg_sample_plot, events_distribution_plot
 import torch
 from tqdm import tqdm
-
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
@@ -77,6 +77,10 @@ def get_dataloader_objects(my_cfg):
     train_data, val_data, train_labels, val_labels = train_test_split(temp_data, temp_labels,
                                                                       test_size=my_cfg.validation_split, shuffle=True,
                                                                       stratify=temp_labels)
+    # Do data augmentation of training data
+    if my_cfg.augment_with_gauss_noise:
+        train_data, train_labels = augment_with_gaussian_noise(train_data, train_labels, my_cfg.augment_std_gauss,
+                                                               my_cfg.augmentation_factor)
 
     # Convert them to Tensors already. torch.float is needed for GPU.
     train_data = torch.tensor(train_data, dtype=torch.float)
@@ -104,6 +108,21 @@ def get_dataloader_objects(my_cfg):
 
     return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
+
+def augment_with_gaussian_noise(data, labels, std, multiplier):
+    mean = 0
+    augmented_data = []
+    augmented_labels = []
+    for idx, tmp_data in enumerate(data):
+        for j in range(multiplier):
+            tmp_label = labels[idx]
+            noise = np.random.normal(loc=mean, scale=std, size=np.shape(tmp_data))
+            tmp_data_noisy = np.add(tmp_data, noise)
+            augmented_data.append(tmp_data_noisy)
+            augmented_labels.append(tmp_label)
+    augmented_data = np.asarray(augmented_data, dtype=np.float64)
+    augmented_labels = np.asarray(augmented_labels, dtype=np.int32)
+    return augmented_data, augmented_labels
 
 def get_epoched_data(my_cfg):
     print("Data is being loaded using MNE...",flush=True)
@@ -168,3 +187,4 @@ def get_epoched_data(my_cfg):
     print("...data loading with MNE was finished. \n")
 
     return epoched
+

@@ -61,9 +61,12 @@ class DefaultConfig:
     es_patience = 5
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)
     
-    normalize = True # Epoch normalization to mean=0.5, std=0.5
-    
-    
+    normalize = True  # Epoch normalization to mean=0.5, std=0.5
+
+    augment_with_gauss_noise = True
+    augment_std_gauss = 0.2  # (See EEG Review Roy et. al. 2019)
+    augmentation_factor = 10
+
     # Warning messages for MNE related stuff
     verbose = None
 
