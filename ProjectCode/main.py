@@ -12,8 +12,8 @@ myList = configs_tim.list_of_configs
 #myList = configs_joaquin.list_of_configs
 #myList = configs_ozhan.list_of_configs
  
-for my_cfg in myList:
-
+for idx, my_cfg in enumerate(myList):
+    print('++++ CONFIGURATION %2d, of %2d' % (idx, len(myList)))
     """ PREPARE DATALOADERS """
     # TODO: Write a method that checks if we have already stored the DL objects for this specific my_cfg -> LOAD THEM
     # TODO: If not -> STORE THEM (...We need a unique identifier for each DL object.. for example MD5 value)

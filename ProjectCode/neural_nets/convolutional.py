@@ -58,7 +58,7 @@ class ConvNet1D(nn.Module):
         return self.fclayers(x)
     
     
-class EEGNet(nn.Module):
+class EEGNet(nn.Module): # https://arxiv.org/abs/1611.08024
     
     def __init__(self, output_dimension):
         super(EEGNet, self).__init__()

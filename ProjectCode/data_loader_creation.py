@@ -113,13 +113,23 @@ def augment_with_gaussian_noise(data, labels, std, multiplier):
     mean = 0
     augmented_data = []
     augmented_labels = []
+    if std > 1:
+        raise ValueError(' We expect in the range 0 to 1')
+
     for idx, tmp_data in enumerate(data):
         for j in range(multiplier):
             tmp_label = labels[idx]
-            noise = np.random.normal(loc=mean, scale=std, size=np.shape(tmp_data))
-            tmp_data_noisy = np.add(tmp_data, noise)
-            augmented_data.append(tmp_data_noisy)
-            augmented_labels.append(tmp_label)
+            if j == 0:  # Take the real data for once
+                augmented_data.append(tmp_data)
+                augmented_labels.append(tmp_label)
+            else:
+                tmp_std_data = np.std(tmp_data)
+                tmp_std = tmp_std_data*std
+
+                noise = np.random.normal(loc=mean, scale=tmp_std, size=np.shape(tmp_data))
+                tmp_data_noisy = np.add(tmp_data, noise)
+                augmented_data.append(tmp_data_noisy)
+                augmented_labels.append(tmp_label)
     augmented_data = np.asarray(augmented_data, dtype=np.float64)
     augmented_labels = np.asarray(augmented_labels, dtype=np.int32)
     return augmented_data, augmented_labels
