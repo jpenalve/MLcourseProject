@@ -33,7 +33,11 @@ for my_cfg in myList:
         fit(train_dl, val_dl, model_untrained, optimizer, my_cfg.loss_fn, my_cfg.num_of_epochs)
 
     # Test the net
+    print('\n \n+++++++++++++++++++++++++++++++++++++++++')
+    print('Performance on the test set:')
     test_loss, test_accuracy = test(model_trained, test_dl, my_cfg.loss_fn, print_loss=True)
+    print('->test_loss: {:.4f}, test_accuracy: {:.4f}%'.format(test_loss, test_accuracy))
+
 
     # Store the results
     results_storer.store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy, train_losses,

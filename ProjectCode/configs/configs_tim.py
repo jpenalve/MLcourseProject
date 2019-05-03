@@ -6,7 +6,7 @@ from configs.defaultconfig import DefaultConfig
 # Own configs follow here
 class ConfigNo01(DefaultConfig):
     # Overwriting base class attributes
-    num_of_epochs = 10
+    num_of_epochs = 5
     # Give it a unique name and a brief description if you like
     config_name = 'simpleNN'
     selected_subjects = [1, 2, 3, 4, 5, 6, 7]

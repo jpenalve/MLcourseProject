@@ -45,7 +45,7 @@ class DefaultConfig:
     # TODO: Make scheduler module like the optimizer module
     scheduler = None  # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
     # Set loss function
-    loss_fn = nn.CrossEntropyLoss()
+    loss_fn = nn.CrossEntropyLoss() # TODO: Maybe we have to apply class weighting (if we care about the under represented classes..)
     # Set number of epochs for training
     num_of_epochs = 3
     use_early_stopping = False
