@@ -59,8 +59,6 @@ def test(model, test_loader, loss_fn, print_loss=False):
                 class_correct[label] += correct_idcs[i].item()
                 class_total[label] += 1
 
-
-
     average_loss = test_loss / len(test_loader)
     accuracy = 100.0 * n_correct / len(test_loader.dataset)
     if print_loss:

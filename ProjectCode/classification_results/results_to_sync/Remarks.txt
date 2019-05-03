@@ -1,0 +1,2 @@
+Run of EEG Net with all subjects and no regularization
+------------------------------------------------------
