@@ -72,8 +72,8 @@ To run the TensorBoard, open a new terminal and run the command `$ tensorboard -
 Logs can be created by calling write_logs_for_tensorboard() -> Feel free to modify, extend this function or add more tensorboard functions for further analysis of network performance.
 # TO DOs:
 ---------
-- Which classes to classify? (see main.py)
-- See the TODOs in the main.py (framework specific)
+- Implement baseline reference as https://github.com/ChaiGuangJie/EEGFeedbackSystem/blob/master/classifier.py
+- See the TODOs in the .py files (framework specific)
 
 # Used Packages:
 
