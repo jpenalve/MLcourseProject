@@ -83,6 +83,8 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
     train_losses, train_accuracies = [], []
     val_losses, val_accuracies = [], []
     logger = Logger('./logs')
+    if scheduler:
+        tmp_scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.25)
     if apply_early_stopping:
         best_val_loss = np.inf
         best_model = None
@@ -103,7 +105,7 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
         val_accuracies.append(val_accuracy)
         # We'll monitor learning rate -- just to show that it's decreasing
         if scheduler:
-            scheduler.step()  # argument only needed for ReduceLROnPlateau
+            tmp_scheduler.step()  # argument only needed for ReduceLROnPlateau
         print('-> Epoch {}/{}: train_loss: {:.4f}, train_accuracy: {:.4f}%, val_loss: {:.4f}, val_accuracy: {:.4f}%'.format(
             epoch + 1, n_epochs,
             train_losses[-1],
