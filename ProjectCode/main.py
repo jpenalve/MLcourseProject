@@ -24,7 +24,7 @@ for idx, my_cfg in enumerate(myList):
     """CLASSIFICATION"""
     # Get the model
     model_untrained = get_nn_model(my_cfg.nn_list[my_cfg.nn_selection_idx], input_dimension=input_dimension_,
-                                   output_dimension=output_dimension_)
+                                   output_dimension=output_dimension_, dropout=my_cfg.dropout_perc)
 
     # Get the optimizer
     optimizer = get_optimizer(my_cfg.optimizer_list[my_cfg.optimizer_selection_idx], my_cfg.learning_rate,
@@ -33,7 +33,8 @@ for idx, my_cfg in enumerate(myList):
 
     # Train and show validation loss
     train_losses, train_accuracies, val_losses, val_accuracies, model_trained, time_spent_for_training_s =\
-        fit(train_dl, val_dl, model_untrained, optimizer, my_cfg.loss_fn, my_cfg.num_of_epochs)
+        fit(train_dl, val_dl, model_untrained, optimizer, my_cfg.loss_fn, my_cfg.num_of_epochs,
+            scheduler=my_cfg.scheduler)
 
     # Test the net
     print('\n \n+++++++++++++++++++++++++++++++++++++++++')
