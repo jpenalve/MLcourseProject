@@ -33,7 +33,7 @@ def train(model, train_loader, optimizer, loss_fn, print_every=100):
     return np.mean(np.array(losses)), accuracy
 
 
-def test(model, test_loader, loss_fn, print_loss=False):
+def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, txt_file_handle=None):
     '''
     Tests the model on data from test_loader
     '''
@@ -70,10 +70,14 @@ def test(model, test_loader, loss_fn, print_loss=False):
             # Class not present
             if class_total[i] == 0:
                 print('Accuracy of class %1d : %19s' % (i, 'No label available'))
+                if write_class_txt:
+                    txt_file_handle.write('Accuracy of class %1d : %19s' % (i, 'No label available \n'))
             else:
                 print('Accuracy of class %1d : %2d %% of %1d labels'
                       % (i, 100 * class_correct[i] / class_total[i], class_total[i]))
-
+                if write_class_txt:
+                    txt_file_handle.write('Accuracy of class %1d : %2d %% of %1d labels \n'
+                      % (i, 100 * class_correct[i] / class_total[i], class_total[i]))
 
     return average_loss, accuracy
 

@@ -45,7 +45,7 @@ for idx, my_cfg in enumerate(myList):
 
     # Store the results
     results_storer.store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy, train_losses,
-                                 train_accuracies, time_spent_for_training_s, val_losses, val_accuracies)
+                                 train_accuracies, time_spent_for_training_s, val_losses, val_accuracies, test_dl)
 
 
 

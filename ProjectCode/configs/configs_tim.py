@@ -21,6 +21,18 @@ dropout_perc = 0.25
 scheduler = None  # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
 """
 
+
+class DummyConfig(DefaultConfig):
+    config_name = 'DummyConfig'
+    config_remark = 'DummyConfig'
+    num_of_epochs = 1
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7]
+    augment_with_gauss_noise = False
+    normalize = False  # Epoch normalization to mean=0.5, std=0.5
+    nn_list = ['SimpleFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+
+
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Fully Connected START
 
@@ -250,9 +262,10 @@ class EEGNet12(DefaultConfig):
 
 
 # Put them all in a list
-list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
+list_of_configs = [DummyConfig]
+"""list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
                    EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12,
                    SimpleFC01, SimpleFC02, SimpleFC03, SimpleFC04, SimpleFC05, SimpleFC06,
-                   DeepFC01, DeepFC02, DeepFC03, DeepFC04, DeepFC05, DeepFC06]
+                   DeepFC01, DeepFC02, DeepFC03, DeepFC04, DeepFC05, DeepFC06]"""
 
 
