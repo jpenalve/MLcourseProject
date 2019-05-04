@@ -6,6 +6,7 @@ import os
 def store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy,
                   train_losses, train_accuracies, time_spent_for_training_s, val_losses, val_accuracies):
 
+
     # Create folder of todays date
     todays_date = datetime.today().strftime('%Y_%m_%d')
     date_path = 'classification_results/tmp_local/'
@@ -18,6 +19,8 @@ def store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy,
 
     file_name = my_cfg.config_name
     path_name = date_path + '/' + file_name + '.pkl'
+    path_name_txt = date_path + '/' + file_name + '.txt'
+    txt_file = open(path_name_txt, "a")
 
     # If it exists, rename it
     while os.path.isfile(path_name):
@@ -28,3 +31,8 @@ def store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy,
         pickle.dump([my_cfg, model_trained, optimizer, test_loss, test_accuracy,
                      train_losses, train_accuracies, time_spent_for_training_s,
                      val_losses, val_accuracies], classification_results)
+
+    txt_file.write('->test_loss: {:.4f}, test_accuracy: {:.4f}% \n'.format(test_loss, test_accuracy))
+    txt_file.write('->val_loss: {:.4f}, val_accuracy: {:.4f}% \n'.format(val_losses[-1], val_accuracies[-1]))
+    txt_file.write('->train_loss: {:.4f}, train_accuracy: {:.4f}% \n'.format(train_losses[-1], train_accuracies[-1]))
+    txt_file.close()
