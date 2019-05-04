@@ -21,7 +21,7 @@ class DefaultConfig:
                          90, 91, 93, 94, 95, 96, 97, 98, 99,
                          101, 102, 103, 104, 105, 106, 107, 108, 109]
     time_before_event_s = -1.1  # Epochsize parameter: Start time before event.
-    time_after_event_s = 4.0  # Epochsize parameter: Start time before event.
+    time_after_event_s = 4.0  # Epochsize parameter: Time after event.
     # Number of channels to investigate (range from 1 to 64)
     selected_channels = range(1, 64)
     # Show sample plot of 1 subject
@@ -52,11 +52,11 @@ class DefaultConfig:
     optimizer_list = ['Adam', 'SGD', 'SGDMomentum']  # Extend if you want more. Add them in the optimizers.py module
     # Adaption of learning rate?
     # TODO: Make scheduler module like the optimizer module
-    scheduler = None  # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
+    scheduler = None  # if true: torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.25)
     # Set loss function
     loss_fn = nn.CrossEntropyLoss() # TODO: Maybe we have to apply class weighting (if we care about the under represented classes..)
     # Set number of epochs for training
-    num_of_epochs = 25
+    num_of_epochs = 30
     use_early_stopping = False
     es_patience = 5
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)
@@ -70,6 +70,7 @@ class DefaultConfig:
     # Warning messages for MNE related stuff
     verbose = None
 
+    dropout_perc = 0.25 # default is 25%
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class
