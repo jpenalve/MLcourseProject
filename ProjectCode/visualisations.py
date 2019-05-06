@@ -31,6 +31,7 @@ def events_distribution_plot(events):
     mne.viz.plot_events(events, show=False)
     plt.title('Show event distribution over the merged dataset')
     plt.tight_layout()
+    plt.show(block=True)
     """ Each annotation includes one of three codes (T0, T1, or T2):
     
         T0 corresponds to rest

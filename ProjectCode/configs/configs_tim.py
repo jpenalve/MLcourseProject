@@ -23,11 +23,12 @@ scheduler = None  # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_si
 class DummyConfig(DefaultConfig):
     config_name = 'aaaaaDummyConfig'
     config_remark = 'DummyConfig'
-    num_of_epochs = 10
+    num_of_epochs = 1
     selected_subjects = [1, 2, 3, 4, 5, 6, 7]
+    show_events_distribution = True
     augment_with_gauss_noise = False
     normalize = False  # Epoch normalization to mean=0.5, std=0.5
-    nn_list = ['SimpleFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
 
 
@@ -260,19 +261,32 @@ class EEGNet12(DefaultConfig):
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Tweak the best model
-class DeepFC04(DefaultConfig):
-    config_name = 'DeepFC04'
-    config_remark = 'DeepFC: Higher Learning rate with scheduler'
+# Tweak the best model and add some dropout
+class DeepFC07(DefaultConfig):
+    config_name = 'DeepFC07'
+    config_remark = 'DeepFC: Like DeepFC05 but with dropout'
+    dropout_perc = 0.5
     scheduler = True
     learning_rate = 0.01
     nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
 
-
+# Make the EEGNet deeper (looks like we need more capacity) 3 more layers
+class EEGNetDeeper(DefaultConfig):
+    config_name = 'EEGNetDeeper'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.5
+    weight_decay = 0.0075
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
+    learning_rate = 0.0001
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = True # DEBUG TEMP! eigentlich true
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Put them all in a list
+#list_of_configs = [EEGNetDeeper,DeepFC07]
 list_of_configs = [DummyConfig]
+
 """list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
                    EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12,
                    SimpleFC01, SimpleFC02, SimpleFC03, SimpleFC04, SimpleFC05, SimpleFC06,

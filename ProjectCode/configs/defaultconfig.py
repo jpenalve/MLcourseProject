@@ -70,7 +70,7 @@ class DefaultConfig:
     # Warning messages for MNE related stuff
     verbose = None
 
-    dropout_perc = 0.25 # default is 25%
+    dropout_perc = 0 # default is no dropout
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class

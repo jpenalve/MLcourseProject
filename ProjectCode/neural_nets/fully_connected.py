@@ -16,18 +16,23 @@ class Simple(nn.Module):
 
 # Fully Connected (FC) little deep network
 class Deep(nn.Module):
-    def __init__(self, input_dimension, output_dimension):
+    def __init__(self, input_dimension, output_dimension, dropout_perc=0):
         super().__init__()
         self.layers = nn.Sequential(
             nn.Linear(input_dimension, 128),
+            nn.Dropout(dropout_perc),  ### Adding dropout layer
             nn.ReLU(),
             nn.Linear(128, 128),
+            nn.Dropout(dropout_perc),  ### Adding dropout layer
             nn.ReLU(),
             nn.Linear(128, 128),
+            nn.Dropout(dropout_perc),  ### Adding dropout layer
             nn.ReLU(),
             nn.Linear(128, 128),
+            nn.Dropout(dropout_perc),  ### Adding dropout layer
             nn.ReLU(),
             nn.Linear(128, 128),
+            nn.Dropout(dropout_perc),  ### Adding dropout layer
             nn.ReLU(),
             nn.Linear(128, output_dimension)
         )
