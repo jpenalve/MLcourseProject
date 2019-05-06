@@ -94,8 +94,8 @@ def plot_performance_metrics(my_cfg, train_losses, val_losses, train_accuracies,
     plt.close('all')
     nn_name = my_cfg.config_name
     plt.figure()
-    plt.plot(np.arange(my_cfg.num_of_epochs), train_losses)
-    plt.plot(np.arange(my_cfg.num_of_epochs), val_losses)
+    plt.plot(np.arange(len(train_losses)), train_losses)
+    plt.plot(np.arange(len(val_losses)), val_losses)
     plt.legend(['train_loss', 'val_loss'])
     plt.xlabel('epoch')
     plt.ylabel('loss value')
@@ -103,8 +103,8 @@ def plot_performance_metrics(my_cfg, train_losses, val_losses, train_accuracies,
     plt.show(block=True)
 
     plt.figure()
-    plt.plot(np.arange(my_cfg.num_of_epochs), train_accuracies)
-    plt.plot(np.arange(my_cfg.num_of_epochs), val_accuracies)
+    plt.plot(np.arange(len(train_accuracies)), train_accuracies)
+    plt.plot(np.arange(len(val_accuracies)), val_accuracies)
     plt.legend(['train_acc', 'val_acc'])
     plt.xlabel('epoch')
     plt.ylabel('accuracy')

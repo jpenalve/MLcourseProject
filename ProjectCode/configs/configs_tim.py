@@ -139,6 +139,28 @@ class DeepFC06(DefaultConfig):
     nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
 
+# 06.05
+class DeepFC07(DefaultConfig):
+    config_name = 'DeepFC07'
+    config_remark = 'DeepFC: Higher weight decay: weight_decay = 0.0075 (default 0.000075)'
+    weight_decay = 0.00075
+    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+
+class DeepFC08(DefaultConfig):
+    config_name = 'DeepFC08'
+    config_remark = 'DeepFC: Higher weight decay: weight_decay = 0.0075 (default 0.000075)'
+    dropout_perc = 0.2
+    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+
+class DeepFC09(DefaultConfig):
+    config_name = 'DeepFC09'
+    config_remark = ''
+    weight_decay = 0.0
+    dropout_perc = 0.2
+    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
 
 # Fully Connected END
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -258,52 +280,118 @@ class EEGNet12(DefaultConfig):
     nn_list = ['EEGNet']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
 
+# DEEPER EEG NET
+class EEGNetDeeper01(DefaultConfig):
+    config_name = 'EEGNetDeeper01'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.1
+    weight_decay = 0.00015
+    scheduler = True
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = True  # DEBUG TEMP! eigentlich true
+
+
+class EEGNetDeeper02(DefaultConfig):
+    config_name = 'EEGNetDeeper02'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.25
+    #weight_decay = 0.00015
+    scheduler = True
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = False  # DEBUG TEMP! eigentlich true
+
+
+class EEGNetDeeper03(DefaultConfig):
+    config_name = 'EEGNetDeeper03'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.2
+    weight_decay = 0.00015
+    scheduler = True
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = False  # DEBUG TEMP! eigentlich true
+
+
+class EEGNetDeeper04(DefaultConfig):
+    config_name = 'EEGNetDeeper04'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.5
+    #weight_decay = 0.00015
+    scheduler = True
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = True  # DEBUG TEMP! eigentlich true
+
+
+class EEGNetDeeper05(DefaultConfig):
+    config_name = 'EEGNetDeeper05'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.5
+    weight_decay = 0.00015
+    scheduler = False
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = True  # DEBUG TEMP! eigentlich true
+
+
+class EEGNetDeeper06(DefaultConfig):
+    config_name = 'EEGNetDeeper06'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.5
+    weight_decay = 0.0
+    scheduler = False
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = False  # DEBUG TEMP! eigentlich true
+
+
+class EEGNetDeeper07(DefaultConfig):
+    config_name = 'EEGNetDeeper06'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
+    dropout_perc = 0.1
+    weight_decay = 0.0
+    scheduler = False
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    augment_with_gauss_noise = False  # DEBUG TEMP! eigentlich true
+
 # EEGNet Tests END
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Make the EEGNet deeper (looks like we need more capacity) 3 more layers
 class EEGNetDeeper(DefaultConfig):
     config_name = 'EEGNetDeeper'
     config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
-    dropout_perc = 0.5
-    weight_decay = 0.00075
-    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
-    learning_rate = 0.0001
+    dropout_perc = 0.1
+    weight_decay = 0.00015
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    scheduler = True
     nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
-    augment_with_gauss_noise = True # DEBUG TEMP! eigentlich true
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# Make the EEGNet deeper (looks like we need more capacity) 3 more layers
-class EEGNetDeeper(DefaultConfig):
-    config_name = 'EEGNetDeeper'
-    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
-    dropout_perc = 0.5
-    weight_decay = 0.0075
-    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
-    learning_rate = 0.0001
-    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
-    nn_selection_idx = 0
-    augment_with_gauss_noise = True # DEBUG TEMP! eigentlich true
+    augment_with_gauss_noise = False  # DEBUG TEMP! eigentlich true
 
 
 class EEGNet11Dbg(DefaultConfig):
     config_name = 'EEGNet11'
     config_remark = 'EEGNET: dropout = 0.5; Higher weight decay: weight_decay = 0.0075 (default 0.000075)'
 
-    dropout_perc = 0.25
-    weight_decay = 0.0000
-    nn_list = ['EEGNet']  # Extend if you want more. Add them in the nn_models_getter.py module
+    dropout_perc = 0.1
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
-    scheduler = True
+    weight_decay = 0.00015
+    scheduler = False
+    augment_with_gauss_noise = False  # DEBUG TEMP! eigentlich true
     selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    loss_fn = nn.NLLLoss()
+    # loss_fn = nn.NLLLoss()
     # num_of_epochs = 1
-    # selected_subjects = [1, 2, 3, 4, 5, 6, 7]
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #selected_subjects = [1, 2, 3, 4, 5, 6, 7]# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Put them all in a list
 #list_of_configs = [EEGNetDeeper,DeepFC07]
-list_of_configs = [EEGNet11Dbg]
+
+list_of_configs = [EEGNet06, EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12, EEGNetDeeper01,
+                   EEGNetDeeper02, EEGNetDeeper03, EEGNetDeeper04, EEGNetDeeper05, EEGNetDeeper06, EEGNetDeeper07,
+                   DeepFC07, DeepFC08, DeepFC09]
 """
 list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
                    EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12,

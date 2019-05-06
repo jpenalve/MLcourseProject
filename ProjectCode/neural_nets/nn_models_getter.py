@@ -4,6 +4,7 @@ import torch.nn as nn
 import neural_nets.fully_connected as fc
 import neural_nets.recurrent as rc
 import neural_nets.convolutional as conv
+from torch import nn
 
 
 # Model selection

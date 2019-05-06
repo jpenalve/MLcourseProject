@@ -131,3 +131,7 @@ Literature/Deep Learning With Convolutional NeuralNetworks for EEG Decoding and 
 *.LUDWIG
 
 \.idea/
+
+ProjectCode/Braindecode_Test/
+
+ProjectCode/tim_braindecode\.py

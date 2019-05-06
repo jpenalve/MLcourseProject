@@ -56,7 +56,7 @@ class DefaultConfig:
     # Set loss function
     loss_fn = nn.CrossEntropyLoss() # TODO: Maybe we have to apply class weighting (if we care about the under represented classes..)
     # Set number of epochs for training
-    num_of_epochs = 30
+    num_of_epochs = 50
     use_early_stopping = False
     es_patience = 5
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)

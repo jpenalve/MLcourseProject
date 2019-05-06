@@ -177,7 +177,7 @@ def get_epoched_data(my_cfg):
         tmp_classes = (tmp_classes - tmp_offset).tolist()
         # Extract the epochs
         tmp_epoched = Epochs(raw, events, event_id=tmp_classes, tmin=my_cfg.time_before_event_s,
-                          tmax=my_cfg.time_after_event_s, baseline=(None, 0), picks=None,
+                          tmax=my_cfg.time_after_event_s, baseline=None, picks=None,
                           preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
                           detrend=None, on_missing='error', reject_by_annotation=True, metadata=None,
                           verbose=my_cfg.verbose)

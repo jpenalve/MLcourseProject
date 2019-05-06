@@ -34,6 +34,12 @@ class Deep(nn.Module):
             nn.Linear(128, 128),
             nn.Dropout(dropout_perc),  ### Adding dropout layer
             nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.Dropout(dropout_perc),  ### Adding dropout layer
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.Dropout(dropout_perc),  ### Adding dropout layer
+            nn.ReLU(),
             nn.Linear(128, output_dimension)
         )
 
