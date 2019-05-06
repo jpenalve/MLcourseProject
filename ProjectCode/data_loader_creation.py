@@ -44,7 +44,7 @@ POSSIBLE LABELS                 APPEAR IN RUNS      ACTUAL LABEL IN RUNS    OUR 
 0 Baseline, eyes open           1                   T0(=1)                  1
 1 Baseline, eyes closed         2                   T0(=1)                  0
 2 Motor Ex: Left Hand           3,7,11              T1(=2)                  0
-3 Motor Ex: Right Hand          3,7,11              T2(=3)                  -1
+3 Motor Ex: Right Hand          3,7,11              T2(=3)                  0
 4 Motor Im: Left Hand           4,8,12              T1(=2)                  -2
 5 Motor Im: Right Hand          4,8,12              T2(=3)                  -2
 6 Motor Ex: Both Hands          5,9,13              T1(=2)                  -4
@@ -141,9 +141,9 @@ def get_epoched_data(my_cfg):
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     # -> We want to split up the dataset in all classes there are
 
-    arr_runs = np.array([1, 2, [3, 7, 11], [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    arr_runs = np.array([1, 2, [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
     arr_selected_classes = np.array([1, 1, [2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
-    arr_labels_offsets = np.array([1, 0, 0, -1, -2, -4, -6])
+    arr_labels_offsets = np.array([1, 0, 0, -2, -4, -6])
 
     # Load the data
     subjects = my_cfg.selected_subjects
@@ -184,7 +184,13 @@ def get_epoched_data(my_cfg):
 
         # Store epoch for later use
         list_epochs.append(tmp_epoched)
-
+        'DEBUG'
+        """SHOW DATA"""
+        # Show some sample EEG data if desired
+        if my_cfg.show_eeg_sample_plot:
+            eeg_sample_plot(my_cfg.subjectIdx_to_plot, my_cfg.seconds_to_plot, my_cfg.channels_to_plot, raw_EDF_list)
+        if my_cfg.show_events_distribution:
+            events_distribution_plot(tmp_epoched.events)
 
     epoched = concatenate_epochs(list_epochs)
 
