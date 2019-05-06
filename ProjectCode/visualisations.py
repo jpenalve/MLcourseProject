@@ -1,7 +1,9 @@
-# Define the functions for plotting or visualizing here
+# Define the funcs for plotting or visualizing here
 import matplotlib.pyplot as plt
 import mne
 import numpy as np
+import matplotlib.pyplot as plt
+import pickle
 
 
 def eeg_sample_plot(subject, seconds_to_plot, channels_to_plot, raw):
@@ -62,3 +64,48 @@ def write_logs_for_tensorboard(loss, accuracy, step, model, logger):
 
     # for tag, data in info.items():
     #    logger.image_summary(tag, data, iteration + 1)
+
+def plot_metrics_from_pkl(pkl_file_path):
+    #  Get all pkl files
+
+    with open(pkl_file_path, 'rb') as f:
+        data = pickle.load(f)
+
+    """ ORDER:
+        [my_cfg, test_loss, test_accuracy, train_losses, train_accuracies, time_spent_for_training_s,
+        val_losses, val_accuracies]
+    """
+    my_cfg = data[0]
+    test_loss = data[1]
+    test_accuracy = data[2]
+    train_losses = data[3]
+    train_accuracies = data[4]
+    val_losses = data[6]
+    val_accuracies = data[7]
+
+    #  Plot them
+    plot_performance_metrics(my_cfg, train_losses, val_losses, train_accuracies, val_accuracies,
+                             test_accuracy, test_loss)
+
+
+def plot_performance_metrics(my_cfg, train_losses, val_losses, train_accuracies, val_accuracies, test_acc, test_loss):
+
+    plt.close('all')
+    nn_name = my_cfg.config_name
+    plt.figure()
+    plt.plot(np.arange(my_cfg.num_of_epochs), train_losses)
+    plt.plot(np.arange(my_cfg.num_of_epochs), val_losses)
+    plt.legend(['train_loss', 'val_loss'])
+    plt.xlabel('epoch')
+    plt.ylabel('loss value')
+    plt.title('Train/val loss of ' + nn_name + '(Tst loss: ' + str(test_loss)[0:5] + ')')
+    plt.show(block=True)
+
+    plt.figure()
+    plt.plot(np.arange(my_cfg.num_of_epochs), train_accuracies)
+    plt.plot(np.arange(my_cfg.num_of_epochs), val_accuracies)
+    plt.legend(['train_acc', 'val_acc'])
+    plt.xlabel('epoch')
+    plt.ylabel('accuracy')
+    plt.title('Train/val accuracy of ' + nn_name + '(Tst acc: ' + str(test_acc)[0:5] + ')')
+    plt.show(block=True)

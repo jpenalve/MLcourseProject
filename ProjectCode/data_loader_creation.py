@@ -117,6 +117,8 @@ def augment_with_gaussian_noise(data, labels, std, multiplier):
         raise ValueError(' We expect in the range 0 to 1')
 
     for idx, tmp_data in enumerate(data):
+        if idx % 100 == 0:
+            print('Augmented ', idx, 'of', len(data))
         for j in range(multiplier):
             tmp_label = labels[idx]
             if j == 0:  # Take the real data for once

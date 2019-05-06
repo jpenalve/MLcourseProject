@@ -20,12 +20,10 @@ nn_list = ['SimpleFC', 'DeepFC', 'EEGNet',
 dropout_perc = 0.25
 scheduler = None  # torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.5)
 """
-
-
 class DummyConfig(DefaultConfig):
-    config_name = 'DummyConfig'
+    config_name = 'aaaaaDummyConfig'
     config_remark = 'DummyConfig'
-    num_of_epochs = 1
+    num_of_epochs = 10
     selected_subjects = [1, 2, 3, 4, 5, 6, 7]
     augment_with_gauss_noise = False
     normalize = False  # Epoch normalization to mean=0.5, std=0.5
@@ -260,7 +258,19 @@ class EEGNet12(DefaultConfig):
 # EEGNet Tests END
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+# Tweak the best model
+class DeepFC04(DefaultConfig):
+    config_name = 'DeepFC04'
+    config_remark = 'DeepFC: Higher Learning rate with scheduler'
+    scheduler = True
+    learning_rate = 0.01
+    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Put them all in a list
 list_of_configs = [DummyConfig]
 """list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,

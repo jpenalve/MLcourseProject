@@ -6,6 +6,7 @@ from utils_train import fit, test
 from configs import configs_tim
 from data_loader_creation import get_dataloader_objects
 from classification_results import results_storer
+from visualisations import plot_metrics_from_pkl
 
 """ USER: SELECT THE CONFIGURATION YOU NEED """
 myList = configs_tim.list_of_configs
@@ -44,6 +45,9 @@ for idx, my_cfg in enumerate(myList):
 
 
     # Store the results
+    results_storer.store_results_for_plot(my_cfg, model_trained, optimizer, test_loss, test_accuracy, train_losses,
+                                 train_accuracies, time_spent_for_training_s, val_losses, val_accuracies, test_dl)
+
     results_storer.store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy, train_losses,
                                  train_accuracies, time_spent_for_training_s, val_losses, val_accuracies, test_dl)
 

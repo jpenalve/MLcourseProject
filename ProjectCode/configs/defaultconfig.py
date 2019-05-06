@@ -39,7 +39,7 @@ class DefaultConfig:
     test_split = 0.1
     validation_split = 0.1  # This is the share of the train_split
     # Batch Size. Batch size should be powers of 2 for better utilization of GPUs.
-    batch_size = 500
+    batch_size = 50
     # Select network architecture according to the nn_list(predefined in nn_models_getter.py)
     nn_selection_idx = 1
     nn_list = ['SimpleFC', 'DeepFC', 'EEGNet', 'ConvNet01']  # Extend if you want more. Add them in the nn_models_getter.py module
@@ -65,7 +65,7 @@ class DefaultConfig:
 
     augment_with_gauss_noise = True
     augment_std_gauss = 0.2  # (See EEG Review Roy et. al. 2019)
-    augmentation_factor = 10
+    augmentation_factor = 5
 
     # Warning messages for MNE related stuff
     verbose = None
