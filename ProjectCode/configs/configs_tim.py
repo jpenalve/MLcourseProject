@@ -1,4 +1,5 @@
 from configs.defaultconfig import DefaultConfig
+import torch.nn as nn
 # ==> Subjects 88, 89, 92 and 100 have overlapping events. Please exclude these subjects.
 # ==> Make sure to pick enough subjects! Otherwise baseline has too few labels!
 
@@ -30,7 +31,8 @@ class DummyConfig(DefaultConfig):
     normalize = False  # Epoch normalization to mean=0.5, std=0.5
     nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
-
+    #time_before_event_s = -0.1  # Epochsize parameter: Start time before event.
+    #time_after_event_s = 2.0  # Epochsize parameter: Time after event.
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Fully Connected START
@@ -83,7 +85,7 @@ class SimpleFC06(DefaultConfig):
     config_name = 'SimpleFC06'
     config_remark = 'SimpleFC: No weight decay (default 0.000075)'
     weight_decay = 0
-    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_list = ['SimpleFC']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
 
 
@@ -177,7 +179,7 @@ class EEGNet04(DefaultConfig):
     config_remark = 'EEGNET: Higher Learning rate with scheduler'
     scheduler = True
     learning_rate = 0.01
-    nn_list = ['SimpleFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_list = ['EEGNet']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
 
 
@@ -235,7 +237,7 @@ class EEGNet10(DefaultConfig):
     dropout_perc = 0.5
     scheduler = True
     learning_rate = 0.01
-    nn_list = ['SimpleFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_list = ['EEGNet']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
 
 
@@ -258,18 +260,18 @@ class EEGNet12(DefaultConfig):
 
 # EEGNet Tests END
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# Tweak the best model and add some dropout
-class DeepFC07(DefaultConfig):
-    config_name = 'DeepFC07'
-    config_remark = 'DeepFC: Like DeepFC05 but with dropout'
+# Make the EEGNet deeper (looks like we need more capacity) 3 more layers
+class EEGNetDeeper(DefaultConfig):
+    config_name = 'EEGNetDeeper'
+    config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
     dropout_perc = 0.5
-    scheduler = True
-    learning_rate = 0.01
-    nn_list = ['DeepFC']  # Extend if you want more. Add them in the nn_models_getter.py module
+    weight_decay = 0.00075
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
+    learning_rate = 0.0001
+    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
+    augment_with_gauss_noise = True # DEBUG TEMP! eigentlich true
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Make the EEGNet deeper (looks like we need more capacity) 3 more layers
 class EEGNetDeeper(DefaultConfig):
@@ -282,12 +284,28 @@ class EEGNetDeeper(DefaultConfig):
     nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
     augment_with_gauss_noise = True # DEBUG TEMP! eigentlich true
+
+
+class EEGNet11Dbg(DefaultConfig):
+    config_name = 'EEGNet11'
+    config_remark = 'EEGNET: dropout = 0.5; Higher weight decay: weight_decay = 0.0075 (default 0.000075)'
+
+    dropout_perc = 0.25
+    weight_decay = 0.0000
+    nn_list = ['EEGNet']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    scheduler = True
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    loss_fn = nn.NLLLoss()
+    # num_of_epochs = 1
+    # selected_subjects = [1, 2, 3, 4, 5, 6, 7]
+
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Put them all in a list
 #list_of_configs = [EEGNetDeeper,DeepFC07]
-list_of_configs = [DummyConfig]
-
-"""list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
+list_of_configs = [EEGNet11Dbg]
+"""
+list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
                    EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12,
                    SimpleFC01, SimpleFC02, SimpleFC03, SimpleFC04, SimpleFC05, SimpleFC06,
                    DeepFC01, DeepFC02, DeepFC03, DeepFC04, DeepFC05, DeepFC06]"""
