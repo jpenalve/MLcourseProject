@@ -33,7 +33,7 @@ def train(model, train_loader, optimizer, loss_fn, print_every=100):
     return np.mean(np.array(losses)), accuracy
 
 
-def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, txt_file_handle=None):
+def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, txt_file_handle=None,print_detailedloss=True):
     '''
     Tests the model on data from test_loader
     '''
@@ -69,11 +69,13 @@ def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, t
         for i in range(number_of_classes):
             # Class not present
             if class_total[i] == 0:
-                print('Accuracy of class %1d : %19s' % (i, 'No label available'))
+                if print_detailedloss:
+                    print('Accuracy of class %1d : %19s' % (i, 'No label available'))
                 if write_class_txt:
                     txt_file_handle.write('Accuracy of class %1d : %19s' % (i, 'No label available \n'))
             else:
-                print('Accuracy of class %1d : %2d %% of %1d labels'
+                if print_detailedloss:
+                    print('Accuracy of class %1d : %2d %% of %1d labels'
                       % (i, 100 * class_correct[i] / class_total[i], class_total[i]))
                 if write_class_txt:
                     txt_file_handle.write('Accuracy of class %1d : %2d %% of %1d labels \n'
@@ -82,7 +84,7 @@ def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, t
     return average_loss, accuracy
 
 
-def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, scheduler=None, apply_early_stopping=False, estop_patience=5):
+def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, scheduler=None, apply_early_stopping=False, estop_patience=5,print_detloss=True):
     time_start = time.time()
     train_losses, train_accuracies = [], []
     val_losses, val_accuracies = [], []
@@ -102,7 +104,7 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
             print('New Learning Rate: ', optimizer.param_groups[0]['lr'])
         train_loss, train_accuracy = train(model, train_dataloader, optimizer, loss_fn)
         print_val_loss = True
-        val_loss, val_accuracy = test(model, val_dataloader, loss_fn, print_val_loss)
+        val_loss, val_accuracy = test(model, val_dataloader, loss_fn, print_val_loss,print_detailedloss=print_detloss)
         train_losses.append(train_loss)
         train_accuracies.append(train_accuracy)
         val_losses.append(val_loss)

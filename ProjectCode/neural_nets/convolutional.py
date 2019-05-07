@@ -221,7 +221,7 @@ class EEGNetDeeper(nn.Module):  # https://arxiv.org/abs/1611.08024
         return out
 # +++++++++++++++++++++++ EEG NETS END +++++++++++++++++++++++++++++++++++++++++++
 
-class ConvNet3D(nn.Module):
+"""class ConvNet3D(nn.Module):
     
     # Will be done 3D
     def __init__(self, output_dimension):
@@ -248,3 +248,4 @@ class ConvNet3D(nn.Module):
         x = x.view(x.size(0), -1)
         return self.fclayers(x)
     
+"""

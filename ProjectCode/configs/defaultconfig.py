@@ -71,6 +71,7 @@ class DefaultConfig:
     verbose = None
 
     dropout_perc = 0 # default is no dropout
+    print_dLoss = True
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class
