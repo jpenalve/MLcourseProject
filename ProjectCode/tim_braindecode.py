@@ -13,7 +13,7 @@ import importlib
 import sys
 import numpy as np
 from braindecode.torch_ext.util import set_random_seeds
-
+from classification_results import results_storer
 
 if torch.cuda.is_available():
     cuda = True
@@ -102,7 +102,18 @@ for idx, my_cfg in enumerate(myList):
                   scheduler='cosine', validation_data=(val_dl.dataset.data.numpy().squeeze(),
                                                        val_dl.dataset.target.numpy().squeeze()))
 
+    time_spent_for_training_s = np.round(np.max(model.epochs_df.runtime.tolist()) / 60)
+    train_losses = model.epochs_df.train_loss.tolist()
+    train_accuracies = model.epochs_df.train_misclass.tolist()
 
-
+    val_losses = model.epochs_df.valid_loss.tolist()
+    val_accuracies = model.epochs_df.valid_misclass.tolist()
 
     result_dict = model.evaluate(test_dl.dataset.data.numpy(), test_dl.dataset.target.numpy())
+    test_loss = result_dict["loss"]
+    test_accuracy = 1 - result_dict["misclass"]
+
+    # Store the results
+
+    results_storer.store_results_for_plot(my_cfg,test_loss, test_accuracy, train_losses,
+                                 train_accuracies, time_spent_for_training_s, val_losses, val_accuracies)
