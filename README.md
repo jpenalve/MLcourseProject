@@ -72,7 +72,7 @@ To run the TensorBoard, open a new terminal and run the command `$ tensorboard -
 Logs can be created by calling write_logs_for_tensorboard() -> Feel free to modify, extend this function or add more tensorboard functions for further analysis of network performance.
 # TO DOs:
 ---------
-- Implement baseline reference as https://github.com/ChaiGuangJie/EEGFeedbackSystem/blob/master/classifier.py
+- Implement baseline reference as https://github.com/ChaiGuangJie/EEGFeedbackSystem/blob/master/classifier.py (or https://mne-tools.github.io/0.11/auto_examples/decoding/plot_decoding_csp_eeg.html)
 - See the TODOs in the .py files (framework specific)
 
 # Used Packages:
