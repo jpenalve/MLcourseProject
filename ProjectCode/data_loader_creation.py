@@ -110,15 +110,18 @@ def get_dataloader_objects(my_cfg):
 
 
 def augment_with_gaussian_noise(data, labels, std, multiplier):
+    
+    print("Data is being augmented with gaussian noise...",flush=True)
     mean = 0
     augmented_data = []
     augmented_labels = []
     if std > 1:
         raise ValueError(' We expect in the range 0 to 1')
 
-    for idx, tmp_data in enumerate(data):
+    for idx, tmp_data in tqdm(enumerate(data),total=len(data)):
         if idx % 100 == 0:
-            print('Augmented ', idx, 'of', len(data))
+            pass
+            #print('Augmented ', idx, 'of', len(data))
         for j in range(multiplier):
             tmp_label = labels[idx]
             if j == 0:  # Take the real data for once
@@ -134,6 +137,8 @@ def augment_with_gaussian_noise(data, labels, std, multiplier):
                 augmented_labels.append(tmp_label)
     augmented_data = np.asarray(augmented_data, dtype=np.float64)
     augmented_labels = np.asarray(augmented_labels, dtype=np.int32)
+    print("...augmentation with gaussian noise is finished. \n",flush=True)
+
     return augmented_data, augmented_labels
 
 def get_epoched_data(my_cfg):

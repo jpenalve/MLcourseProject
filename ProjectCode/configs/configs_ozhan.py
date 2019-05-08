@@ -66,7 +66,7 @@ class ConfigNo02(DefaultConfig):
     
 class ConfigConv1D(DefaultConfig):
     # Overwriting base class attributes
-    num_of_epochs = 50
+    num_of_epochs = 5
 
     # Give it a unique name and a brief description if you like
     config_name = 'ConvNet1D'
@@ -95,6 +95,12 @@ class ConfigConv1D(DefaultConfig):
     
     batch_size = 64
     use_early_stopping = True
+    
+    print_dLoss = False
+    
+    es_patience = 20
+    
+    normalize = True
         
 class EEGNet(DefaultConfig):
     # Overwriting base class attributes
@@ -123,35 +129,7 @@ class EEGNet(DefaultConfig):
     es_patience = 20
 
     
-    
-class ConfigConv3D(DefaultConfig):
-    # Overwriting base class attributes
-    num_of_epochs = 100
 
-    # Give it a unique name and a brief description if you like
-    config_name = 'ConvNet3D'
-    config_remark = 'This is a cov NN test.. I am serious'
-    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    
-    
-    nn_list = ['ConvNet3D']  # Extend if you want more. Add them in the nn_models_getter.py module
-    nn_selection_idx = 0
-    optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
-    optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
-    
-
-    # Select optimizer parameters
-    learning_rate = 1e-3
-    weight_decay = 0.008
-    
-    verbose = 'CRITICAL'
-    
-    batch_size = 64
-    use_early_stopping = True
-    es_patience = 20
-    
-    normalize = True
-    
     
 # Put them all in a list
-list_of_configs = [ConfigConv3D]
+list_of_configs = [ConfigConv1D]
