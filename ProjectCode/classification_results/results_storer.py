@@ -46,7 +46,7 @@ def store_results_for_plot(my_cfg, test_loss, test_accuracy,
 
 
     txt_file.close()
-
+    return path_name_txt
 # ATTENTION: Right now we are not able to load the pkl files from it withou a GPU machine
 def store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy,
                   train_losses, train_accuracies, time_spent_for_training_s, val_losses, val_accuracies, test_dl):
@@ -83,11 +83,8 @@ def store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy,
     txt_file.write(my_cfg.config_remark + '\n')
     txt_file.write('->val_loss: {:.4f}, val_accuracy: {:.4f}% \n'.format(val_losses[-1], val_accuracies[-1]))
     txt_file.write('->train_loss: {:.4f}, train_accuracy: {:.4f}% \n'.format(train_losses[-1], train_accuracies[-1]))
-
-    # Write detailled test loss metrics
-    test_loss, test_accuracy = test(model_trained, test_dl, my_cfg.loss_fn, print_loss=True, write_class_txt=True,
-                                    txt_file_handle=txt_file)
     txt_file.write('->test_loss: {:.4f}, test_accuracy: {:.4f}% \n'.format(test_loss, test_accuracy))
-
-
     txt_file.close()
+    # Write detailled test loss metrics
+    test_loss, test_accuracy = test(model_trained, test_dl, my_cfg.loss_fn, print_loss=True, path_name_txt=path_name_txt)
+    return path_name_txt

@@ -387,11 +387,11 @@ class EEGNet11Dbg(DefaultConfig):
     # num_of_epochs = 1
     #selected_subjects = [1, 2, 3, 4, 5, 6, 7]# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Put them all in a list
-#list_of_configs = [EEGNetDeeper,DeepFC07]
+list_of_configs = [DummyConfig]
 
-list_of_configs = [EEGNet06, EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12, EEGNetDeeper01,
-                   EEGNetDeeper02, EEGNetDeeper03, EEGNetDeeper04, EEGNetDeeper05, EEGNetDeeper06, EEGNetDeeper07,
-                   DeepFC07, DeepFC08, DeepFC09]
+#list_of_configs = [EEGNet06, EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12, EEGNetDeeper01,
+                   #EEGNetDeeper02, EEGNetDeeper03, EEGNetDeeper04, EEGNetDeeper05, EEGNetDeeper06, EEGNetDeeper07,
+                  # DeepFC07, DeepFC08, DeepFC09]
 """
 list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
                    EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12,

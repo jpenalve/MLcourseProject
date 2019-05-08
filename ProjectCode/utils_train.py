@@ -33,7 +33,7 @@ def train(model, train_loader, optimizer, loss_fn, print_every=100):
     return np.mean(np.array(losses)), accuracy
 
 
-def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, txt_file_handle=None,print_detailedloss=True):
+def test(model, test_loader, loss_fn, print_loss=False, path_name_txt=None, print_detailedloss=True):
     '''
     Tests the model on data from test_loader
     '''
@@ -64,12 +64,15 @@ def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, t
     if print_loss:
         #print('--> Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
         #print("\n\n")
-        write_class_accuracies_to_txt(number_of_classes, class_appearances, class_correct, print_enabled=True)
+        if path_name_txt is not None:
+            write_class_accuracies_to_txt(path_name_txt, number_of_classes, class_appearances, class_correct, print_enabled=True)
 
     return average_loss, accuracy
 
 
-def write_class_accuracies_to_txt(txt_file_handle, num_of_classes, class_appearances, class_correct, print_enabled=True):
+def write_class_accuracies_to_txt(path_name_txt, num_of_classes, class_appearances, class_correct, print_enabled=True):
+
+    txt_file_handle = open(path_name_txt, "a")
  # Look at each class
     for i in range(num_of_classes):
         # Class not present
@@ -85,7 +88,7 @@ def write_class_accuracies_to_txt(txt_file_handle, num_of_classes, class_appeara
 
             txt_file_handle.write('Accuracy of class %1d : %2d %% of %1d labels \n'
                                   % (i, 100 * class_correct[i] / class_appearances[i], class_appearances[i]))
-
+    txt_file_handle.close()
 
 
 def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, scheduler=None, apply_early_stopping=False, estop_patience=5,print_detloss=True):

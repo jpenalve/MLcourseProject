@@ -14,7 +14,7 @@ import sys
 import numpy as np
 from braindecode.torch_ext.util import set_random_seeds
 from classification_results import results_storer
-
+from utils_train import write_class_accuracies_to_txt
 if torch.cuda.is_available():
     cuda = True
 else:
@@ -31,7 +31,8 @@ cropped = False
 #DEBUG
 my_cfg.num_of_epochs = 1
 my_cfg.selected_subjects = [1, 2, 3, 4, 5, 6, 7]
-
+list_of_models = ['ShallowFBCSPNet'] # We know eegnet already
+my_cfg.augment_with_gauss_noise = False
 
 train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
 
@@ -115,22 +116,33 @@ while start_idx < len(list_of_models):
                   batch_size=my_cfg.batch_size, scheduler='cosine',
                   validation_data=(val_dl.dataset.data.numpy(), val_dl.dataset.target.numpy()))
 
-    time_spent_for_training_s = np.round(np.max(model.epochs_df.runtime.tolist()) / 60)
+    time_spent_for_training_s = np.round(np.sum(model.epochs_df.runtime.tolist()))
     train_losses = model.epochs_df.train_loss.tolist()
     train_accuracies = model.epochs_df.train_misclass.tolist()
 
     val_losses = model.epochs_df.valid_loss.tolist()
     val_accuracies = model.epochs_df.valid_misclass.tolist()
-
     result_dict = model.evaluate(test_dl.dataset.data.numpy(), test_dl.dataset.target.numpy())
     test_loss = result_dict["loss"]
     test_accuracy = 1 - result_dict["misclass"]
+    if cuda:  # Works only with cuda... strange...
+        # Class specific
+        class_correct = list(0. for i in range(n_classes))
+        class_appearances = list(0. for i in range(n_classes))
+        class_predictions= (model.predict_classes(test_dl.dataset.data.numpy())).tolist()
+        for i in range(len(class_predictions)):
+            tmp_label = test_dl.dataset.target.numpy()[i]
+            if tmp_label == class_predictions[i]:
+                class_correct[tmp_label] += 1
+            class_appearances[tmp_label] += 1
 
     # Store the results
-
-    results_storer.store_results_for_plot(my_cfg, test_loss, test_accuracy, train_losses,
+    txt_file_path = results_storer.store_results_for_plot(my_cfg, test_loss, test_accuracy, train_losses,
                                           train_accuracies, time_spent_for_training_s, val_losses, val_accuracies)
-    start_idx += 1
+    if cuda:
+        write_class_accuracies_to_txt(txt_file_path, n_classes, class_appearances, class_correct, print_enabled=True)
+
+    start_idx += 1  # Iterator
 
     if not start_idx < len(list_of_models):
         print('ONE LIST RUN IS FINNISHED')
