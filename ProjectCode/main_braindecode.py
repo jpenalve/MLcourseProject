@@ -8,14 +8,12 @@ Test it with different strategies: (20 Epochs enough for tendency)
 learning_rate=0.0625 * 0.01, weight_decay_factor=0
 
 - Without cropped training DONE
-- With gaussian augmentation (No Crop) DONE
-- Without gaussian augmentation
-- With cropped training
+- With gaussian augmentation (No Crop) DONE -> Improves test acc ca. 4%
+- Without gaussian augmentation DONE
+- With cropped training (and gauss) DONE
 
 Take the best model (With gauss and cropped training) and go on with
-- Cosine Annealing learning_rate
 
-If better: Take cosine annealing.
 
 ...Go on with:
 
@@ -23,6 +21,10 @@ L2 regularization
 weight_decay_factor = 0.0001
 weight_decay_factor = 0.00001
 weight_decay_factor = 0.000001
+
+- Play with epoch length (or 500 ms after trial start as in Schirrmeister et. al.)
+
+Test it (just for fun) wihtout normalization
 
 => Take the best value.
 Apply early stopping.
@@ -52,17 +54,21 @@ n_classes = 10
 #list_of_models = ['EEGNetv4', 'ShallowFBCSPNet', 'Deep4Net'] # We know due to experiments that Shallow FBCSPNet is best
 list_of_models = ['ShallowFBCSPNet']
 my_cfg = defaultconfig.DefaultConfig
-my_cfg.augment_with_gauss_noise = False
+my_cfg.augment_with_gauss_noise = True
 start_idx = 0
-cropped = False
+cropped = True
 """ PREPARE DATALOADERS """
 # TODO: Write a method that checks if we have already stored the DL objects for this specific my_cfg -> LOAD THEM
 # TODO: If not -> STORE THEM (...We need a unique identifier for each DL object.. for example MD5 value)
-
+my_cfg.selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+my_cfg.augment_with_gauss_noise = False
+my_cfg.num_of_epochs = 1
 
 train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
-
-
+list_weight_decay = [0.0001, 0.00001, 0.000001]
+list_time_before_event = [-0.5, 0, 0.5, 1]
+#my_cfg.time_before_event_s
+#my_cfg.time_after_event_s
 while start_idx < len(list_of_models):
     print('++++ CONFIGURATION %2d, of %2d' % (start_idx+1, len(list_of_models)))
     print('croppend is ', cropped)
@@ -145,9 +151,12 @@ while start_idx < len(list_of_models):
     time_spent_for_training_s = np.round(np.sum(model.epochs_df.runtime.tolist()))
     train_losses = model.epochs_df.train_loss.tolist()
     train_accuracies = model.epochs_df.train_misclass.tolist()
+    train_accuracies = [1 - x for x in train_accuracies]
 
     val_losses = model.epochs_df.valid_loss.tolist()
     val_accuracies = model.epochs_df.valid_misclass.tolist()
+    val_accuracies = [1 - x for x in val_accuracies]
+
     result_dict = model.evaluate(test_dl.dataset.data.numpy(), test_dl.dataset.target.numpy())
     test_loss = result_dict["loss"]
     test_accuracy = 1 - result_dict["misclass"]

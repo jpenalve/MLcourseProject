@@ -29,7 +29,7 @@ class DummyConfig(DefaultConfig):
     show_events_distribution = True
     augment_with_gauss_noise = False
     normalize = False  # Epoch normalization to mean=0.5, std=0.5
-    nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_list = ['SimpleFC01']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
     #time_before_event_s = -0.1  # Epochsize parameter: Start time before event.
     #time_after_event_s = 2.0  # Epochsize parameter: Time after event.
@@ -365,7 +365,6 @@ class EEGNetDeeper(DefaultConfig):
     config_remark = 'EEGNetDeeper: Like EEGNet11 but with more layers'
     dropout_perc = 0.1
     weight_decay = 0.00015
-    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     scheduler = True
     nn_list = ['EEGNetDeeper']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
@@ -382,7 +381,6 @@ class EEGNet11Dbg(DefaultConfig):
     weight_decay = 0.00015
     scheduler = False
     augment_with_gauss_noise = False  # DEBUG TEMP! eigentlich true
-    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     # loss_fn = nn.NLLLoss()
     # num_of_epochs = 1
     #selected_subjects = [1, 2, 3, 4, 5, 6, 7]# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
