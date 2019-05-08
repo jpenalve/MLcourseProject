@@ -1,3 +1,32 @@
+
+"""
+Experiments Results: The best ist the ConvNet ShallowFBCSPNet
+-----------------------------------------
+
+Test it with different strategies: (20 Epochs enough for tendency)
+
+learning_rate=0.0625 * 0.01, weight_decay_factor=0
+
+- Without cropped training DONE
+- With gaussian augmentation (No Crop) DONE
+- Without gaussian augmentation
+- With cropped training
+
+Take the best model (With gauss and cropped training) and go on with
+- Cosine Annealing learning_rate
+
+If better: Take cosine annealing.
+
+...Go on with:
+
+L2 regularization
+weight_decay_factor = 0.0001
+weight_decay_factor = 0.00001
+weight_decay_factor = 0.000001
+
+=> Take the best value.
+Apply early stopping.
+"""
 from configs import configs_tim, defaultconfig
 from data_loader_creation import get_dataloader_objects
 from optimizers import get_optimizer
@@ -20,19 +49,16 @@ if torch.cuda.is_available():
 else:
     cuda = False
 n_classes = 10
-list_of_models = ['EEGNetv4', 'ShallowFBCSPNet', 'Deep4Net'] # We know eegnet already
+#list_of_models = ['EEGNetv4', 'ShallowFBCSPNet', 'Deep4Net'] # We know due to experiments that Shallow FBCSPNet is best
+list_of_models = ['ShallowFBCSPNet']
 my_cfg = defaultconfig.DefaultConfig
+my_cfg.augment_with_gauss_noise = False
 start_idx = 0
 cropped = False
 """ PREPARE DATALOADERS """
 # TODO: Write a method that checks if we have already stored the DL objects for this specific my_cfg -> LOAD THEM
 # TODO: If not -> STORE THEM (...We need a unique identifier for each DL object.. for example MD5 value)
 
-#DEBUG
-my_cfg.num_of_epochs = 1
-my_cfg.selected_subjects = [1, 2, 3, 4, 5, 6, 7]
-list_of_models = ['ShallowFBCSPNet'] # We know eegnet already
-my_cfg.augment_with_gauss_noise = False
 
 train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
 
@@ -146,8 +172,8 @@ while start_idx < len(list_of_models):
 
     if not start_idx < len(list_of_models):
         print('ONE LIST RUN IS FINNISHED')
-        if not my_cfg.augment_with_gauss_noise: # We are done
+        if not cropped: # We are done
             print('Done with main braindecode')
         else:
-            my_cfg.augment_with_gauss_noise = False
+            cropped = False
             start_idx = 0 # we do only one setting

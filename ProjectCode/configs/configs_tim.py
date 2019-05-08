@@ -393,8 +393,18 @@ list_of_configs = [DummyConfig]
                    #EEGNetDeeper02, EEGNetDeeper03, EEGNetDeeper04, EEGNetDeeper05, EEGNetDeeper06, EEGNetDeeper07,
                   # DeepFC07, DeepFC08, DeepFC09]
 """
+CONFIGS to create for eval plots
+list_of_configs = [ EEGNet06, , EEGNet08, , EEGNet10, EEGNet11, EEGNet12,
+                   EEGNetDeeper01, EEGNetDeeper03, EEGNetDeeper05, EEGNetDeeper06, EEGNetDeeper07,
+                   SimpleFC01, SimpleFC02, SimpleFC03, SimpleFC04, SimpleFC05, SimpleFC06,
+                   DeepFC01, DeepFC02, DeepFC03, DeepFC04, DeepFC05, DeepFC06]
+"""
+"""
+ALL CONFIGS
 list_of_configs = [EEGNet01, EEGNet02, EEGNet03, EEGNet04, EEGNet05, EEGNet06,
                    EEGNet07, EEGNet08, EEGNet09, EEGNet10, EEGNet11, EEGNet12,
+                   EEGNetDeeper01,EEGNetDeeper02, EEGNetDeeper03, EEGNetDeeper04, EEGNetDeeper05, 
+                   EEGNetDeeper06, EEGNetDeeper07,
                    SimpleFC01, SimpleFC02, SimpleFC03, SimpleFC04, SimpleFC05, SimpleFC06,
                    DeepFC01, DeepFC02, DeepFC03, DeepFC04, DeepFC05, DeepFC06]"""
 
