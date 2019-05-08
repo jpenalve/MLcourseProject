@@ -96,7 +96,7 @@ class ConfigConv1D(DefaultConfig):
     
     config_name = 'ConvNet1D'
     config_remark = 'This is a cov NN test.. I am serious'
-    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
     
     
     nn_list = ['ConvNet1D']  # Extend if you want more. Add them in the nn_models_getter.py module
@@ -104,14 +104,13 @@ class ConfigConv1D(DefaultConfig):
     optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
     optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
     learning_rate = 1e-3
-    weight_decay = 0.01
-    momentum = 0.01  # Relevant only for SGDMomentum, else: ignored
+    weight_decay = 0.02
     
     
     num_of_epochs = 15
     batch_size = 128
     use_early_stopping = True
-    es_patience = 20
+    es_patience = 10
     normalize = True
     
     

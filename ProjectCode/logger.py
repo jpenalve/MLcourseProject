@@ -2,6 +2,10 @@
 import tensorflow as tf
 import numpy as np
 import scipy.misc
+import os, shutil
+from datetime import datetime
+
+
 
 try:
     from StringIO import StringIO  # Python 2.7
@@ -12,8 +16,25 @@ except ImportError:
 class Logger(object):
 
     def __init__(self, log_dir):
+        
+        # Empyty the folder to only plot the last training.
+        '''for the_file in os.listdir(log_dir):
+            file_path = os.path.join(log_dir, the_file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                #elif os.path.isdir(file_path): shutil.rmtree(file_path)  #Uncomment this to remove also subfolders.
+            except Exception as e:
+                print(e)'''
+                
         """Create a summary writer logging to log_dir."""
-        self.writer = tf.summary.FileWriter(log_dir)
+        todays_date = datetime.today().strftime('/%Y_%m_%d_%H%M')
+        date_path = log_dir + todays_date
+        if not os.path.exists(date_path):
+            os.mkdir(date_path)
+        
+        tf.reset_default_graph()
+        self.writer = tf.summary.FileWriter(date_path)
 
     def scalar_summary(self, tag, value, step):
         """Log a scalar variable."""

@@ -74,7 +74,7 @@ def test(model, test_loader, loss_fn, print_loss=False, path_name_txt=None):
 def write_class_accuracies_to_txt(path_name_txt, num_of_classes, class_appearances, class_correct, print_enabled=True):
 
     txt_file_handle = open(path_name_txt, "a")
- # Look at each class
+    # Look at each class
     for i in range(num_of_classes):
         # Class not present
         if class_appearances[i] == 0:
@@ -107,6 +107,7 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
         best_model = None
         patience = estop_patience  # if no improvement after estop_patience epochs, stop training
         counter = 0
+        
     # Track learning rate
     previous_learning_rate =  optimizer.param_groups[0]['lr'];
     print('Learning Rate: ', optimizer.param_groups[0]['lr'],'\n')
