@@ -70,12 +70,13 @@ list_weight_decay = [0.0001, 0.00001, 0.000001]
 list_time_before_event = [-0.5, 0, 0.5, 1]
 #my_cfg.time_before_event_s
 #my_cfg.time_after_event_s
+list_to_iterate = list_weight_decay
 #while start_idx < len(list_of_models):
-while start_idx < len(list_weight_decay):
+while start_idx < len(list_to_iterate):
     tmp_weight_decay = list_weight_decay[start_idx]
     my_cfg.weight_decay = tmp_weight_decay
 
-    print('++++ CONFIGURATION %2d, of %2d' % (start_idx+1, len(list_of_models)))
+    print('++++ CONFIGURATION %2d, of %2d' % (start_idx+1, len(list_to_iterate)))
     print('croppend is ', cropped)
     tmp_model_id = 'ShallowFBCSPNet'#list_of_models[start_idx]
 
