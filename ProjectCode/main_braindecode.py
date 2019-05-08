@@ -20,10 +20,10 @@ if torch.cuda.is_available():
 else:
     cuda = False
 n_classes = 10
-list_of_models = ['ShallowFBCSPNet', 'Deep4Net', 'EEGNetv4'] # We know eegnet already
+list_of_models = ['EEGNetv4', 'ShallowFBCSPNet', 'Deep4Net'] # We know eegnet already
 my_cfg = defaultconfig.DefaultConfig
 start_idx = 0
-cropped = True
+cropped = False
 """ PREPARE DATALOADERS """
 # TODO: Write a method that checks if we have already stored the DL objects for this specific my_cfg -> LOAD THEM
 # TODO: If not -> STORE THEM (...We need a unique identifier for each DL object.. for example MD5 value)
@@ -31,7 +31,7 @@ cropped = True
 #DEBUG
 my_cfg.num_of_epochs = 1
 my_cfg.selected_subjects = [1, 2, 3, 4, 5, 6, 7]
-my_cfg.augment_with_gauss_noise = False
+
 
 train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
 
@@ -82,6 +82,7 @@ while start_idx < len(list_of_models):
         model = ShallowFBCSPNet(in_chans=in_chans, n_classes=n_classes,
                                 input_time_length=input_time_length_param,
                                 final_conv_length=final_conv_length_param)
+        super_crop_size = 450
         if cuda: model.cuda()
     elif tmp_model_id == 'Deep4Net':
         my_cfg.config_name = 'Deep4Net'+str_addon
@@ -89,13 +90,15 @@ while start_idx < len(list_of_models):
         model = Deep4Net(in_chans=in_chans, n_classes=n_classes,
                          input_time_length=input_time_length_param,
                          final_conv_length=final_conv_length_param)
+        #super_crop_size = 450
         if cuda: model.cuda()
     elif tmp_model_id == 'EEGNetv4':
         my_cfg.config_name = 'EEGNetv4'+str_addon
         my_cfg.config_remark = str_addon
         model = EEGNetv4(in_chans=in_chans, n_classes=n_classes,
-                         input_time_length=input_time_length_param,
-                         final_conv_length=final_conv_length_param)
+                             input_time_length=input_time_length_param,
+                             final_conv_length=final_conv_length_param)
+        #super_crop_size = 450
         if cuda: model.cuda()
 
 
@@ -104,7 +107,6 @@ while start_idx < len(list_of_models):
 
     model.compile(loss=F.cross_entropy, optimizer=optimizer, iterator_seed=1, cropped=cropped)
     if cropped:
-        super_crop_size = np.round(train_dl.dataset.data.shape[2] / 5).astype(np.int64)
         model.fit(train_dl.dataset.data.numpy(), train_dl.dataset.target.numpy(), epochs=my_cfg.num_of_epochs,
                   batch_size=my_cfg.batch_size, scheduler='cosine', input_time_length=super_crop_size,
                   validation_data=(val_dl.dataset.data.numpy(), val_dl.dataset.target.numpy()))
@@ -132,8 +134,8 @@ while start_idx < len(list_of_models):
 
     if not start_idx < len(list_of_models):
         print('ONE LIST RUN IS FINNISHED')
-        if not cropped: # We are done
+        if not my_cfg.augment_with_gauss_noise: # We are done
             print('Done with main braindecode')
         else:
-            cropped = False
-            start_idx = 0
+            my_cfg.augment_with_gauss_noise = False
+            start_idx = 0 # we do only one setting

@@ -2,7 +2,7 @@
 import os
 from visualisations import plot_metrics_from_pkl
 
-usr_folder_path = 'C:/Users/tim-f/Downloads/'
+usr_folder_path = 'C:/Users/tim-f/Documents/ATML_GroupWork_GitRepo/MLcourseProject/ProjectCode/classification_results/results_to_sync/Braindecode'
 
 
 files_list = []
