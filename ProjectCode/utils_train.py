@@ -42,7 +42,7 @@ def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, t
     n_correct = 0
     number_of_classes = 10
     class_correct = list(0. for i in range(number_of_classes))
-    class_total = list(0. for i in range(number_of_classes))
+    class_appearances = list(0. for i in range(number_of_classes))
     with torch.no_grad():
         for images, labels in test_loader:
             images = images.to(device)
@@ -57,31 +57,35 @@ def test(model, test_loader, loss_fn, print_loss=False, write_class_txt=False, t
             for i in range(tmp_batch_size):
                 label = labels[i]
                 class_correct[label] += correct_idcs[i].item()
-                class_total[label] += 1
+                class_appearances[label] += 1
 
     average_loss = test_loss / len(test_loader)
     accuracy = 100.0 * n_correct / len(test_loader.dataset)
     if print_loss:
         #print('--> Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
         #print("\n\n")
-
-        # Look at each class
-        for i in range(number_of_classes):
-            # Class not present
-            if class_total[i] == 0:
-                if print_detailedloss:
-                    print('Accuracy of class %1d : %19s' % (i, 'No label available'))
-                if write_class_txt:
-                    txt_file_handle.write('Accuracy of class %1d : %19s' % (i, 'No label available \n'))
-            else:
-                if print_detailedloss:
-                    print('Accuracy of class %1d : %2d %% of %1d labels'
-                      % (i, 100 * class_correct[i] / class_total[i], class_total[i]))
-                if write_class_txt:
-                    txt_file_handle.write('Accuracy of class %1d : %2d %% of %1d labels \n'
-                      % (i, 100 * class_correct[i] / class_total[i], class_total[i]))
+        write_class_accuracies_to_txt(number_of_classes, class_appearances, class_correct, print_enabled=True)
 
     return average_loss, accuracy
+
+
+def write_class_accuracies_to_txt(txt_file_handle, num_of_classes, class_appearances, class_correct, print_enabled=True):
+ # Look at each class
+    for i in range(num_of_classes):
+        # Class not present
+        if class_appearances[i] == 0:
+            if print_enabled:
+                print('Accuracy of class %1d : %19s' % (i, 'No label available'))
+
+            txt_file_handle.write('Accuracy of class %1d : %19s' % (i, 'No label available \n'))
+        else:
+            if print_enabled:
+                print('Accuracy of class %1d : %2d %% of %1d labels'
+                      % (i, 100 * class_correct[i] / class_appearances[i], class_appearances[i]))
+
+            txt_file_handle.write('Accuracy of class %1d : %2d %% of %1d labels \n'
+                                  % (i, 100 * class_correct[i] / class_appearances[i], class_appearances[i]))
+
 
 
 def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, scheduler=None, apply_early_stopping=False, estop_patience=5,print_detloss=True):
