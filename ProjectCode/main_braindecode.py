@@ -66,14 +66,16 @@ my_cfg.num_of_epochs = 10
 
 
 #list_weight_decay = [0.00005, 0.00001,0.000005, 0.000001, 0.0000005] #0.0001 is too "strong" 0.000005 is best
-list_time_before_event = [-4.5, -4, -3, -2, -1, -0.5, 0, 0.5, 1]
-list_to_iterate = list_time_before_event
+#list_time_before_event = [-4.5, -4, -3, -2, -1, -0.5, 0, 0.5, 1] # -4 is by far the best!
+#list_time_after_event = [-2, -1, -0.5, 0, 0.5, 1, 2, 3, 4, 4.5, 5] # 4 is the best
+list_to_iterate = list_time_after_event
 #while start_idx < len(list_of_models):
 while start_idx < len(list_to_iterate):
     tmp_weight_decay = 0.000005  # Experimental approved value.
     my_cfg.weight_decay = tmp_weight_decay
 
-    my_cfg.time_before_event_s = list_time_before_event[start_idx]
+    my_cfg.time_before_event_s = -4
+    my_cfg.time_after_event_s = 4
     train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
 
 
@@ -117,8 +119,8 @@ while start_idx < len(list_to_iterate):
         str_addon = '_Not_cropped'
         final_conv_length_param = 'auto'
     if tmp_model_id == 'ShallowFBCSPNet':
-        my_cfg.config_name = 'ShallowFBCSPNet'+str_addon + '_tbe_' + str( my_cfg.time_before_event_s )
-        my_cfg.config_remark = str_addon + '_wd_' + str(tmp_weight_decay)
+        my_cfg.config_name = 'ShallowFBCSPNet'+str_addon
+        my_cfg.config_remark = str_addon
         model = ShallowFBCSPNet(in_chans=in_chans, n_classes=n_classes,
                                 input_time_length=input_time_length_param,
                                 final_conv_length=final_conv_length_param)
