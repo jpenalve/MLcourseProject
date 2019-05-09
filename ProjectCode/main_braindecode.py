@@ -17,10 +17,8 @@ Take the best model (With gauss and cropped training) and go on with
 
 ...Go on with:
 
-L2 regularization
-weight_decay_factor = 0.0001
-weight_decay_factor = 0.00001
-weight_decay_factor = 0.000001
+L2 regularization several weight decay factors
+weight_decay_factor = 0.000005 Performs best!
 
 - Play with epoch length (or 500 ms after trial start as in Schirrmeister et. al.)
 
@@ -61,20 +59,23 @@ cropped = True
 # TODO: Write a method that checks if we have already stored the DL objects for this specific my_cfg -> LOAD THEM
 # TODO: If not -> STORE THEM (...We need a unique identifier for each DL object.. for example MD5 value)
 #DEBUG
-my_cfg.selected_subjects = [1, 2, 3, 4, 5, 6, 7]
+my_cfg.selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+                         20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
 my_cfg.augment_with_gauss_noise = False
-my_cfg.num_of_epochs = 1
+my_cfg.num_of_epochs = 10
 
-train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
-list_weight_decay = [0.0001, 0.00001, 0.000001]
-list_time_before_event = [-0.5, 0, 0.5, 1]
-#my_cfg.time_before_event_s
-#my_cfg.time_after_event_s
-list_to_iterate = list_weight_decay
+
+#list_weight_decay = [0.00005, 0.00001,0.000005, 0.000001, 0.0000005] #0.0001 is too "strong" 0.000005 is best
+list_time_before_event = [-4.5, -4, -3, -2, -1, -0.5, 0, 0.5, 1]
+list_to_iterate = list_time_before_event
 #while start_idx < len(list_of_models):
 while start_idx < len(list_to_iterate):
-    tmp_weight_decay = list_weight_decay[start_idx]
+    tmp_weight_decay = 0.000005  # Experimental approved value.
     my_cfg.weight_decay = tmp_weight_decay
+
+    my_cfg.time_before_event_s = list_time_before_event[start_idx]
+    train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
+
 
     print('++++ CONFIGURATION %2d, of %2d' % (start_idx+1, len(list_to_iterate)))
     print('croppend is ', cropped)
@@ -116,8 +117,8 @@ while start_idx < len(list_to_iterate):
         str_addon = '_Not_cropped'
         final_conv_length_param = 'auto'
     if tmp_model_id == 'ShallowFBCSPNet':
-        my_cfg.config_name = 'ShallowFBCSPNet'+str_addon+'_wd_'+str(tmp_weight_decay)
-        my_cfg.config_remark = str_addon
+        my_cfg.config_name = 'ShallowFBCSPNet'+str_addon + '_tbe_' + str( my_cfg.time_before_event_s )
+        my_cfg.config_remark = str_addon + '_wd_' + str(tmp_weight_decay)
         model = ShallowFBCSPNet(in_chans=in_chans, n_classes=n_classes,
                                 input_time_length=input_time_length_param,
                                 final_conv_length=final_conv_length_param)
