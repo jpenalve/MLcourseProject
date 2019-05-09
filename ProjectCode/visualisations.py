@@ -43,13 +43,26 @@ def events_distribution_plot(events):
             both feet (in runs 5, 6, 9, 10, 13, and 14)
     """
 
+def write_accuracies_for_tensorboard(accuracy_list, step, model, logger):
+    # ================================================================== #
+    #                        Tensorboard Logging                         #
+    # ================================================================== #
+
+    # 1. Log scalar values (scalar summary)
+    for i in range(len(accuracy_list)):
+        info = {'ClassAccuracy/Class '+str(i): accuracy_list[i]}
+
+        for tag, value in info.items():
+            logger.scalar_summary(tag, value, step + 1)
+    
+    
 def write_logs_for_tensorboard(loss, accuracy, step, model, logger):
     # ================================================================== #
     #                        Tensorboard Logging                         #
     # ================================================================== #
 
     # 1. Log scalar values (scalar summary)
-    info = {'loss': loss, 'accuracy': accuracy}
+    info = {'.Overall/Loss': loss, '.Overall/Accuracy': accuracy}
 
     for tag, value in info.items():
         logger.scalar_summary(tag, value, step + 1)

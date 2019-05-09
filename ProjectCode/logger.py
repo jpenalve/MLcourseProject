@@ -2,7 +2,7 @@
 import tensorflow as tf
 import numpy as np
 import scipy.misc
-import os, shutil
+import os
 from datetime import datetime
 
 
@@ -15,21 +15,15 @@ except ImportError:
 
 class Logger(object):
 
-    def __init__(self, log_dir):
+    def __init__(self, log_dir, curve_name,training=False):
         
-        # Empyty the folder to only plot the last training.
-        '''for the_file in os.listdir(log_dir):
-            file_path = os.path.join(log_dir, the_file)
-            try:
-                if os.path.isfile(file_path):
-                    os.unlink(file_path)
-                #elif os.path.isdir(file_path): shutil.rmtree(file_path)  #Uncomment this to remove also subfolders.
-            except Exception as e:
-                print(e)'''
-                
         """Create a summary writer logging to log_dir."""
-        todays_date = datetime.today().strftime('/%Y_%m_%d_%H%M')
-        date_path = log_dir + todays_date
+        todays_date = datetime.today().strftime('%Y%m%d_%H%M%S')
+        curve_name = "/"+curve_name + "_"
+        date_path = log_dir + curve_name + todays_date
+        if training:
+            date_path = date_path+"_train"
+        
         if not os.path.exists(date_path):
             os.mkdir(date_path)
         
