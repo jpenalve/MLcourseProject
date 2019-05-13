@@ -1,0 +1,4 @@
+SimpleFC: No mormalization and no gauss
+->val_loss: 1230.7079, val_accuracy: 25.8651% 
+->train_loss: 252.0987, train_accuracy: 64.4236% 
+->test_loss: 1147.6757, test_accuracy: 28.2999% 

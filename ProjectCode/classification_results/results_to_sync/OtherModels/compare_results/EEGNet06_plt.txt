@@ -1,0 +1,4 @@
+EEGNET: No weight decay (default 0.000075)
+->val_loss: 1.9801, val_accuracy: 33.1965% 
+->train_loss: 1.8347, train_accuracy: 37.2609% 
+->test_loss: 1.9795, test_accuracy: 31.8902% 

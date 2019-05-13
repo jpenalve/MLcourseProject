@@ -58,7 +58,7 @@ class DefaultConfig:
     # Set loss function
     loss_fn = nn.CrossEntropyLoss() # TODO: Maybe we have to apply class weighting (if we care about the under represented classes..)
     # Set number of epochs for training
-    num_of_epochs = 20
+    num_of_epochs = 25
     use_early_stopping = False
     es_patience = 5
     # TODO : Make data augmentation module (e.g. add gaussian noise to channels)
@@ -67,7 +67,7 @@ class DefaultConfig:
 
     augment_with_gauss_noise = True
     augment_std_gauss = 0.2  # (See EEG Review Roy et. al. 2019)
-    augmentation_factor = 5
+    augmentation_factor = 3
 
     # Warning messages for MNE related stuff
     verbose = None

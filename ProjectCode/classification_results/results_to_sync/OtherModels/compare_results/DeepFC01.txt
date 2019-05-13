@@ -1,0 +1,14 @@
+DeepFC: Nor mormalization
+->val_loss: 2.8784, val_accuracy: 28.6804% 
+->train_loss: 0.7140, train_accuracy: 76.9497% 
+->test_loss: 2.8896, test_accuracy: 26.7159% 
+Accuracy of class 0 :  0 % of 4 labels 
+Accuracy of class 1 :  0 % of 3 labels 
+Accuracy of class 2 : 21 % of 237 labels 
+Accuracy of class 3 : 22 % of 235 labels 
+Accuracy of class 4 : 31 % of 238 labels 
+Accuracy of class 5 : 32 % of 234 labels 
+Accuracy of class 6 : 28 % of 234 labels 
+Accuracy of class 7 : 21 % of 237 labels 
+Accuracy of class 8 : 26 % of 236 labels 
+Accuracy of class 9 : 31 % of 236 labels 

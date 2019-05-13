@@ -1,0 +1,14 @@
+SimpleFC: No mormalization and no gauss
+->val_loss: 1230.7079, val_accuracy: 25.8651% 
+->train_loss: 252.0987, train_accuracy: 64.4236% 
+->test_loss: 1147.6757, test_accuracy: 28.2999% 
+Accuracy of class 0 :  0 % of 4 labels 
+Accuracy of class 1 :  0 % of 3 labels 
+Accuracy of class 2 : 36 % of 237 labels 
+Accuracy of class 3 : 36 % of 235 labels 
+Accuracy of class 4 : 30 % of 238 labels 
+Accuracy of class 5 : 38 % of 234 labels 
+Accuracy of class 6 : 14 % of 234 labels 
+Accuracy of class 7 : 19 % of 237 labels 
+Accuracy of class 8 : 27 % of 236 labels 
+Accuracy of class 9 : 23 % of 236 labels 

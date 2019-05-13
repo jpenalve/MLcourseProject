@@ -1,0 +1,14 @@
+DeepFC: Higher weight decay: weight_decay = 0.0075 (default 0.000075)
+->val_loss: 1.8797, val_accuracy: 24.2229% 
+->train_loss: 1.8245, train_accuracy: 25.0087% 
+->test_loss: 1.8759, test_accuracy: 22.9673% 
+Accuracy of class 0 :  0 % of 4 labels 
+Accuracy of class 1 :  0 % of 3 labels 
+Accuracy of class 2 : 28 % of 237 labels 
+Accuracy of class 3 : 12 % of 235 labels 
+Accuracy of class 4 : 32 % of 238 labels 
+Accuracy of class 5 : 47 % of 234 labels 
+Accuracy of class 6 :  0 % of 234 labels 
+Accuracy of class 7 :  0 % of 237 labels 
+Accuracy of class 8 :  0 % of 236 labels 
+Accuracy of class 9 : 63 % of 236 labels 
