@@ -17,10 +17,8 @@ Take the best model (With gauss and cropped training) and go on with
 
 ...Go on with:
 
-L2 regularization
-weight_decay_factor = 0.0001
-weight_decay_factor = 0.00001
-weight_decay_factor = 0.000001
+L2 regularization several weight decay factors
+weight_decay_factor = 0.000005 Performs best!
 
 - Play with epoch length (or 500 ms after trial start as in Schirrmeister et. al.)
 
@@ -60,19 +58,26 @@ cropped = True
 """ PREPARE DATALOADERS """
 # TODO: Write a method that checks if we have already stored the DL objects for this specific my_cfg -> LOAD THEM
 # TODO: If not -> STORE THEM (...We need a unique identifier for each DL object.. for example MD5 value)
-my_cfg.selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-my_cfg.augment_with_gauss_noise = False
-my_cfg.num_of_epochs = 1
 
-train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
-list_weight_decay = [0.0001, 0.00001, 0.000001]
-list_time_before_event = [-0.5, 0, 0.5, 1]
-#my_cfg.time_before_event_s
-#my_cfg.time_after_event_s
-while start_idx < len(list_of_models):
-    print('++++ CONFIGURATION %2d, of %2d' % (start_idx+1, len(list_of_models)))
+
+
+#list_weight_decay = [0.00005, 0.00001,0.000005, 0.000001, 0.0000005] #0.0001 is too "strong" 0.000005 is best
+#list_time_before_event = [-4.5, -4, -3, -2, -1, -0.5, 0, 0.5, 1] # -4 is by far the best!
+#list_time_after_event = [-2, -1, -0.5, 0, 0.5, 1, 2, 3, 4, 4.5, 5] # 4 is the best
+list_to_iterate = list_of_models
+#while start_idx < len(list_of_models):
+while start_idx < len(list_to_iterate):
+    tmp_weight_decay = 0.000005  # Experimental approved value.
+    my_cfg.weight_decay = tmp_weight_decay
+
+    my_cfg.time_before_event_s = -4
+    my_cfg.time_after_event_s = 4
+    train_dl, val_dl, test_dl, input_dimension_, output_dimension_ = get_dataloader_objects(my_cfg)
+
+
+    print('++++ CONFIGURATION %2d, of %2d' % (start_idx+1, len(list_to_iterate)))
     print('croppend is ', cropped)
-    tmp_model_id = list_of_models[start_idx]
+    tmp_model_id = 'ShallowFBCSPNet'#list_of_models[start_idx]
 
     """CLASSIFICATION"""
     importlib.reload(logging)  # see https://stackoverflow.com/a/21475297/1469195
@@ -136,7 +141,7 @@ while start_idx < len(list_of_models):
 
 
     optimizer = get_optimizer('AdamW', learning_rate=0.0625 * 0.01, model_parameters=model.parameters(), sgd_momentum=0,
-                              weight_decay_factor=0)
+                              weight_decay_factor=tmp_weight_decay)
 
     model.compile(loss=F.cross_entropy, optimizer=optimizer, iterator_seed=1, cropped=cropped)
     if cropped:
@@ -151,15 +156,15 @@ while start_idx < len(list_of_models):
     time_spent_for_training_s = np.round(np.sum(model.epochs_df.runtime.tolist()))
     train_losses = model.epochs_df.train_loss.tolist()
     train_accuracies = model.epochs_df.train_misclass.tolist()
-    train_accuracies = [1 - x for x in train_accuracies]
+    train_accuracies = [(1 - x)*100 for x in train_accuracies]
 
     val_losses = model.epochs_df.valid_loss.tolist()
     val_accuracies = model.epochs_df.valid_misclass.tolist()
-    val_accuracies = [1 - x for x in val_accuracies]
+    val_accuracies = [(1 - x)*100 for x in val_accuracies]
 
     result_dict = model.evaluate(test_dl.dataset.data.numpy(), test_dl.dataset.target.numpy())
     test_loss = result_dict["loss"]
-    test_accuracy = 1 - result_dict["misclass"]
+    test_accuracy = (1 - result_dict["misclass"])*100
     if cuda:  # Works only with cuda... strange...
         # Class specific
         class_correct = list(0. for i in range(n_classes))
@@ -185,4 +190,4 @@ while start_idx < len(list_of_models):
             print('Done with main braindecode')
         else:
             cropped = False
-            start_idx = 0 # we do only one setting
+            #start_idx = 0 # we do only one setting

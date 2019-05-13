@@ -1,0 +1,14 @@
+_Not_cropped_wd_5e-06
+->val_loss: 2.0718, val_accuracy: 19.1579% 
+->train_loss: 1.8838, train_accuracy: 33.1617% 
+->test_loss: 2.0514, test_accuracy: 20.0758% 
+Accuracy of class 0 :  0 % of 3 labels 
+Accuracy of class 1 :  0 % of 3 labels 
+Accuracy of class 2 :  7 % of 66 labels 
+Accuracy of class 3 : 14 % of 64 labels 
+Accuracy of class 4 : 24 % of 66 labels 
+Accuracy of class 5 : 21 % of 65 labels 
+Accuracy of class 6 : 24 % of 65 labels 
+Accuracy of class 7 : 27 % of 66 labels 
+Accuracy of class 8 : 20 % of 65 labels 
+Accuracy of class 9 : 23 % of 65 labels 
