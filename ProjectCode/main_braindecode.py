@@ -53,6 +53,7 @@ n_classes = 10
 list_of_models = ['ShallowFBCSPNet']
 my_cfg = defaultconfig.DefaultConfig
 my_cfg.augment_with_gauss_noise = True
+my_cfg.num_of_epochs = 50
 start_idx = 0
 cropped = True
 """ PREPARE DATALOADERS """
