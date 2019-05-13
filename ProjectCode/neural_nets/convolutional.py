@@ -249,3 +249,31 @@ class EEGNetDeeper(nn.Module):  # https://arxiv.org/abs/1611.08024
         return self.fclayers(x)
     
 """
+
+class ConvNetOzhan(nn.Module):
+
+    def __init__(self, output_dimension):
+        super(ConvNetOzhan, self).__init__()
+        # Define layers
+        self.convlayer = nn.Sequential(nn.Conv1d(in_channels=64, out_channels=256, kernel_size=50, stride=1),
+                                    nn.MaxPool1d(kernel_size=10, stride=10),
+                                    nn.BatchNorm1d(256),
+                                    nn.LeakyReLU(0.1),
+                                    nn.Conv1d(in_channels=256, out_channels=256, kernel_size=50, stride=1),
+                                    nn.MaxPool1d(kernel_size=10, stride=10),
+                                    nn.BatchNorm1d(256),
+                                    nn.LeakyReLU(0.1))
+
+
+        self.fclayers = nn.Sequential(nn.Linear(512, 512),
+                                      nn.LeakyReLU(0.1),
+                                      nn.Dropout(0.5),
+                                      nn.Linear(512, 256),
+                                      nn.LeakyReLU(0.1),
+                                      nn.Dropout(0.5),
+                                      nn.Linear(256, output_dimension))
+
+    def forward(self, x):
+        x = self.convlayer(x)
+        x = x.view(x.size(0), -1)
+        return self.fclayers(x)

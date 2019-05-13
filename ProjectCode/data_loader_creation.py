@@ -142,7 +142,6 @@ def augment_with_gaussian_noise(data, labels, std, multiplier):
     return augmented_data, augmented_labels
 
 def get_epoched_data(my_cfg):
-    print("Data is being loaded using MNE...",flush=True)
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     # -> We want to split up the dataset in all classes there are
 
@@ -156,11 +155,14 @@ def get_epoched_data(my_cfg):
     # print(current_path)
     if 'studi7/home/ProjectCode/' in current_path:
         data_path = '../../var/tmp/RawDataMNE'
-        print('We are on the cluster...',flush=True)
+        print('We are on the cluster...\n',flush=True)
         data_path = '../../var/tmp/RawDataMNE'
     else:
-        print('We are not on the cluster...',flush=True)
+        print('We are not on the cluster...\n',flush=True)
         data_path = 'RawDataMNE'
+
+        
+    print("Data is being loaded using MNE...",flush=True)
 
     list_epochs = []
     for idx, runs in tqdm(enumerate(arr_runs),total=len(arr_runs)):

@@ -2,6 +2,10 @@
 import tensorflow as tf
 import numpy as np
 import scipy.misc
+import os
+from datetime import datetime
+
+
 
 try:
     from StringIO import StringIO  # Python 2.7
@@ -11,9 +15,20 @@ except ImportError:
 
 class Logger(object):
 
-    def __init__(self, log_dir):
+    def __init__(self, log_dir, curve_name,training=False):
+        
         """Create a summary writer logging to log_dir."""
-        self.writer = tf.summary.FileWriter(log_dir)
+        todays_date = datetime.today().strftime('%Y%m%d_%H%M%S')
+        curve_name = "/"+curve_name + "_"
+        date_path = log_dir + curve_name + todays_date
+        if training:
+            date_path = date_path+"_train"
+        
+        if not os.path.exists(date_path):
+            os.mkdir(date_path)
+        
+        tf.reset_default_graph()
+        self.writer = tf.summary.FileWriter(date_path)
 
     def scalar_summary(self, tag, value, step):
         """Log a scalar variable."""
