@@ -17,8 +17,8 @@ def get_nn_model(model_name, input_dimension, output_dimension, dropout=0.25):
         model = conv.ConvNet01(output_dimension)
     elif model_name == 'ConvNet1D':
         model = conv.ConvNet1D(output_dimension)
-    elif model_name == 'ConvNet3D':
-        model = conv.ConvNet3D(output_dimension)
+    elif model_name == 'ConvNetOzhan':
+        model = conv.ConvNetOzhan(output_dimension)
     elif model_name == 'EEGNet':
         model = conv.EEGNet(output_dimension, dropout)
     elif model_name == 'EEGNetDeeper':

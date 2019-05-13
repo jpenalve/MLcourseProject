@@ -111,5 +111,31 @@ class ConfigConv1D(DefaultConfig):
     normalize = True
     
     
+class ConfigConvOzhan(DefaultConfig):
+    verbose = 'CRITICAL'
+    
+    config_name = 'ConvNetOzhan'
+    config_remark = 'This is a cov NN test.. I am serious'
+    selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+
+    
+    nn_list = ['ConvNetOzhan']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_selection_idx = 0
+    optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
+    optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
+    learning_rate = 1e-3
+    weight_decay = 0.02
+    
+    
+    num_of_epochs = 50
+    batch_size = 128
+    use_early_stopping = False
+    es_patience = 10
+    
+    normalize = True
+    augment_with_gauss_noise = True
+    augmentation_factor = 4
+    
+    
 # Put them all in a list
-list_of_configs = [ConfigConv1D,EEGNet]
+list_of_configs = [ConfigConvOzhan]
