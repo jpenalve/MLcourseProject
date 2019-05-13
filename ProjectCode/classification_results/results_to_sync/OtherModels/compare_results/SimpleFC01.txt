@@ -1,0 +1,14 @@
+SimpleFC: Nor mormalization
+->val_loss: 1889.2368, val_accuracy: 26.2757% 
+->train_loss: 117.8391, train_accuracy: 82.3574% 
+->test_loss: 1889.0870, test_accuracy: 26.7687% 
+Accuracy of class 0 : 25 % of 4 labels 
+Accuracy of class 1 : 33 % of 3 labels 
+Accuracy of class 2 : 35 % of 237 labels 
+Accuracy of class 3 : 25 % of 235 labels 
+Accuracy of class 4 : 22 % of 238 labels 
+Accuracy of class 5 : 28 % of 234 labels 
+Accuracy of class 6 : 30 % of 234 labels 
+Accuracy of class 7 : 20 % of 237 labels 
+Accuracy of class 8 : 25 % of 236 labels 
+Accuracy of class 9 : 27 % of 236 labels 

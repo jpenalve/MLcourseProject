@@ -1,0 +1,4 @@
+SimpleFC: Nor mormalization
+->val_loss: 1889.2368, val_accuracy: 26.2757% 
+->train_loss: 117.8391, train_accuracy: 82.3574% 
+->test_loss: 1889.0870, test_accuracy: 26.7687% 

@@ -1,0 +1,4 @@
+EEGNET: dropout = 0.5; Higher weight decay: weight_decay = 0.0075 (default 0.000075)
+->val_loss: 1.9797, val_accuracy: 32.0821% 
+->train_loss: 1.9554, train_accuracy: 34.7179% 
+->test_loss: 1.9958, test_accuracy: 31.0982% 

@@ -1,0 +1,14 @@
+EEGNET: dropout = 0.5; Higher weight decay: weight_decay = 0.0075 (default 0.000075)
+->val_loss: 1.9797, val_accuracy: 32.0821% 
+->train_loss: 1.9554, train_accuracy: 34.7179% 
+->test_loss: 1.9958, test_accuracy: 31.0982% 
+Accuracy of class 0 :  0 % of 4 labels 
+Accuracy of class 1 :  0 % of 3 labels 
+Accuracy of class 2 : 19 % of 237 labels 
+Accuracy of class 3 : 35 % of 235 labels 
+Accuracy of class 4 : 39 % of 238 labels 
+Accuracy of class 5 : 32 % of 234 labels 
+Accuracy of class 6 : 20 % of 234 labels 
+Accuracy of class 7 : 26 % of 237 labels 
+Accuracy of class 8 : 42 % of 236 labels 
+Accuracy of class 9 : 32 % of 236 labels 

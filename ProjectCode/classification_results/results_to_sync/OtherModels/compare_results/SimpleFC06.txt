@@ -1,0 +1,14 @@
+SimpleFC: No weight decay (default 0.000075)
+->val_loss: 13.1152, val_accuracy: 25.9824% 
+->train_loss: 1.0133, train_accuracy: 82.1140% 
+->test_loss: 13.3964, test_accuracy: 25.7656% 
+Accuracy of class 0 :  0 % of 4 labels 
+Accuracy of class 1 :  0 % of 3 labels 
+Accuracy of class 2 : 47 % of 237 labels 
+Accuracy of class 3 : 43 % of 235 labels 
+Accuracy of class 4 : 13 % of 238 labels 
+Accuracy of class 5 : 19 % of 234 labels 
+Accuracy of class 6 :  8 % of 234 labels 
+Accuracy of class 7 :  0 % of 237 labels 
+Accuracy of class 8 : 16 % of 236 labels 
+Accuracy of class 9 : 56 % of 236 labels 

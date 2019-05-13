@@ -1,0 +1,14 @@
+EEGNetDeeper: Like EEGNet11 but with more layers
+->val_loss: 2.0046, val_accuracy: 29.2082% 
+->train_loss: 1.9325, train_accuracy: 33.7311% 
+->test_loss: 1.9892, test_accuracy: 31.3622% 
+Accuracy of class 0 :  0 % of 3 labels 
+Accuracy of class 1 :  0 % of 4 labels 
+Accuracy of class 2 : 16 % of 237 labels 
+Accuracy of class 3 : 14 % of 235 labels 
+Accuracy of class 4 : 46 % of 238 labels 
+Accuracy of class 5 : 55 % of 234 labels 
+Accuracy of class 6 : 37 % of 234 labels 
+Accuracy of class 7 : 26 % of 237 labels 
+Accuracy of class 8 : 22 % of 236 labels 
+Accuracy of class 9 : 31 % of 236 labels 

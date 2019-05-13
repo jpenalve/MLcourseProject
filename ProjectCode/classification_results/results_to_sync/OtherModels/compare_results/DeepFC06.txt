@@ -1,0 +1,14 @@
+DeepFC: No weight decay (default 0.000075)
+->val_loss: 4.9307, val_accuracy: 27.3900% 
+->train_loss: 0.4632, train_accuracy: 83.3790% 
+->test_loss: 4.6012, test_accuracy: 27.6663% 
+Accuracy of class 0 :  0 % of 3 labels 
+Accuracy of class 1 :  0 % of 4 labels 
+Accuracy of class 2 : 24 % of 237 labels 
+Accuracy of class 3 : 15 % of 235 labels 
+Accuracy of class 4 : 41 % of 238 labels 
+Accuracy of class 5 : 42 % of 234 labels 
+Accuracy of class 6 : 17 % of 234 labels 
+Accuracy of class 7 : 19 % of 237 labels 
+Accuracy of class 8 : 19 % of 236 labels 
+Accuracy of class 9 : 41 % of 236 labels 

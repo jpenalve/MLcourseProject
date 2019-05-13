@@ -1,0 +1,4 @@
+EEGNET: dropout = 0.5; Higher Learning rate with scheduler
+->val_loss: 1.9917, val_accuracy: 30.2639% 
+->train_loss: 1.9532, train_accuracy: 31.8858% 
+->test_loss: 1.9994, test_accuracy: 30.0950% 

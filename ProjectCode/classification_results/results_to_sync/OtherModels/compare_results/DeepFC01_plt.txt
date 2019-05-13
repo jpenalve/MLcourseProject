@@ -1,0 +1,4 @@
+DeepFC: Nor mormalization
+->val_loss: 2.8784, val_accuracy: 28.6804% 
+->train_loss: 0.7140, train_accuracy: 76.9497% 
+->test_loss: 2.8896, test_accuracy: 26.7159% 

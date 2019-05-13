@@ -1,0 +1,4 @@
+EEGNetDeeper: Like EEGNet11 but with more layers
+->val_loss: 1.9678, val_accuracy: 30.4985% 
+->train_loss: 1.9491, train_accuracy: 33.0856% 
+->test_loss: 1.9949, test_accuracy: 30.6230% 

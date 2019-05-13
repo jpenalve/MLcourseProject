@@ -1,0 +1,14 @@
+EEGNET: dropout = 0.5; Higher Learning rate with scheduler
+->val_loss: 1.9917, val_accuracy: 30.2639% 
+->train_loss: 1.9532, train_accuracy: 31.8858% 
+->test_loss: 1.9994, test_accuracy: 30.0950% 
+Accuracy of class 0 :  0 % of 3 labels 
+Accuracy of class 1 :  0 % of 4 labels 
+Accuracy of class 2 : 30 % of 237 labels 
+Accuracy of class 3 : 25 % of 235 labels 
+Accuracy of class 4 : 47 % of 238 labels 
+Accuracy of class 5 : 36 % of 234 labels 
+Accuracy of class 6 : 23 % of 234 labels 
+Accuracy of class 7 : 29 % of 237 labels 
+Accuracy of class 8 : 23 % of 236 labels 
+Accuracy of class 9 : 29 % of 236 labels 

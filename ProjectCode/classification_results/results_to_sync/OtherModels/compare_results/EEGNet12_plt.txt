@@ -1,0 +1,4 @@
+EEGNET: dropout = 0.5; No weight decay (default 0.000075)
+->val_loss: 1.9807, val_accuracy: 33.3138% 
+->train_loss: 1.9181, train_accuracy: 34.7527% 
+->test_loss: 1.9628, test_accuracy: 35.3221% 

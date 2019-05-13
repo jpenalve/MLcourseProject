@@ -1,0 +1,4 @@
+DeepFC: No weight decay (default 0.000075)
+->val_loss: 4.9307, val_accuracy: 27.3900% 
+->train_loss: 0.4632, train_accuracy: 83.3790% 
+->test_loss: 4.6012, test_accuracy: 27.6663% 

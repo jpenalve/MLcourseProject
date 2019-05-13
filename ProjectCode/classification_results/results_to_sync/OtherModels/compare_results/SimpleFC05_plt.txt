@@ -1,0 +1,4 @@
+SimpleFC: Higher weight decay: weight_decay = 0.0075 (default 0.000075)
+->val_loss: 6.3274, val_accuracy: 26.5689% 
+->train_loss: 2.1772, train_accuracy: 60.1091% 
+->test_loss: 6.2916, test_accuracy: 24.7624% 

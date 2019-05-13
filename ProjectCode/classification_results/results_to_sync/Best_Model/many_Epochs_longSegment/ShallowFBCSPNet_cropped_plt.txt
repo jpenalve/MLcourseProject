@@ -1,0 +1,14 @@
+_cropped
+->val_loss: 1.8198, val_accuracy: 43.8123% 
+->train_loss: 1.4570, train_accuracy: 68.4033% 
+->test_loss: 1.8376, test_accuracy: 43.9810% 
+Accuracy of class 0 :  0 % of 3 labels 
+Accuracy of class 1 :  0 % of 4 labels 
+Accuracy of class 2 : 46 % of 237 labels 
+Accuracy of class 3 : 46 % of 235 labels 
+Accuracy of class 4 : 48 % of 238 labels 
+Accuracy of class 5 : 50 % of 234 labels 
+Accuracy of class 6 : 47 % of 234 labels 
+Accuracy of class 7 : 40 % of 237 labels 
+Accuracy of class 8 : 32 % of 236 labels 
+Accuracy of class 9 : 40 % of 236 labels 

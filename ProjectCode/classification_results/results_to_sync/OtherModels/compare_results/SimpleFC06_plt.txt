@@ -1,0 +1,4 @@
+SimpleFC: No weight decay (default 0.000075)
+->val_loss: 13.1152, val_accuracy: 25.9824% 
+->train_loss: 1.0133, train_accuracy: 82.1140% 
+->test_loss: 13.3964, test_accuracy: 25.7656% 
