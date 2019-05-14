@@ -66,6 +66,14 @@ def get_dataloader_objects(my_cfg):
 
     data = (epoched.get_data() * 1e6)  # Get all epochs as a 3D array.
     data = data[:, :-1, :]  # We do not want to feed in the labels as inputs
+    
+    if my_cfg.removeLastData:
+        remaining = data.shape[2] % 10
+        data = data[:, :, :-remaining]
+    
+    print(str(data.shape[2])," time samples and ",str(data.shape[1])," EEG channels for one epoch are taken. ",\
+          "Total epoch number is ",str(data.shape[0])," and there are ",str(len(my_cfg.selected_subjects))," subjects included.\n",\
+          "There are in total ", str(my_cfg.nClasses)," classes for classification.\n",flush=True)
 
     # -offset_to_subtract -> Classes made matching to CX definition
     labels = epoched.events[:, event_current_class_column]

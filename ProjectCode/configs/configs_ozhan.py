@@ -84,6 +84,7 @@ class ConfigConvOzhan(DefaultConfig):
     time_after_event_s = 4.0  # Epochsize parameter: Time after event.
     
     show_events_distribution = False
+    removeLastData = True
     
     
 # Put them all in a list

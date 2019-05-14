@@ -79,6 +79,8 @@ class DefaultConfig:
     
     #nClasses = 10 # Need to change other parts as well
     nClasses = 8 # Need to change other parts as well
+    
+    removeLastData = False
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class
