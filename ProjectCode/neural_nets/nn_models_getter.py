@@ -4,14 +4,15 @@ import torch.nn as nn
 import neural_nets.fully_connected as fc
 import neural_nets.recurrent as rc
 import neural_nets.convolutional as conv
+from torch import nn
 
 
 # Model selection
-def get_nn_model(model_name, input_dimension, output_dimension):
+def get_nn_model(model_name, input_dimension, output_dimension, dropout=0.25):
     if model_name == 'SimpleFC':
         model = fc.Simple(input_dimension, output_dimension)
     elif model_name == 'DeepFC':
-        model = fc.Deep(input_dimension, output_dimension)
+        model = fc.Deep(input_dimension, output_dimension, dropout)
     elif model_name == 'ConvNet01':
         model = conv.ConvNet01(output_dimension)
     elif model_name == 'ConvNet1D':
@@ -19,7 +20,9 @@ def get_nn_model(model_name, input_dimension, output_dimension):
     elif model_name == 'ConvNet3D':
         model = conv.ConvNet3D(output_dimension)
     elif model_name == 'EEGNet':
-        model = conv.EEGNet(output_dimension)
+        model = conv.EEGNet(output_dimension, dropout)
+    elif model_name == 'EEGNetDeeper':
+        model =conv.EEGNetDeeper(output_dimension, dropout)
     else:
         raise Exception('Mismatch between nn_list in config and available names in get_nn_model')
 
@@ -32,3 +35,4 @@ def get_nn_model(model_name, input_dimension, output_dimension):
     model = model.to(device)
 
     return model
+

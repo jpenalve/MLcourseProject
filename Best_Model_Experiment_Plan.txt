@@ -1,0 +1,33 @@
+The best ist the ConvNet ShallowFBCSPNet
+-----------------------------------------
+
+Test it with different strategies:
+
+learning_rate=0.0625 * 0.01, weight_decay_factor=0
+
+- With cropped training
+- Without cropped training
+- With gaussian augmentation
+- Without gaussian augmentation
+
+Take the best model (With gauss and cropped training) and go on with
+- Cosine Annealing learning_rate
+
+If better: Take cosine annealing.
+
+...Go on with:
+
+L2 regularization
+weight_decay_factor = 0.0001
+weight_decay_factor = 0.00001
+weight_decay_factor = 0.000001
+
+=> Take the best value. 
+Apply early stopping.
+
+
+
+############################################
+For presentation purpose: 
+Test the other models once again to get the graphs (just for presentation only).
+(See CONFIGS to create for eval plots)

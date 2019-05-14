@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
-from torchvision.transforms import Compose, ToTensor
 from torch.utils.data import DataLoader
 from datasets import ChannelsVoltageDataset
 from mne.datasets import eegbci
@@ -10,7 +9,7 @@ import os
 from visualisations import eeg_sample_plot, events_distribution_plot
 import torch
 from tqdm import tqdm
-
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 """
 The data are provided here in EDF+ format (containing 64 EEG signals, each sampled at 160 samples per second, and an 
@@ -45,7 +44,7 @@ POSSIBLE LABELS                 APPEAR IN RUNS      ACTUAL LABEL IN RUNS    OUR 
 0 Baseline, eyes open           1                   T0(=1)                  1
 1 Baseline, eyes closed         2                   T0(=1)                  0
 2 Motor Ex: Left Hand           3,7,11              T1(=2)                  0
-3 Motor Ex: Right Hand          3,7,11              T2(=3)                  -1
+3 Motor Ex: Right Hand          3,7,11              T2(=3)                  0
 4 Motor Im: Left Hand           4,8,12              T1(=2)                  -2
 5 Motor Im: Right Hand          4,8,12              T2(=3)                  -2
 6 Motor Ex: Both Hands          5,9,13              T1(=2)                  -4
@@ -78,6 +77,10 @@ def get_dataloader_objects(my_cfg):
     train_data, val_data, train_labels, val_labels = train_test_split(temp_data, temp_labels,
                                                                       test_size=my_cfg.validation_split, shuffle=True,
                                                                       stratify=temp_labels)
+    # Do data augmentation of training data
+    if my_cfg.augment_with_gauss_noise:
+        train_data, train_labels = augment_with_gaussian_noise(train_data, train_labels, my_cfg.augment_std_gauss,
+                                                               my_cfg.augmentation_factor)
 
     # Convert them to Tensors already. torch.float is needed for GPU.
     train_data = torch.tensor(train_data, dtype=torch.float)
@@ -106,14 +109,45 @@ def get_dataloader_objects(my_cfg):
     return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
 
+def augment_with_gaussian_noise(data, labels, std, multiplier):
+    
+    print("Data is being augmented with gaussian noise...",flush=True)
+    mean = 0
+    augmented_data = []
+    augmented_labels = []
+    if std > 1:
+        raise ValueError(' We expect in the range 0 to 1')
+
+    for idx, tmp_data in tqdm(enumerate(data),total=len(data)):
+        if idx % 100 == 0:
+            pass
+            #print('Augmented ', idx, 'of', len(data))
+        for j in range(multiplier):
+            tmp_label = labels[idx]
+            if j == 0:  # Take the real data for once
+                augmented_data.append(tmp_data)
+                augmented_labels.append(tmp_label)
+            else:
+                tmp_std_data = np.std(tmp_data)
+                tmp_std = tmp_std_data*std
+
+                noise = np.random.normal(loc=mean, scale=tmp_std, size=np.shape(tmp_data))
+                tmp_data_noisy = np.add(tmp_data, noise)
+                augmented_data.append(tmp_data_noisy)
+                augmented_labels.append(tmp_label)
+    augmented_data = np.asarray(augmented_data, dtype=np.float64)
+    augmented_labels = np.asarray(augmented_labels, dtype=np.int32)
+    print("...augmentation with gaussian noise is finished. \n",flush=True)
+
+    return augmented_data, augmented_labels
+
 def get_epoched_data(my_cfg):
-    print("Data is being loaded using MNE...",flush=True)
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     # -> We want to split up the dataset in all classes there are
 
-    arr_runs = np.array([1, 2, [3, 7, 11], [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    arr_runs = np.array([1, 2, [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
     arr_selected_classes = np.array([1, 1, [2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
-    arr_labels_offsets = np.array([1, 0, 0, -1, -2, -4, -6])
+    arr_labels_offsets = np.array([1, 0, 0, -2, -4, -6])
 
     # Load the data
     subjects = my_cfg.selected_subjects
@@ -121,11 +155,14 @@ def get_epoched_data(my_cfg):
     # print(current_path)
     if 'studi7/home/ProjectCode/' in current_path:
         data_path = '../../var/tmp/RawDataMNE'
-        print('We are on the cluster...',flush=True)
+        print('We are on the cluster...\n',flush=True)
         data_path = '../../var/tmp/RawDataMNE'
     else:
-        print('We are not on the cluster...',flush=True)
+        print('We are not on the cluster...\n',flush=True)
         data_path = 'RawDataMNE'
+
+        
+    print("Data is being loaded using MNE...",flush=True)
 
     list_epochs = []
     for idx, runs in tqdm(enumerate(arr_runs),total=len(arr_runs)):
@@ -147,14 +184,20 @@ def get_epoched_data(my_cfg):
         tmp_classes = (tmp_classes - tmp_offset).tolist()
         # Extract the epochs
         tmp_epoched = Epochs(raw, events, event_id=tmp_classes, tmin=my_cfg.time_before_event_s,
-                          tmax=my_cfg.time_after_event_s, baseline=(None, 0), picks=None,
+                          tmax=my_cfg.time_after_event_s, baseline=None, picks=None,
                           preload=False, reject=None, flat=None, proj=True, decim=1, reject_tmin=None, reject_tmax=None,
                           detrend=None, on_missing='error', reject_by_annotation=True, metadata=None,
                           verbose=my_cfg.verbose)
 
         # Store epoch for later use
         list_epochs.append(tmp_epoched)
-
+        'DEBUG'
+        """SHOW DATA"""
+        # Show some sample EEG data if desired
+        if my_cfg.show_eeg_sample_plot:
+            eeg_sample_plot(my_cfg.subjectIdx_to_plot, my_cfg.seconds_to_plot, my_cfg.channels_to_plot, raw_EDF_list)
+        if my_cfg.show_events_distribution:
+            events_distribution_plot(tmp_epoched.events)
 
     epoched = concatenate_epochs(list_epochs)
 
@@ -169,3 +212,4 @@ def get_epoched_data(my_cfg):
     print("...data loading with MNE was finished. \n")
 
     return epoched
+

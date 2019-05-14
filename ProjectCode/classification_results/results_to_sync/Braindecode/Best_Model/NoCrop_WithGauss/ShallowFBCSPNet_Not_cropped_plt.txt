@@ -1,0 +1,4 @@
+_Not_cropped
+->val_loss: 1.3700, val_accuracy: 0.4692% 
+->train_loss: 0.8362, train_accuracy: 0.2600% 
+->test_loss: 1.3741, test_accuracy: 0.5391% 
