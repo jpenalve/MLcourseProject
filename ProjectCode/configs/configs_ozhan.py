@@ -86,6 +86,8 @@ class ConfigConvOzhan(DefaultConfig):
     show_events_distribution = False
     removeLastData = True
     
+    downSample = 2
+    
     
 # Put them all in a list
 list_of_configs = [ConfigConvOzhan]

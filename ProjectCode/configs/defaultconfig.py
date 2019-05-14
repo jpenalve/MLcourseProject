@@ -81,6 +81,7 @@ class DefaultConfig:
     nClasses = 8 # Need to change other parts as well
     
     removeLastData = False
+    downSample = 1 # Downsamples the epoch time samples with this factor. Simply selects each downSample'th  data.
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class

@@ -277,7 +277,7 @@ class ConvNetOzhan(nn.Module):
         # FC Layer
         # NOTE: This dimension will depend on the number of timestamps per sample in your data.
         # I have 120 timepoints.
-        self.fc1 = nn.Linear(400, output_dimension)
+        self.fc1 = nn.Linear(200, output_dimension)
 
     def forward(self, x):
         x = x.permute(0, 2, 1)
@@ -303,7 +303,7 @@ class ConvNetOzhan(nn.Module):
         x = self.pooling3(x)
 
         # FC Layer
-        x = x.view(-1,400)
+        x = x.view(-1,200)
         x = torch.sigmoid(self.fc1(x))
         return x
     
