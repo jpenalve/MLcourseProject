@@ -105,8 +105,8 @@ def fit(train_dataloader, val_dataloader, model, optimizer, loss_fn, n_epochs, s
     time_start = time.time()
     train_losses, train_accuracies = [], []
     val_losses, val_accuracies = [], []
-    logger = Logger('./logs',curve_name)
-    logger_train = Logger('./logs',curve_name,training=True)
+    #logger = Logger('./logs',curve_name)
+    #logger_train = Logger('./logs',curve_name,training=True)
     
     if scheduler:
         tmp_scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.25)

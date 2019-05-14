@@ -5,7 +5,7 @@ import neural_nets.fully_connected as fc
 import neural_nets.recurrent as rc
 import neural_nets.convolutional as conv
 from torch import nn
-
+import neural_nets.con3dKeras as convV
 
 # Model selection
 def get_nn_model(model_name, input_dimension, output_dimension, dropout=0.25):
@@ -19,6 +19,8 @@ def get_nn_model(model_name, input_dimension, output_dimension, dropout=0.25):
         model = conv.ConvNet1D(output_dimension)
     elif model_name == 'ConvNet3D':
         model = conv.ConvNet3D(output_dimension)
+    elif model_name == 'ConvNet3DFFT':
+        model = convV.ConvNet3DFFT(output_dimension)
     elif model_name == 'EEGNet':
         model = conv.EEGNet(output_dimension, dropout)
     elif model_name == 'EEGNetDeeper':
