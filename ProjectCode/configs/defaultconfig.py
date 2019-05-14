@@ -76,7 +76,9 @@ class DefaultConfig:
     dropout_perc = 0 # default is no dropout
     
     curve_name = "NoName"
-    nClasses = 10 # Need to change other parts as well
+    
+    #nClasses = 10 # Need to change other parts as well
+    nClasses = 8 # Need to change other parts as well
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class

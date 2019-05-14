@@ -95,7 +95,7 @@ def fit(train_dataloader, val_dataloader, model, optimizer, config):
     if config.use_early_stopping:
         best_val_loss = np.inf
         best_model = None
-        patience = config.estop_patience  # if no improvement after estop_patience epochs, stop training
+        patience = config.es_patience  # if no improvement after estop_patience epochs, stop training
         counter = 0
         
     # Track learning rate

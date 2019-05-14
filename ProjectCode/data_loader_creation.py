@@ -104,7 +104,7 @@ def get_dataloader_objects(my_cfg):
     val_dl = DataLoader(val_ds, my_cfg.batch_size, shuffle=False)
     test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
     input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
-    output_dimension_ = np.max(labels) + 1  # Classes start at 0, therefore +1 offset
+    output_dimension_ = my_cfg.nClasses  # Classes start at 0, therefore +1 offset
 
     return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
@@ -145,9 +145,14 @@ def get_epoched_data(my_cfg):
     # Experimental runs per subject (range from 1 to 14). Runs differ in tasks performed tasks!
     # -> We want to split up the dataset in all classes there are
 
-    arr_runs = np.array([1, 2, [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
-    arr_selected_classes = np.array([1, 1, [2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
-    arr_labels_offsets = np.array([1, 0, 0, -2, -4, -6])
+    #arr_runs = np.array([1, 2, [3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    #arr_selected_classes = np.array([1, 1, [2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
+    #arr_labels_offsets = np.array([1, 0, 0, -2, -4, -6])
+    
+    #***** WITHOUT BASELINE***************
+    arr_runs = np.array([[3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    arr_selected_classes = np.array([[2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
+    arr_labels_offsets = np.array([-2, 0, 2, -4]) 
 
     # Load the data
     subjects = my_cfg.selected_subjects
