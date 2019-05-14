@@ -85,6 +85,7 @@ def store_results(my_cfg, model_trained, optimizer, test_loss, test_accuracy,
     txt_file.write('->train_loss: {:.4f}, train_accuracy: {:.4f}% \n'.format(train_losses[-1], train_accuracies[-1]))
     txt_file.write('->test_loss: {:.4f}, test_accuracy: {:.4f}% \n'.format(test_loss, test_accuracy))
     txt_file.close()
+    
     # Write detailled test loss metrics
-    test_loss, test_accuracy = test(model_trained, test_dl, my_cfg.loss_fn, print_loss=True, path_name_txt=path_name_txt)
+    test_loss, test_accuracy = test(model_trained, test_dl, my_cfg, print_loss=True, path_name_txt=path_name_txt)
     return path_name_txt

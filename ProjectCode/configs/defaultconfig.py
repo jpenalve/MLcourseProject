@@ -55,6 +55,8 @@ class DefaultConfig:
     # Adaption of learning rate?
     # TODO: Make scheduler module like the optimizer module
     scheduler = None  # if true: torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10, gamma=0.25)
+    schStepSize = 10
+    schGamma = 0.25
     # Set loss function
     loss_fn = nn.CrossEntropyLoss() # TODO: Maybe we have to apply class weighting (if we care about the under represented classes..)
     # Set number of epochs for training
@@ -72,6 +74,9 @@ class DefaultConfig:
     # Warning messages for MNE related stuff
     verbose = None
     dropout_perc = 0 # default is no dropout
+    
+    curve_name = "NoName"
+    nClasses = 10 # Need to change other parts as well
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 # overwrite parameters from the Config class

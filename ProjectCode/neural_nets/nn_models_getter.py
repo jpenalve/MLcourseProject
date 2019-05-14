@@ -8,7 +8,11 @@ from torch import nn
 
 
 # Model selection
-def get_nn_model(model_name, input_dimension, output_dimension, dropout=0.25):
+def get_nn_model(config, input_dimension, output_dimension):
+    
+    model_name = config.nn_list[config.nn_selection_idx]
+    dropout =  config.dropout_perc
+    
     if model_name == 'SimpleFC':
         model = fc.Simple(input_dimension, output_dimension)
     elif model_name == 'DeepFC':

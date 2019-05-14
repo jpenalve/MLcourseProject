@@ -123,3 +123,10 @@ def plot_performance_metrics(my_cfg, train_losses, val_losses, train_accuracies,
     plt.ylabel('accuracy')
     plt.title('Train/val accuracy of ' + nn_name + '(Tst acc: ' + str(test_acc)[0:5] + ')')
     plt.show(block=True)
+    
+    
+    
+def curve_name_gen(config):
+    
+    config.curve_name = config.nn_list[config.nn_selection_idx] + "_" + config.optimizer_list[config.optimizer_selection_idx]
+    print(config.curve_name,"\n-------------------------\n", flush=True)

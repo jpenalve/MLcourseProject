@@ -2,7 +2,13 @@
 from torch import optim
 from braindecode.torch_ext.optimizers import AdamW
 
-def get_optimizer(optimizer_name, learning_rate, model_parameters, sgd_momentum=0, weight_decay_factor=0):
+def get_optimizer(config, model_parameters):
+    
+    optimizer_name = config.optimizer_list[config.optimizer_selection_idx]
+    learning_rate = config.learning_rate
+    sgd_momentum = config.momentum
+    weight_decay_factor = config.weight_decay
+
     if optimizer_name == 'Adam':
         optimizer = optim.Adam(model_parameters, lr=learning_rate, weight_decay=weight_decay_factor)
     elif optimizer_name == 'SGD':
