@@ -90,6 +90,9 @@ def get_dataloader_objects(my_cfg):
         train_data, train_labels = augment_with_gaussian_noise(train_data, train_labels, my_cfg.augment_std_gauss,
                                                                my_cfg.augmentation_factor)
 
+    if my_cfg.dropOutCh or my_cfg.dropOutTime:
+        train_data = dropout_tiles(train_data,my_cfg)
+    
     # Convert them to Tensors already. torch.float is needed for GPU.
     train_data = torch.tensor(train_data, dtype=torch.float)
     train_labels = torch.tensor(train_labels, dtype=torch.long)
@@ -116,6 +119,41 @@ def get_dataloader_objects(my_cfg):
 
     return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
+
+def dropout_tiles(data, config):
+    
+    perc = config.dropOutperc
+    
+    sTimeTile = config.dropOutTimeTile
+    sChannelTile = config.dropOutChannelTile
+    
+    nEpochs = data.shape[0]
+    nChannel = data.shape[1]
+    nTime = data.shape[2]
+    
+    if config.dropOutTime == False:
+        sTimeTile = nTime
+        
+    if config.dropOutCh == False:
+        sChannelTile = nChannel
+    
+    nTimeTile = int(np.ceil(nTime/sTimeTile))
+    nChannelTile = int(np.ceil(nChannel/sChannelTile))
+    
+    print("Data is being dropped with ", str(perc), "prob and ", str(sTimeTile), " sized time tiles(",\
+          str(nTimeTile),") and ", str(sChannelTile)," sized channel tiles(",str(nChannelTile),").", flush=True)
+    
+    drop = np.random.choice([0, 1], (nEpochs,nChannelTile,nTimeTile), p=[perc,(1-perc)])
+    drop =  np.repeat(drop, sTimeTile, axis=2)
+    drop =  np.repeat(drop, sChannelTile, axis=1)
+    
+    
+    drop = drop[:,:data.shape[1],:data.shape[2]]
+    data = np.multiply(data,drop)
+    
+    print("...data was being dropped.", flush=True)
+    return data
+    
 
 def augment_with_gaussian_noise(data, labels, std, multiplier):
     

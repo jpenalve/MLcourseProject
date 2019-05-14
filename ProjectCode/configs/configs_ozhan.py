@@ -78,15 +78,22 @@ class ConfigConvOzhan(DefaultConfig):
     normalize = True
     augment_with_gauss_noise = True
     augmentation_factor = 2
+    augment_std_gauss = 0.2
     
     
-    time_before_event_s = -1.1  # Epochsize parameter: Start time before event.
+    time_before_event_s = -1.0  # Epochsize parameter: Start time before event.
     time_after_event_s = 4.0  # Epochsize parameter: Time after event.
     
     show_events_distribution = False
     removeLastData = True
     
-    downSample = 2
+    downSample = 1
+    
+    dropOutCh = True
+    dropOutTime = True
+    dropOutperc = 0.5
+    dropOutTimeTile = 40
+    dropOutChannelTile = 64
     
     
 # Put them all in a list

@@ -82,8 +82,15 @@ class DefaultConfig:
     
     removeLastData = False
     downSample = 1 # Downsamples the epoch time samples with this factor. Simply selects each downSample'th  data.
+    
+    dropOutCh = False
+    dropOutTime = False
+    dropOutperc = 0.5
+    dropOutTimeTile = 40
+    dropOutChannelTile = 4
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
+
 # overwrite parameters from the Config class
 
 # Dummy Config
