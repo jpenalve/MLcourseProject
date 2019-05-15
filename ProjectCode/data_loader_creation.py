@@ -90,7 +90,7 @@ def get_dataloader_objects(my_cfg):
         train_data, train_labels = augment_with_gaussian_noise(train_data, train_labels, my_cfg.augment_std_gauss,
                                                                my_cfg.augmentation_factor)
 
-    if my_cfg.dropOutCh or my_cfg.dropOutTime:
+    if my_cfg.dropOut:
         train_data = dropout_tiles(train_data,my_cfg)
     
     # Convert them to Tensors already. torch.float is needed for GPU.
@@ -122,7 +122,7 @@ def get_dataloader_objects(my_cfg):
 
 def dropout_tiles(data, config):
     
-    perc = config.dropOutperc
+    perc = config.dropOutTilePerc
     
     sTimeTile = config.dropOutTimeTile
     sChannelTile = config.dropOutChannelTile
@@ -131,10 +131,10 @@ def dropout_tiles(data, config):
     nChannel = data.shape[1]
     nTime = data.shape[2]
     
-    if config.dropOutTime == False:
+    if config.dropOutChOnly == True:
         sTimeTile = nTime
         
-    if config.dropOutCh == False:
+    if config.dropOutTimeOnly == True:
         sChannelTile = nChannel
     
     nTimeTile = int(np.ceil(nTime/sTimeTile))
@@ -144,9 +144,21 @@ def dropout_tiles(data, config):
           str(nTimeTile),") and ", str(sChannelTile)," sized channel tiles(",str(nChannelTile),").", flush=True)
     
     drop = np.random.choice([0, 1], (nEpochs,nChannelTile,nTimeTile), p=[perc,(1-perc)])
+    
+    drop_mean = np.mean(np.mean(drop,axis=2),axis=1)
+    zero_index = np.where(drop_mean == 0)
+
+    for idx in zero_index[0]:
+        if nTimeTile*nChannelTile > 1:
+            fill_i = np.random.randint(0, nTimeTile*nChannelTile-1)
+        else:
+            fill_i = int(0)
+        fill_ch = int(fill_i / nTimeTile)
+        fill_time = int(fill_i % nTimeTile)
+        drop[idx,fill_ch,fill_time] = 1
+    
     drop =  np.repeat(drop, sTimeTile, axis=2)
     drop =  np.repeat(drop, sChannelTile, axis=1)
-    
     
     drop = drop[:,:data.shape[1],:data.shape[2]]
     data = np.multiply(data,drop)

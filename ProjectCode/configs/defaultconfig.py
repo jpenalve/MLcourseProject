@@ -83,9 +83,12 @@ class DefaultConfig:
     removeLastData = False
     downSample = 1 # Downsamples the epoch time samples with this factor. Simply selects each downSample'th  data.
     
-    dropOutCh = False
-    dropOutTime = False
-    dropOutperc = 0.5
+    # Drops out square tiles of ChannelxTime for each epoch. Possible to drop whole channels (for all time parts) or same time parts (for all channels).
+    dropOut = False
+    dropOutChOnly = False
+    dropOutTimeOnly = False
+    
+    dropOutTilePerc = 0.5
     dropOutTimeTile = 40
     dropOutChannelTile = 4
 
