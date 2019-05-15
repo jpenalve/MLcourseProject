@@ -4,6 +4,7 @@ import torch.nn as nn
 import neural_nets.fully_connected as fc
 import neural_nets.recurrent as rc
 import neural_nets.convolutional as conv
+import neural_nets.freq_approach as convF
 from torch import nn
 
 
@@ -23,6 +24,8 @@ def get_nn_model(config, input_dimension, output_dimension):
         model = conv.ConvNet1D(output_dimension)
     elif model_name == 'ConvNetOzhan':
         model = conv.ConvNetOzhan(output_dimension)
+    elif model_name == 'FreqNet':
+        model = convF.ConvNet2DFFT(output_dimension)
     elif model_name == 'EEGNet':
         model = conv.EEGNet(output_dimension, dropout)
     elif model_name == 'EEGNetDeeper':
