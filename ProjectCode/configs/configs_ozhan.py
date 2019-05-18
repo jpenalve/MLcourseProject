@@ -80,7 +80,7 @@ class ConfigConvOzhan(DefaultConfig):
     schGamma = 0.5
     
     num_of_epochs = 200
-    batch_size = 512*2
+    batch_size = 128
     use_early_stopping = True
     es_patience = num_of_epochs
     
