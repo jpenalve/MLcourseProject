@@ -73,14 +73,14 @@ class ConfigConvOzhan(DefaultConfig):
     optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
     optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
     learning_rate = 1e-4
-    weight_decay = 0.0001
+    weight_decay = 1e-4
     
     scheduler = True  
     schStepSize = 25
     schGamma = 0.5
     
     num_of_epochs = 200
-    batch_size = 512
+    batch_size = 512*2
     use_early_stopping = True
     es_patience = num_of_epochs
     
@@ -88,22 +88,19 @@ class ConfigConvOzhan(DefaultConfig):
     augment_with_gauss_noise = False
     augmentation_factor = 2
     augment_std_gauss = 0.2
-    
-    time_before_event_s = 0.0  # Epochsize parameter: Start time before event.
-    time_after_event_s = 2.0  # Epochsize parameter: Time after event.
-    
-    show_events_distribution = False
-    removeLastData = True
-    
-    downSample = 1
-    
     dropOut = False
     dropOutChOnly = False
     dropOutTimeOnly = False
-    
     dropOutTilePerc = 0.5
-    dropOutTimeTile = 20
+    dropOutTimeTile = 40
     dropOutChannelTile = 8
+    
+    time_before_event_s = 0.0  # Epochsize parameter: Start time before event.
+    time_after_event_s = 2.0  # Epochsize parameter: Time after event.
+    downSample = 1
+    
+    show_events_distribution = False
+    removeLastData = True
     
     
 # Put them all in a list

@@ -288,7 +288,7 @@ class ConvNetOzhan(nn.Module):
                                     nn.BatchNorm2d(self.k3w,False))
 
         self.fc1 =  nn.Sequential(nn.Dropout(0.25),
-                                    nn.Linear(self.lin, output_dimension))
+                                    nn.Linear(55296*2, output_dimension))
                                     
 
     def forward(self, x):
@@ -303,8 +303,8 @@ class ConvNetOzhan(nn.Module):
         x = self.conv3(x)
         #print("L3:",x.shape)
 
-        x = x.view(-1,self.k3w*16*8)
-        x = torch.sigmoid(self.fc1(x))
+        x = x.view(-1,55296*2)
+        x = self.fc1(x)
         return x
     
     
@@ -318,8 +318,8 @@ class ConvNetOzhan3D(nn.Module):
         self.dropout_perc = dropout_perc
         self.timePoints = int(input_dimension/64)
         
-        self.l1 = [ 64, (1,1,3), (1,1,3), (0,0,3), (1,1,2), (1,1,2)]
-        self.l2 = [ 128, (1,1,4), (1,1,2), (0,0,1), (1,1,2), (1,1,1)]
+        self.l1 = [ 32, (1,1,4), (1,1,3), (0,0,3), (1,1,2), (1,1,2)]
+        self.l2 = [ 128, (1,1,4), (1,1,2), (0,0,1), (1,1,1), (1,1,1)]
         self.l3 = [ 128, (4,4,1), (4,4,2), (2,0,0), (2,2,1), (2,2,1)]
         
         self.dim0 = [1,8,8,self.timePoints]
@@ -328,13 +328,13 @@ class ConvNetOzhan3D(nn.Module):
         self.dim3 = self.dimout(self.dim2,self.l3)
         self.lin = int( self.dim3[0]*self.dim3[1]*self.dim3[2]*self.dim3[3] )
         
-        '''
-        print("\nExpected network layer shapes:")
-        print(self.dim0)
-        print(self.dim1)
-        print(self.dim2)
-        print(self.dim3)
-        print(self.lin,"\n")'''
+        
+        print("\nExpected network layer output shapes:")
+        print("Input:",self.dim0)
+        print("Layer 1 Out:",self.dim1)
+        print("Layer 2 Out:",self.dim2)
+        print("Layer 3 Out:",self.dim3)
+        print("Linear Layer Features:",self.lin,"\n")
 
         self.conv1 = nn.Sequential(nn.Conv3d(in_channels=1, out_channels=self.l1[0], kernel_size=self.l1[1], stride=self.l1[2], padding = self.l1[3] ),
                                     nn.ReLU(),
@@ -342,7 +342,7 @@ class ConvNetOzhan3D(nn.Module):
                                     nn.BatchNorm3d(self.l1[0],False))
         self.conv2 = nn.Sequential(nn.Conv3d(in_channels=self.l1[0], out_channels=self.l2[0], kernel_size=self.l2[1], stride=self.l2[2], padding = self.l2[3] ),
                                     nn.ReLU(),
-                                    #nn.MaxPool3d(kernel_size=self.l2[4], stride=self.l2[5]),
+                                    nn.MaxPool3d(kernel_size=self.l2[4], stride=self.l2[5]),
                                     nn.BatchNorm3d(self.l2[0],False))
         self.conv3 = nn.Sequential(nn.Conv3d(in_channels=self.l2[0], out_channels=self.l3[0], kernel_size=self.l3[1], stride=self.l3[2], padding = self.l3[3] ),
                                     nn.ReLU(),
@@ -371,7 +371,8 @@ class ConvNetOzhan3D(nn.Module):
         x = x.view(-1,self.lin)
         #print("oo-InpLin:",x.shape,"\n",flush=True)
         
-        x = torch.sigmoid(self.fc1(x))
+        #x = torch.sigmoid(self.fc1(x))
+        x = self.fc1(x)
         return x
     
     
