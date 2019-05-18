@@ -9,6 +9,9 @@ import os
 from visualisations import eeg_sample_plot, events_distribution_plot
 import torch
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+
+
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 """
@@ -85,13 +88,19 @@ def get_dataloader_objects(my_cfg):
     train_data, val_data, train_labels, val_labels = train_test_split(temp_data, temp_labels,
                                                                       test_size=my_cfg.validation_split, shuffle=True,
                                                                       stratify=temp_labels)
+    
+    # Normalize data
+    #if my_cfg.normalize:
+    #    train_data = normalize(train_data)
+    
     # Do data augmentation of training data
     if my_cfg.augment_with_gauss_noise:
         train_data, train_labels = augment_with_gaussian_noise(train_data, train_labels, my_cfg.augment_std_gauss,
                                                                my_cfg.augmentation_factor)
-
+    # Drop tiles randomly
     if my_cfg.dropOut:
         train_data = dropout_tiles(train_data,my_cfg)
+        
     
     # Convert them to Tensors already. torch.float is needed for GPU.
     train_data = torch.tensor(train_data, dtype=torch.float)
@@ -120,7 +129,21 @@ def get_dataloader_objects(my_cfg):
     return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
 
-def dropout_tiles(data, config):
+def normalize(data):
+    print("Normalizing data...",flush=True)
+    
+    #mean = np.mean(data,axis=(1,2)).reshape(-1,1,1)
+    #std = np.std(data,axis=(1,2)).reshape(-1,1,1)
+    #data = np.divide( data - np.tile(mean,(data.shape[1],data.shape[2])) , np.tile(std,(data.shape[1],data.shape[2])) )
+    
+    for i in range(data.shape[0]):
+        data[i,:,:] = ( data[i,:,:] - np.mean(data[i,:,:]) ) / np.std( data[i,:,:] )
+        data[i,:,:] = (data[i,:,:]+1)*0.5
+        
+    print("...data was normalized.\n",flush=True)
+    return data
+    
+def dropout_tiles(data,config):
     
     perc = config.dropOutTilePerc
     
@@ -208,9 +231,20 @@ def get_epoched_data(my_cfg):
     #arr_labels_offsets = np.array([1, 0, 0, -2, -4, -6])
     
     #***** WITHOUT BASELINE***************
-    arr_runs = np.array([[3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
-    arr_selected_classes = np.array([[2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
-    arr_labels_offsets = np.array([-2, 0, 2, -4]) 
+    #arr_runs = np.array([[3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    #arr_selected_classes = np.array([[2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
+    #arr_labels_offsets = np.array([-2, 0, 2, -4]) 
+    
+    #***** 4 CLASSES ***************
+    #arr_runs = np.array([ [4, 8, 12], [6, 10, 14]])
+    #arr_runs = np.array([ [3, 7, 11], [5, 9, 13] ])
+    #arr_selected_classes = np.array([[2, 3], [2, 3]])
+    #arr_labels_offsets = np.array([0, 2]) 
+    
+    #***** 2 CLASSES ***************
+    arr_runs = np.array([ [3, 7, 11]])
+    arr_selected_classes = np.array([[2, 3]])
+    arr_labels_offsets = np.array([2]) 
 
     # Load the data
     subjects = my_cfg.selected_subjects

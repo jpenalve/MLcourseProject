@@ -64,23 +64,23 @@ class ConfigConvOzhan(DefaultConfig):
                          80, 81, 82, 83, 84, 85, 86, 87,
                          90, 91, 93, 94, 95, 96, 97, 98, 99,
                          101, 102, 103, 104, 105, 106, 107, 108, 109]
-    nSubj = 80
+    nSubj = 60
     selected_subjects = selected_subjects[:nSubj]
     
     
-    nn_list = ['ConvNetOzhan']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_list = ['ConvNetOzhan3D']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
     optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
     optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
-    learning_rate = 1e-2
-    weight_decay = 0.001
+    learning_rate = 1e-4
+    weight_decay = 0.0001
     
     scheduler = True  
-    schStepSize = 10
+    schStepSize = 25
     schGamma = 0.5
     
-    num_of_epochs = 50
-    batch_size = 128
+    num_of_epochs = 200
+    batch_size = 512
     use_early_stopping = True
     es_patience = num_of_epochs
     
@@ -89,22 +89,21 @@ class ConfigConvOzhan(DefaultConfig):
     augmentation_factor = 2
     augment_std_gauss = 0.2
     
-    
-    time_before_event_s = -1.0  # Epochsize parameter: Start time before event.
-    time_after_event_s = 4.0  # Epochsize parameter: Time after event.
+    time_before_event_s = 0.0  # Epochsize parameter: Start time before event.
+    time_after_event_s = 2.0  # Epochsize parameter: Time after event.
     
     show_events_distribution = False
     removeLastData = True
     
     downSample = 1
     
-    dropOut = True
+    dropOut = False
     dropOutChOnly = False
     dropOutTimeOnly = False
     
     dropOutTilePerc = 0.5
-    dropOutTimeTile = 100
-    dropOutChannelTile = 4
+    dropOutTimeTile = 20
+    dropOutChannelTile = 8
     
     
 # Put them all in a list

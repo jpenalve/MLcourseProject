@@ -78,7 +78,7 @@ class DefaultConfig:
     curve_name = "NoName"
     
     #nClasses = 10 # Need to change other parts as well
-    nClasses = 8 # Need to change other parts as well
+    nClasses = 2 # Need to change other parts as well
     
     removeLastData = False
     downSample = 1 # Downsamples the epoch time samples with this factor. Simply selects each downSample'th  data.
@@ -91,6 +91,7 @@ class DefaultConfig:
     dropOutTilePerc = 0.5
     dropOutTimeTile = 40
     dropOutChannelTile = 4
+    
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 

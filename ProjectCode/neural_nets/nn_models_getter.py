@@ -24,6 +24,8 @@ def get_nn_model(config, input_dimension, output_dimension):
         model = conv.ConvNet1D(output_dimension)
     elif model_name == 'ConvNetOzhan':
         model = conv.ConvNetOzhan(output_dimension)
+    elif model_name == 'ConvNetOzhan3D':
+        model = conv.ConvNetOzhan3D(input_dimension,output_dimension)
     elif model_name == 'FreqNet':
         model = convF.ConvNet2DFFT(output_dimension)
     elif model_name == 'EEGNet':

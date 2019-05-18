@@ -13,7 +13,6 @@ class ChannelsVoltageDataset(Dataset):
     def __getitem__(self, index):
         data = self.data[index]
         
-        
         if self.normalize:
             mean = torch.mean(data)
             std = torch.std(data)
