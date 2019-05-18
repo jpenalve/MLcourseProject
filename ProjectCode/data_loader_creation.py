@@ -73,7 +73,18 @@ def get_dataloader_objects(my_cfg):
     if my_cfg.removeLastData:
         remaining = data.shape[2] % 10
         data = data[:, :, :-remaining]
+        
+    input_dimension_ = data.shape[1] * data.shape[2]
+    output_dimension_ = my_cfg.nClasses 
     
+    if my_cfg.Elec2D:
+        data = dataset_1Dto2D(data)
+        input_dimension_ = data.shape[1] * data.shape[2] * data.shape[3]
+        
+    # Normalize data
+    if my_cfg.normalize:
+        data = normalize(data)
+        
     print(str(data.shape[2])," time samples and ",str(data.shape[1])," EEG channels for one epoch are taken. ",\
           "Total epoch number is ",str(data.shape[0])," and there are ",str(len(my_cfg.selected_subjects))," subjects included.\n",\
           "There are in total ", str(my_cfg.nClasses)," classes for classification.\n",flush=True)
@@ -89,9 +100,6 @@ def get_dataloader_objects(my_cfg):
                                                                       test_size=my_cfg.validation_split, shuffle=True,
                                                                       stratify=temp_labels)
     
-    # Normalize data
-    #if my_cfg.normalize:
-    #    train_data = normalize(train_data)
     
     # Do data augmentation of training data
     if my_cfg.augment_with_gauss_noise:
@@ -99,8 +107,7 @@ def get_dataloader_objects(my_cfg):
                                                                my_cfg.augmentation_factor)
     # Drop tiles randomly
     if my_cfg.dropOut:
-        train_data = dropout_tiles(train_data,my_cfg)
-        
+        train_data = dropout_tiles(train_data,my_cfg)        
     
     # Convert them to Tensors already. torch.float is needed for GPU.
     train_data = torch.tensor(train_data, dtype=torch.float)
@@ -123,8 +130,7 @@ def get_dataloader_objects(my_cfg):
     train_dl = DataLoader(train_ds, my_cfg.batch_size, shuffle=True)
     val_dl = DataLoader(val_ds, my_cfg.batch_size, shuffle=False)
     test_dl = DataLoader(test_ds, my_cfg.batch_size, shuffle=False)
-    input_dimension_ = train_ds.data.shape[1] * train_ds.data.shape[2]
-    output_dimension_ = my_cfg.nClasses  # Classes start at 0, therefore +1 offset
+    
 
     return train_dl, val_dl, test_dl, input_dimension_, output_dimension_
 
@@ -310,3 +316,63 @@ def get_epoched_data(my_cfg):
 
     return epoched
 
+
+
+
+'''
+# https://github.com/dalinzhang/Cascade-Parallel/blob/master/data_preprocess/pre_process.py
+
+	data_2D[0] = [ 	   	 0, 	   0,  	   	 0, 	   0, data[21], data[22], data[23], 	   0,  	     0, 	   0, 	 	 0]
+	data_2D[1] = [	  	 0, 	   0,  	   	 0, data[24], data[25], data[26], data[27], data[28], 	   	 0,   	   0, 	 	 0]
+	data_2D[2] = [	  	 0, data[29], data[30], data[31], data[32], data[33], data[34], data[35], data[36], data[37], 	 	 0]
+	data_2D[3] = [	  	 0, data[38],  data[0],  data[1],  data[2],  data[3],  data[4],  data[5],  data[6], data[39], 		 0]
+	data_2D[4] = [data[42], data[40],  data[7],  data[8],  data[9], data[10], data[11], data[12], data[13], data[41], data[43]]
+	data_2D[5] = [	  	 0, data[44], data[14], data[15], data[16], data[17], data[18], data[19], data[20], data[45], 		 0]
+	data_2D[6] = [	  	 0, data[46], data[47], data[48], data[49], data[50], data[51], data[52], data[53], data[54], 		 0]
+	data_2D[7] = [	  	 0, 	   0, 	 	 0, data[55], data[56], data[57], data[58], data[59], 	   	 0, 	   0, 		 0]
+	data_2D[8] = [	  	 0, 	   0, 	 	 0, 	   0, data[60], data[61], data[62], 	   0, 	   	 0, 	   0, 		 0]
+	data_2D[9] = [	  	 0, 	   0, 	 	 0, 	   0, 	     0, data[63], 		 0, 	   0, 	   	 0, 	   0, 		 0]
+
+'''
+def data_1Dto2D(data, Y=10, X=11):
+    
+    data_2D = np.zeros([1, Y, X, data.shape[1] ])
+
+    data_2D[0,0,4:7,:] = data[21:24,:]
+
+    data_2D[0,1,3:8,:] = data[24:29,:]
+    
+    data_2D[0,2,1:10,:] = data[29:38,:]
+
+    data_2D[0,3,1,:] = data[39,:]
+    data_2D[0,3,2:9,:] = data[0:7,:]
+    data_2D[0,3,9,:] = data[39,:]
+    
+    data_2D[0,4,0,:] = data[42,:]
+    data_2D[0,4,1,:] = data[40,:]
+    data_2D[0,4,2:9,:] = data[7:14,:]
+    data_2D[0,4,9,:] = data[41,:]
+    data_2D[0,4,10,:] = data[43,:]
+    
+    data_2D[0,5,1,:] = data[44,:]
+    data_2D[0,5,2:9,:] = data[14:21,:]
+    data_2D[0,5,9,:] = data[45,:]
+    
+    data_2D[0,6,1:10,:] = data[46:55,:]
+
+    data_2D[0,7,3:8,:] = data[55:60,:]
+    
+    data_2D[0,8,4:7,:] = data[60:63,:]
+    
+    data_2D[0,8,5,:] = data[63,:]
+    
+    return data_2D
+
+
+def dataset_1Dto2D(dataset_1D):
+    print('Dataset is being made 2D...',flush=True)
+    dataset_2D = np.zeros([dataset_1D.shape[0],10,11,dataset_1D.shape[2]])
+    for i in range(dataset_1D.shape[0]):
+        dataset_2D[i,:,:,:] = data_1Dto2D(dataset_1D[i,:,:])
+    print("Data is now 2D.",flush=True)
+    return dataset_2D

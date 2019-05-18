@@ -92,6 +92,7 @@ class DefaultConfig:
     dropOutTimeTile = 40
     dropOutChannelTile = 4
     
+    Elec2D = False
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 
