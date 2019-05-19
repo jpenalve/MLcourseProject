@@ -230,4 +230,4 @@ class Config3DCNN_NOTCropped(DefaultConfig):
     
     
 # Put them all in a list
-list_of_configs = [Config3DCNN_Cropped,Config2DCNN_Cropped]
+list_of_configs = [Config3DCNN_NOTCropped,Config2DCNN_NOTCropped]
