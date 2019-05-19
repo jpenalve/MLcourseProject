@@ -52,6 +52,47 @@ Logs can be created by calling write_logs_for_tensorboard() -> Feel free to modi
 
 - https://martinos.org/mne/stable/auto_examples/decoding/plot_decoding_csp_eeg.html#sphx-glr-auto-examples-decoding-plot-decoding-csp-eeg-py
 
+# The preprocessing and Networks Trained:
+
+### Pre-processing
+
+- The epochs are taken to cover 2s on movement (trigger) offset with 160 samples per second. 
+- Each epoch data are normalized to have zero mean and standard deviation of 1.
+- Augmentation of data with gaussian noise and inpainting-like data removal for regularization are tried (both in time and channel axis), however, we could not detect significant difference.
+- 20 subjects were included, with 8 classes (no baseline).
+- Cropping the time axis in small windows (of 10 samples) was suggested in literature (Zhang,2018), we have followed the suggestion. Each network is trained with and without this technique.
+- For 3D CNN, the 64 channels are mapped to their locations in the head as a 2D grid (11x10). In order to make this location information a rectangle, zeros are added where there is no electrode on the grid.
+- Eventually the data shape were (nEpochs,nChannels,nSamples), (nEpochs,nChannelsX,nChannelsY,nSamples), (nEpochs*nWindows,nChannels,nSamples) or (nEpochs*nWindows,nChannelsX,nChannelsY,nSamples) depending on whether the time axis is cropped or not and whether it was 2D or 3D CNN.
+
+### Networks Trained
+
+1) 3D CNN
+- Layer 1 -- (32x1x11x10x10--cropped) or (32x1x11x10x320--non_cropped) + ExpoRU (CELU) + BatchNorm
+- Layer 2 -- (64x1x11x10x10--cropped) or (64x1x11x10x320--non_cropped) + ExpoRU (CELU) + BatchNorm
+- Layer 3 -- (128x1x11x10x10--cropped) or (128x1x11x10x320--non_cropped) + ExpoRU (CELU) + BatchNorm
+- Layer 4 -- (Flatten fully connected Linear, Droput=0.5) 
+
+#### Note: All the kernel sizes were (3,3,3) with stride 1, and padding such that there were no reduction on the size.
+
+2) 2D CNN 
+
+- Layer 1 -- (32x1x64x10--cropped) or (32x1x64x320--non_cropped) + ExpoRU (CELU) + BatchNorm
+- Layer 2 -- (64x1x64x10--cropped) or (64x1x64x320--non_cropped) + ExpoRU (CELU) + BatchNorm
+- Layer 3 -- (128x1x64x10--cropped) or (128x1x64x320--non_cropped) + ExpoRU (CELU) + BatchNorm
+- Layer 4 -- (Flatten fully connected Linear, Droput=0.5) 
+
+#### Note: All the kernel sizes were (7,3) with stride 1, and padding such that there were no reduction on the size.
+
+### For all the trainings, ADAM optimizer (lr:1e-3, weight decay:1e-4, scheduler with 20 steps and gamma 0.5), and Cross Entropy Loss (with sigmoid activation in the output) are used. Batch size was either 128 or 256.
+
+# Results
+
+
+
+
+
+
+
 
 # Code: How-to
 In order to run the project, you need to open the 'Main' jupyter notebook and run it from top to bottom.
@@ -66,7 +107,7 @@ Inside the main.py: Select your config via myList = myconfig.list_of_configs
 
 In case of supplementary optimizers or nn, please add them to the optimizers.py or neural_nets package. Adapt the optimizer_list or nn_list (+nn_models_getter.py) the  in the defaultconifg.py respectively.
 
-# Example config file to run any NN implemented/tested
+## Example config file to run any NN implemented/tested
 
 
 #### Config class name to include in the list at the bottom.

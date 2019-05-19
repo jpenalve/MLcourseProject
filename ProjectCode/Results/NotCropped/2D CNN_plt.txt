@@ -1,0 +1,4 @@
+2D CNN
+->val_loss: 91.4889, val_accuracy: 29.9383% 
+->train_loss: 0.0047, train_accuracy: 99.9657% 
+->test_loss: 92.8022, test_accuracy: 30.8333% 

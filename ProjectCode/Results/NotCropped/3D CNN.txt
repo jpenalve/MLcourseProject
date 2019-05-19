@@ -1,0 +1,12 @@
+3D CNN
+->val_loss: 143.1435, val_accuracy: 30.8642% 
+->train_loss: 0.0000, train_accuracy: 100.0000% 
+->test_loss: 157.2628, test_accuracy: 26.9444% 
+Accuracy of class 0 : 31 % of 44 labels 
+Accuracy of class 1 : 31 % of 45 labels 
+Accuracy of class 2 : 28 % of 46 labels 
+Accuracy of class 3 : 24 % of 45 labels 
+Accuracy of class 4 : 31 % of 45 labels 
+Accuracy of class 5 : 20 % of 45 labels 
+Accuracy of class 6 : 20 % of 45 labels 
+Accuracy of class 7 : 28 % of 45 labels 
