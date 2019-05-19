@@ -88,11 +88,17 @@ Logs can be created by calling write_logs_for_tensorboard() -> Feel free to modi
 # Results
 
 
+The accuracy on the test sets for both CNNs with both cropped and non-cropped (of time axis) epochs are below. The in-class accuracy on the right is given for 3D-CNN cropped.
+![](ProjectCode/Results/Figures/Tables.png)
+
+As you see, cropping the time axis in time windows (of 10 samples) makes a huge difference
 
 
+The training progress for accuracy and loss for cropped epochs are below.
+![](ProjectCode/Results/Figures/cropped.png)
 
-
-
+The training progress for accuracy and loss for non-cropped epochs are below. You could see the huge overfitting.
+![](ProjectCode/Results/Figures/notcropped.png)
 
 # Code: How-to
 In order to run the project, you need to open the 'Main' jupyter notebook and run it from top to bottom.
