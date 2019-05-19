@@ -233,9 +233,12 @@ class ConvNetOzhan2D(nn.Module):
         self.dropout_perc = dropout_perc
         self.timePoints = int(input_dimension/64)
         
-        self.l1 = [ 512, (1,3), (1,3), (0,3), (1,2), (1,2)]
-        self.l2 = [ 512, (1,4), (1,2), (0,1), (1,1), (1,1)]
-        self.l3 = [ 256, (4,1), (2,1), (2,0), (2,1), (2,1)]
+        #self.l1 = [ 512, (1,3), (1,3), (0,3), (1,2), (1,2)]
+        #self.l2 = [ 512, (1,4), (1,2), (0,1), (1,1), (1,1)]
+        #self.l3 = [ 256, (4,1), (2,1), (2,0), (2,1), (2,1)]
+        self.l1 = [ 32, (7,3), (1,1), (3,1), (1,1), (1,1)]
+        self.l2 = [ 64, (7,3), (1,1), (3,1), (1,1), (1,1)]
+        self.l3 = [ 128, (7,3), (1,1), (3,1), (1,1), (1,1)]
         
         self.dim0 = [1,64,self.timePoints]
         self.dim1 = self.dimout(self.dim0,self.l1)
@@ -253,19 +256,16 @@ class ConvNetOzhan2D(nn.Module):
 
         self.conv1 = nn.Sequential(nn.Conv2d(in_channels=1, out_channels=self.l1[0], kernel_size=self.l1[1], stride=self.l1[2], padding = self.l1[3] ),
                                     nn.CELU(),
-                                    nn.MaxPool2d(kernel_size=self.l1[4], stride=self.l1[5]),
+                                    #nn.MaxPool2d(kernel_size=self.l1[4], stride=self.l1[5]),
                                     nn.BatchNorm2d(self.l1[0],False))
         self.conv2 = nn.Sequential(nn.Conv2d(in_channels=self.l1[0], out_channels=self.l2[0], kernel_size=self.l2[1], stride=self.l2[2], padding = self.l2[3] ),
                                     nn.CELU(),
-                                    nn.MaxPool2d(kernel_size=self.l2[4], stride=self.l2[5]),
+                                    #nn.MaxPool2d(kernel_size=self.l2[4], stride=self.l2[5]),
                                     nn.BatchNorm2d(self.l2[0],False))
         self.conv3 = nn.Sequential(nn.Conv2d(in_channels=self.l2[0], out_channels=self.l3[0], kernel_size=self.l3[1], stride=self.l3[2], padding = self.l3[3] ),
                                     nn.CELU(),
-                                    nn.MaxPool2d(kernel_size=self.l3[4], stride=self.l3[5]),
+                                    #nn.MaxPool2d(kernel_size=self.l3[4], stride=self.l3[5]),
                                     nn.BatchNorm2d(self.l3[0],False))
-        
-        
-
         self.fc1 =  nn.Sequential(nn.Dropout(dropout_perc),
                                     nn.Linear(self.lin, output_dimension))
                                     

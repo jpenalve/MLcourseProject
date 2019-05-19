@@ -64,15 +64,15 @@ class ConfigConvOzhan(DefaultConfig):
                          80, 81, 82, 83, 84, 85, 86, 87,
                          90, 91, 93, 94, 95, 96, 97, 98, 99,
                          101, 102, 103, 104, 105, 106, 107, 108, 109]
-    nSubj = 60
+    nSubj = 10
     selected_subjects = selected_subjects[:nSubj]
     
     
-    nn_list = ['ConvNetOzhan3D']  # Extend if you want more. Add them in the nn_models_getter.py module
+    nn_list = ['ConvNetOzhan2D']  # Extend if you want more. Add them in the nn_models_getter.py module
     nn_selection_idx = 0
     optimizer_list = ['Adam']  # Extend if you want more. Add them in the optimizers.py module
     optimizer_selection_idx = 0  # Idx corresponds to entry optimizer_list (find below)
-    learning_rate = 1e-4
+    learning_rate = 1e-3
     weight_decay = 1e-4
     
     scheduler = True  
@@ -102,7 +102,7 @@ class ConfigConvOzhan(DefaultConfig):
     show_events_distribution = False
     removeLastData = True
     
-    Elec2D = True
+    Elec2D = False
     wSize = 10
     wCropped = True
     
