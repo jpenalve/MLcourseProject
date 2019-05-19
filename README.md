@@ -10,6 +10,9 @@ The project will focus on classification of movement imagination tasks using EEG
 
 It is proven that thinking about different movement that one plans to execute, generates a different neural fooprint. This footprint can be detected by means of an EEG recording device. The goal of this project is to classify different movements that subjects may think of or execute. 
 
+# Report
+Please note that the report.html (which is basically the export of notebook) is under the folder ProjectCode. This readme file has almost the same content.
+
 # DataSet
 We will base our project on an existing dataset (link: https://www.physionet.org/physiobank/database/eegmmidb/#experimental-protocol ). 
 
