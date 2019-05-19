@@ -22,10 +22,10 @@ def get_nn_model(config, input_dimension, output_dimension):
         model = conv.ConvNet01(output_dimension)
     elif model_name == 'ConvNet1D':
         model = conv.ConvNet1D(output_dimension)
-    elif model_name == 'ConvNetOzhan2D':
-        model = conv.ConvNetOzhan2D(input_dimension,output_dimension)
-    elif model_name == 'ConvNetOzhan3D':
-        model = conv.ConvNetOzhan3D(input_dimension,output_dimension)
+    elif model_name == 'ConvNet2D':
+        model = conv.ConvNet2D(input_dimension,output_dimension)
+    elif model_name == 'ConvNet3D':
+        model = conv.ConvNet3D(input_dimension,output_dimension)
     elif model_name == 'FreqNet':
         model = convF.ConvNet2DFFT(output_dimension)
     elif model_name == 'EEGNet':

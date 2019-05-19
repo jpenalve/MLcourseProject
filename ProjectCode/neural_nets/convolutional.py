@@ -225,10 +225,10 @@ class EEGNetDeeper(nn.Module):  # https://arxiv.org/abs/1611.08024
 
 
     
-class ConvNetOzhan2D(nn.Module):
+class ConvNet2D(nn.Module):
 
     def __init__(self, input_dimension, output_dimension, dropout_perc=0.50):
-        super(ConvNetOzhan2D, self).__init__()
+        super(ConvNet2D, self).__init__()
         
         self.dropout_perc = dropout_perc
         self.timePoints = int(input_dimension/64)
@@ -301,10 +301,10 @@ class ConvNetOzhan2D(nn.Module):
         return out
         
     
-class ConvNetOzhan3D(nn.Module):
+class ConvNet3D(nn.Module):
 
     def __init__(self, input_dimension, output_dimension, dropout_perc=0.50):
-        super(ConvNetOzhan3D, self).__init__()
+        super(ConvNet3D, self).__init__()
         
         self.dropout_perc = dropout_perc
         #self.timePoints = int(input_dimension/64)
