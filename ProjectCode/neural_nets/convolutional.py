@@ -309,17 +309,21 @@ class ConvNetOzhan3D(nn.Module):
         self.dropout_perc = dropout_perc
         #self.timePoints = int(input_dimension/64)
         self.timePoints = int(input_dimension/(11*10))
+        #self.timePoints = 10
         
-        self.l1 = [ 32, (1,1,4), (1,1,3), (0,0,3), (1,1,2), (1,1,2)]
-        self.l2 = [ 128, (1,1,4), (1,1,2), (0,0,1), (1,1,1), (1,1,1)]
-        self.l3 = [ 128, (4,4,1), (4,4,2), (2,0,0), (2,2,1), (2,2,1)]
+        #self.l1 = [ 32, (1,1,4), (1,1,3), (0,0,3), (1,1,2), (1,1,2)]
+        #self.l2 = [ 128, (1,1,4), (1,1,2), (0,0,1), (1,1,2), (1,1,2)]
+        #self.l3 = [ 128, (2,2,1), (2,2,1), (0,0,0), (1,1,1), (1,1,1)]
+        self.l1 = [ 32, (3,3,3), (1,1,1), (1,1,1), (1,1,1), (1,1,1)]
+        self.l2 = [ 64, (3,3,3), (1,1,1), (1,1,1), (1,1,1), (1,1,1)]
+        self.l3 = [ 128, (3,3,3), (1,1,1), (1,1,1), (1,1,1), (1,1,1)]
         
         #self.dim0 = [1,8,8,self.timePoints]
         self.dim0 = [1,11,10,self.timePoints]
         self.dim1 = self.dimout(self.dim0,self.l1)
         self.dim2 = self.dimout(self.dim1,self.l2)
         self.dim3 = self.dimout(self.dim2,self.l3)
-        self.lin = int( self.dim3[0]*self.dim3[1]*self.dim3[2]*self.dim3[3] )
+        self.lin = int( self.dim3[0]*self.dim3[1]*self.dim3[2]*self.dim3[3])
         
         
         print("\nExpected network layer output shapes:")
@@ -330,19 +334,19 @@ class ConvNetOzhan3D(nn.Module):
         print("Linear Layer Features:",self.lin,"\n")
 
         self.conv1 = nn.Sequential(nn.Conv3d(in_channels=1, out_channels=self.l1[0], kernel_size=self.l1[1], stride=self.l1[2], padding = self.l1[3] ),
-                                    nn.LeakyReLU(0.2),
-                                    #nn.CELU(),
-                                    nn.MaxPool3d(kernel_size=self.l1[4], stride=self.l1[5]),
+                                    #nn.LeakyReLU(0.2),
+                                    nn.CELU(),
+                                    #nn.MaxPool3d(kernel_size=self.l1[4], stride=self.l1[5]),
                                     nn.BatchNorm3d(self.l1[0],False))
         self.conv2 = nn.Sequential(nn.Conv3d(in_channels=self.l1[0], out_channels=self.l2[0], kernel_size=self.l2[1], stride=self.l2[2], padding = self.l2[3] ),
-                                    nn.LeakyReLU(0.2),
-                                    #nn.CELU(),
-                                    nn.MaxPool3d(kernel_size=self.l2[4], stride=self.l2[5]),
+                                    #nn.LeakyReLU(0.2),
+                                    nn.CELU(),
+                                    #nn.MaxPool3d(kernel_size=self.l2[4], stride=self.l2[5]),
                                     nn.BatchNorm3d(self.l2[0],False))
         self.conv3 = nn.Sequential(nn.Conv3d(in_channels=self.l2[0], out_channels=self.l3[0], kernel_size=self.l3[1], stride=self.l3[2], padding = self.l3[3] ),
-                                    nn.LeakyReLU(0.2),
-                                    #nn.CELU(),
-                                    nn.MaxPool3d(kernel_size=self.l3[4], stride=self.l3[5]),
+                                    #nn.LeakyReLU(0.2),
+                                    nn.CELU(),
+                                    #nn.MaxPool3d(kernel_size=self.l3[4], stride=self.l3[5]),
                                     nn.BatchNorm3d(self.l3[0],False))
         self.fc1 =  nn.Sequential(nn.Dropout(dropout_perc),
                                     nn.Linear(self.lin, output_dimension))

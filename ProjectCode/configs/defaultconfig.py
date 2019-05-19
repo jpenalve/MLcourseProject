@@ -93,6 +93,9 @@ class DefaultConfig:
     dropOutChannelTile = 4
     
     Elec2D = False
+    
+    wSize = 10
+    wCropped = False
 
 # Here we can define more specific configurations. For example we need extra parameters or we have to
 

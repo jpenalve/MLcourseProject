@@ -73,25 +73,34 @@ def get_dataloader_objects(my_cfg):
     if my_cfg.removeLastData:
         remaining = data.shape[2] % 10
         data = data[:, :, :-remaining]
-        
-    input_dimension_ = data.shape[1] * data.shape[2]
-    output_dimension_ = my_cfg.nClasses 
     
     if my_cfg.Elec2D:
         data = dataset_1Dto2D(data)
-        input_dimension_ = data.shape[1] * data.shape[2] * data.shape[3]
         
     # Normalize data
     if my_cfg.normalize:
         data = normalize(data)
         
-    print(str(data.shape[2])," time samples and ",str(data.shape[1])," EEG channels for one epoch are taken. ",\
-          "Total epoch number is ",str(data.shape[0])," and there are ",str(len(my_cfg.selected_subjects))," subjects included.\n",\
-          "There are in total ", str(my_cfg.nClasses)," classes for classification.\n",flush=True)
-
     # -offset_to_subtract -> Classes made matching to CX definition
     labels = epoched.events[:, event_current_class_column]
 
+    tSample = data.shape[-1]
+    
+    if my_cfg.wCropped:
+        data, labels = WindowCrop(data,labels,my_cfg.wSize)
+        tSample = data.shape[-1]
+    
+    if len(data.shape) == 4:
+        input_dimension_ = data.shape[1] * data.shape[2] * data.shape[3]
+    else:
+        input_dimension_ = data.shape[1] * data.shape[2]
+    output_dimension_ = my_cfg.nClasses 
+    
+    
+    print(str(tSample)," time samples and ",str(data.shape[1])," EEG channels for one epoch are taken. ",\
+          "Total epoch number is ",str(data.shape[0])," and there are ",str(len(my_cfg.selected_subjects))," subjects included.\n",\
+          "There are in total ", str(my_cfg.nClasses)," classes for classification.\n",flush=True)
+    
     # Split data in train test and validation set. Stratify makes sure the label distribution is the same
     temp_data, test_data, temp_labels, test_labels = train_test_split(data, labels, test_size=my_cfg.test_split,
                                                                       shuffle=True, stratify=labels)
@@ -374,5 +383,36 @@ def dataset_1Dto2D(dataset_1D):
     dataset_2D = np.zeros([dataset_1D.shape[0],10,11,dataset_1D.shape[2]])
     for i in range(dataset_1D.shape[0]):
         dataset_2D[i,:,:,:] = data_1Dto2D(dataset_1D[i,:,:])
-    print("Data is now 2D.",flush=True)
+    print("Data is now 2D.\n",flush=True)
     return dataset_2D
+
+
+def WindowCrop(data, labels, window_size):
+    
+    print("Dataset is being cropped in time axis...",flush=True)
+    
+    tPoints = data.shape[-1]
+    nWindows = int (np.floor( tPoints/window_size ) ) * 2 - 1 
+    
+    if len(data.shape) == 4:
+        cData = np.zeros([data.shape[0],data.shape[1],data.shape[2],nWindows,window_size])
+        for i in range(nWindows):
+            cData[:,:,:,i,:] = data[:,:,:,i*int(window_size/2):i*int(window_size/2)+window_size]
+        cData = np.moveaxis(cData, -2, 1)
+        cData = np.reshape(cData,(-1,cData.shape[2],cData.shape[3],cData.shape[4]))
+    else:
+        cData = np.zeros([data.shape[0],data.shape[1],nWindows,window_size])
+        for i in range(nWindows):
+            cData[:,:,i,:] = data[:,:,i*int(window_size/2):i*int(window_size/2)+window_size]
+        cData = np.moveaxis(cData, -2, 1)
+        cData = np.reshape(cData,(-1,cData.shape[2],cData.shape[3]))
+            
+            
+    labels = np.repeat(labels,nWindows,axis=0)
+    
+    print("Dataset is cropped. From shape",data.shape,"to",cData.shape,"\n",flush=True)
+    
+    return cData, labels
+    
+    
+    

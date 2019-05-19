@@ -76,11 +76,11 @@ class ConfigConvOzhan(DefaultConfig):
     weight_decay = 1e-4
     
     scheduler = True  
-    schStepSize = 25
+    schStepSize = 50
     schGamma = 0.5
     
     num_of_epochs = 200
-    batch_size = 128
+    batch_size = 256
     use_early_stopping = True
     es_patience = num_of_epochs
     
@@ -103,6 +103,8 @@ class ConfigConvOzhan(DefaultConfig):
     removeLastData = True
     
     Elec2D = True
+    wSize = 10
+    wCropped = True
     
 # Put them all in a list
 list_of_configs = [ConfigConvOzhan]
