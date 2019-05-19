@@ -78,7 +78,7 @@ class DefaultConfig:
     curve_name = "NoName"
     
     #nClasses = 10 # Need to change other parts as well
-    nClasses = 2 # Need to change other parts as well
+    nClasses = 8 # Need to change other parts as well
     
     removeLastData = False
     downSample = 1 # Downsamples the epoch time samples with this factor. Simply selects each downSample'th  data.

@@ -1,0 +1,4 @@
+3D CNN
+->val_loss: 0.7654, val_accuracy: 76.2395% 
+->train_loss: 0.3358, train_accuracy: 88.0571% 
+->test_loss: 0.7608, test_accuracy: 76.5168% 

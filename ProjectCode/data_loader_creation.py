@@ -245,10 +245,10 @@ def get_epoched_data(my_cfg):
     #arr_selected_classes = np.array([1, 1, [2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
     #arr_labels_offsets = np.array([1, 0, 0, -2, -4, -6])
     
-    #***** WITHOUT BASELINE***************
-    #arr_runs = np.array([[3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
-    #arr_selected_classes = np.array([[2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
-    #arr_labels_offsets = np.array([-2, 0, 2, -4]) 
+    #***** 8 CLASSES ( WITHOUT BASELINE ) ***************
+    arr_runs = np.array([[3, 7, 11], [4, 8, 12], [5, 9, 13], [6, 10, 14]])
+    arr_selected_classes = np.array([[2, 3], [2, 3], [2, 3], [2, 3], [2, 3]])
+    arr_labels_offsets = np.array([-2, 0, 2, -4]) 
     
     #***** 4 CLASSES ***************
     #arr_runs = np.array([ [4, 8, 12], [6, 10, 14]])
@@ -257,9 +257,9 @@ def get_epoched_data(my_cfg):
     #arr_labels_offsets = np.array([0, 2]) 
     
     #***** 2 CLASSES ***************
-    arr_runs = np.array([ [3, 7, 11]])
-    arr_selected_classes = np.array([[2, 3]])
-    arr_labels_offsets = np.array([2]) 
+    #arr_runs = np.array([ [3, 7, 11]])
+    #arr_selected_classes = np.array([[2, 3]])
+    #arr_labels_offsets = np.array([2]) 
 
     # Load the data
     subjects = my_cfg.selected_subjects
