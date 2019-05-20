@@ -6,7 +6,7 @@ This repository is for the Advanced Topics in ML project Spring Semester 2019.
 Tim Fischer, Özhan Özen, Joaquin Penalver-Andres
 
 # Project Description:
-The project will focus on classification of movement imagination tasks using EEG signals. 
+The project will focus on classification of movement imagination and movement tasks using EEG signals. 
 
 It is proven that thinking about different movement that one plans to execute, generates a different neural fooprint. This footprint can be detected by means of an EEG recording device. The goal of this project is to classify different movements that subjects may think of or execute. 
 
