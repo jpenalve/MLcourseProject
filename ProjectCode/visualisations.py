@@ -129,4 +129,4 @@ def plot_performance_metrics(my_cfg, train_losses, val_losses, train_accuracies,
 def curve_name_gen(config):
     
     config.curve_name = config.config_name
-    print(config.curve_name,"\n-------------------------\n", flush=True)
+    print("\n\n\n\n",config.curve_name,"\n-------------------------\n", flush=True)
