@@ -3,7 +3,7 @@ from configs.defaultconfig import DefaultConfig
 class Config2DCNN_Cropped(DefaultConfig):
     verbose = 'CRITICAL'
     
-    config_name = '2D CNN'
+    config_name = '2D-CNN-tAxisCropped'
     config_remark = '2D CNN'
     selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                          20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -60,7 +60,7 @@ class Config2DCNN_Cropped(DefaultConfig):
 class Config3DCNN_Cropped(DefaultConfig):
     verbose = 'CRITICAL'
     
-    config_name = '3D CNN'
+    config_name = '3D-CNN-tAxisCropped'
     config_remark = '3D CNN'
     selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                          20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -117,7 +117,7 @@ class Config3DCNN_Cropped(DefaultConfig):
 class Config2DCNN_NOTCropped(DefaultConfig):
     verbose = 'CRITICAL'
     
-    config_name = '2D CNN'
+    config_name = '2D-CNN-tAxisNOTCropped'
     config_remark = '2D CNN'
     selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                          20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -174,7 +174,7 @@ class Config2DCNN_NOTCropped(DefaultConfig):
 class Config3DCNN_NOTCropped(DefaultConfig):
     verbose = 'CRITICAL'
     
-    config_name = '3D CNN'
+    config_name = '3D-CNN-tAxisNOTCropped'
     config_remark = '3D CNN'
     selected_subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                          20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -230,4 +230,4 @@ class Config3DCNN_NOTCropped(DefaultConfig):
     
     
 # Put them all in a list
-list_of_configs = [Config3DCNN_NOTCropped,Config2DCNN_NOTCropped]
+list_of_configs = [Config3DCNN_NOTCropped,Config2DCNN_NOTCropped,Config3DCNN_Cropped,Config2DCNN_Cropped]

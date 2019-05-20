@@ -128,5 +128,5 @@ def plot_performance_metrics(my_cfg, train_losses, val_losses, train_accuracies,
     
 def curve_name_gen(config):
     
-    config.curve_name = config.nn_list[config.nn_selection_idx] + "_" + config.optimizer_list[config.optimizer_selection_idx]
+    config.curve_name = config.config_name
     print(config.curve_name,"\n-------------------------\n", flush=True)
