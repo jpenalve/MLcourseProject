@@ -10,6 +10,11 @@ The project will focus on classification of movement imagination and movement ta
 
 It has been proven that the mental planning or execution of different movements, produces different neuronal footprints. These footprints can be detected by means of an EEG recording device. The goal of this project is to classify different movements that subjects may think of or execute. 
 
+## Motivation
+By decoding the EEG Signal, creating a so called "Brain-Computer-Interface" is possible. A BCI is able to decode human intent from brain activity to create an alternate communication channel. In our case decoding imaginary movement planning from the eeg, could help impaired people to move a prosthesis in the desired direction.
+
+For more details on BCIs see https://towardsdatascience.com/a-beginners-guide-to-brain-computer-interface-and-convolutional-neural-networks-9f35bd4af948.
+
 ## Report
 Please note that the report.html (which is basically the export of notebook) is under the folder ProjectCode. This readme file has almost the same content.
 
