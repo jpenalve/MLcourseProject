@@ -8,7 +8,7 @@ Tim Fischer, Özhan Özen, Joaquin Penalver-Andres
 # Project Description:
 The project will focus on classification of movement imagination and movement tasks using EEG signals. 
 
-It is proven that thinking about different movements that one plans to execute, generate a different neural fooprint. This footprint can be detected by means of an EEG recording device. The goal of this project is to classify different movements that subjects may think of or execute. 
+It has been proven that the mental planning or execution of different movements, produces different neuronal footprints. These footprints can be detected by means of an EEG recording device. The goal of this project is to classify different movements that subjects may think of or execute. 
 
 # Report
 Please note that the report.html (which is basically the export of notebook) is under the folder ProjectCode. This readme file has almost the same content.
