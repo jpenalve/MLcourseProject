@@ -98,6 +98,9 @@ https://github.com/aliasvishnu/EEGNet
 
 ## Neural Networks Trained
 
+<img src="ProjectCode/Results/Figures/network.png" width="1200" />
+
+
 ### 1) 3D CNN (The network is almost the same as in [1])
 - Layer 1 -- (32x1x11x10x10--cropped) or (32x1x11x10x320--non_cropped) + ExpoRU (CELU) + BatchNorm
 - Layer 2 -- (64x1x11x10x10--cropped) or (64x1x11x10x320--non_cropped) + ExpoRU (CELU) + BatchNorm
