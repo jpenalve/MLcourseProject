@@ -14,6 +14,19 @@ It has been proven that the mental planning or execution of different movements,
 Please note that the report.html (which is basically the export of notebook) is under the folder ProjectCode. This readme file has almost the same content.
 
 # EEG
+According to the wikipedia definition (https://en.wikipedia.org/wiki/Electroencephalography):
+
+
+        "Electroencephalography (EEG) is an electrophysiological monitoring method to record electrical activity of the brain. It is typically noninvasive, with the electrodes placed along the scalp, although invasive electrodes are sometimes used, as in electrocorticography. EEG measures voltage fluctuations resulting from ionic current within the neurons of the brain. Clinically, EEG refers to the recording of the brain's spontaneous electrical activity over a period of time, as recorded from multiple electrodes placed on the scalp. Diagnostic applications generally focus either on event-related potentials or on the spectral content of EEG. The former investigates potential fluctuations time locked to an event, such as 'stimulus onset' or 'button press'. The latter analyses the type of neural oscillations (popularly called "brain waves") that can be observed in EEG signals in the frequency domain. "
+
+
+
+<p float="left">
+  <img src="ProjectCode/Results/Figures/64ch.png" width="400" />
+  <img src="ProjectCode/Results/Figures/eegraw.png" width="500" /> 
+</p>
+
+##### The pictures are taken from physionet and wikipedia, respectively.
 
 # Resources
 ## Dataset
@@ -107,17 +120,18 @@ https://github.com/aliasvishnu/EEGNet
 # Results
 
 The accuracy on the test sets for both CNNs with both cropped and non-cropped (of time axis) epochs are below. The in-class accuracy on the right is given for 3D-CNN cropped.
-![](ProjectCode/Results/Figures/Tables.png)
+
+<img src="ProjectCode/Results/Figures/Tables.png" width="700" />
 
 As you see, cropping the time axis in time windows (of 10 samples) makes a huge difference.
 
 An explanation of Schirrmeister et al. (2017) in arXiv:1703.05051v5 states that "cropping has the aim to force the ConvNet into using features that are present in all crops of the trial, since the ConvNet can no longer use the differences between crops and the global  temporal structure." 
 
 The training progress for accuracy and loss for cropped epochs are below.
-![](ProjectCode/Results/Figures/cropped.png)
+<img src="ProjectCode/Results/Figures/cropped.png" width="1200" />
 
 The training progress for accuracy and loss for non-cropped epochs are below. You could see the huge overfitting.
-![](ProjectCode/Results/Figures/notcropped.png)
+<img src="ProjectCode/Results/Figures/notcropped.png" width="1200" />
 
 # Discussion
 
