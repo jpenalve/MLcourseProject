@@ -54,6 +54,7 @@ Logs can be created by calling write_logs_for_tensorboard() -> Feel free to modi
 # Examples, literature or code that we were inspired:
 
 - https://martinos.org/mne/stable/auto_examples/decoding/plot_decoding_csp_eeg.html#sphx-glr-auto-examples-decoding-plot-decoding-csp-eeg-py
+- https://robintibor.github.io/braindecode/notebooks/Cropped_Decoding.html
 
 # The preprocessing and Networks Trained:
 
