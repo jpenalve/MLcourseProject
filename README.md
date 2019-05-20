@@ -132,6 +132,17 @@ We have implemented and tried different augmenting the data with gaussian noise,
 
 # Future Works
 
+What we think could be future work that may benefit the project are:
+
+- Utilizing RNNs with CNNs to include the global temporal change information as it was done in [1].
+
+- Making adaptive kernel sizes for CNN (and for cropping windows sizes) to extract optimal frequency features.
+
+- Using autoencoders to extract recurring patterns, and using these to increase classification accuracy.
+
+- Using Transfer learning to utilize this dataset on other EEG applications.
+
+
 # Code: How-to
 - In order to run the project, you need to open the 'Main' jupyter notebook and run it from top to bottom.
 
