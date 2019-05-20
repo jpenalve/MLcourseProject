@@ -95,8 +95,9 @@ Logs can be created by calling write_logs_for_tensorboard() -> Feel free to modi
 The accuracy on the test sets for both CNNs with both cropped and non-cropped (of time axis) epochs are below. The in-class accuracy on the right is given for 3D-CNN cropped.
 ![](ProjectCode/Results/Figures/Tables.png)
 
-As you see, cropping the time axis in time windows (of 10 samples) makes a huge difference
-An explanation of Schirrmeister et al (2018) in arXiv:1703.05051v5 states that "cropping has the aim to force the ConvNet into using features that are presentin all crops of the trial, since the ConvNet can no longer use the differences between crops and the global  temporal structure." 
+As you see, cropping the time axis in time windows (of 10 samples) makes a huge difference.
+
+An explanation of Schirrmeister et al. (2017) in arXiv:1703.05051v5 states that "cropping has the aim to force the ConvNet into using features that are presentin all crops of the trial, since the ConvNet can no longer use the differences between crops and the global  temporal structure." 
 
 The training progress for accuracy and loss for cropped epochs are below.
 ![](ProjectCode/Results/Figures/cropped.png)
